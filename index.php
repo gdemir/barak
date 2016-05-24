@@ -9,7 +9,7 @@ $table_names = DB::table_names($db_name);
 
 foreach ($table_names as $table_name) {
 	eval("
-		class $name extends Model {
+		class $name extends ApplicationModel {
 			protected static \$table_name = $name;
 		}
 	");

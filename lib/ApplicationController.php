@@ -1,5 +1,5 @@
 <?php
-class Controller {
+class ApplicationController {
   public static before_filter = NULL;
   public function __call($method, $arguments) {
       if (method_exists($this, $method)) {

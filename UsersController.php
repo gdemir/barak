@@ -1,5 +1,5 @@
 <?php
-class UserController extends ApplicationController {
+class UsersController extends ApplicationController {
 			before_filter = "require_login";
 			public require_login()
 			{

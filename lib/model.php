@@ -1,5 +1,5 @@
 <?php
-class Model {
+class ApplicationModel {
 	public static function key($_table) {
 		return mysql_fetch_field(mysql_query('select * from '. $_table))->name;
 	}

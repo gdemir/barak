@@ -1,8 +1,8 @@
 <?php
 class ApplicationModel {
 
-	public static function key($_table) {
-		return mysql_query("show index from " . static:$name . " where Key_name = 'PRIMARY'")[0]["Column_name"];
+	public static function key() {
+		return mysql_fetch_assoc(mysql_query("show index from " . static::$name . " where Key_name = 'PRIMARY'"))["Column_name"];
 	}
 	public static function find($value) {
 		return mysql_query('select * from ' . static::$name . ' where ' . Application::key() . ' = ' . $value);
@@ -18,19 +18,21 @@ class ApplicationModel {
 		return $_fields;
 	}
 	public static function first() {
-		$result = mysql_query('select * FROM ' . static::$name . ' order by ' . Application::key() . ' desc);
-		return mysql_fetch_field($result);
+		return mysql_fetch_assoc(mysql_query('select * from ' . static::$name . ' order by ' . static::key() . ' asc'));
 	}
 	public static function last() {
-		$result = mysql_query('select * FROM ' . static::$name . ' order by ' . Application::key() . ' asc);
-		return mysql_fetch_field($result);
+		return mysql_fetch_assoc(mysql_query('select * from ' . static::$name . ' order by ' . static::key() . ' desc'));
 	}
 	// OK
-	public static function All() {
+	public static function all() {
 		$result = mysql_query('select * from ' . static::$name);
 		for ($_rows = array(); $row = mysql_fetch_assoc($result);)
 			$_rows[] = $row;
 		return $_rows;
+	}
+	private function mysql_to_hash ($query)
+	{
+		return mysql_fetch_assoc(mysql_query($query));
 	}
 	// public static function rows($_fields = NULL, $_request = NULL) {
 	// 	$_requests = ($_request) ? $_request : '*';

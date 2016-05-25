@@ -16,8 +16,10 @@ foreach ($table_names as $table_name) {
 		}
 	");
 }
-		
-print_r(Users::All());
+print_r(Users::first());		
+echo "<br/>";
+print_r(Users::all());
+echo "<br/>";
 print_r(Comments::fields());
 ///////////////////////////////////////////////////////////
 

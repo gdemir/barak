@@ -1,9 +1,9 @@
 <?php
 class ApplicationModel {
 
-	// public static function key($_table) {
-	// 	return mysql_fetch_field(mysql_query('select * from '. $_table))->name;
-	// }
+	public static function key($_table) {
+		return mysql_query("show index from " . static:$name . "where Key_name = 'PRIMARY'")[0]["Column_name"];
+	}
 	// public static function where ($ask) {
 	// 	return mysql_query('select * from ' . static::$name . ' ' . $ask);
 	// }

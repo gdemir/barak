@@ -18,10 +18,12 @@ class ApplicationModel {
 		return $_fields;
 	}
 	public static function first() {
-		$result = mysql_query('select * from ' . static::$name);
-		for ($_fields = array(); $field = mysql_fetch_field($result);)
-			$_fields[] = $field->name;
-		return $_fields;
+		$result = mysql_query('select * FROM ' . static::$name . ' order by ' . Application::key() . ' desc);
+		return mysql_fetch_field($result);
+	}
+	public static function last() {
+		$result = mysql_query('select * FROM ' . static::$name . ' order by ' . Application::key() . ' asc);
+		return mysql_fetch_field($result);
 	}
 	// OK
 	public static function All() {

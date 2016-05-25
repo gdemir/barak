@@ -1,17 +1,16 @@
 <?php
 Schedule::Application.routes.draw do
 Routes::draw(
-  "get" => array("/home" => "home#index"),
+  get("/", "home#index"),
 );
 
 class Routes {
   public static function draw()
   {
-    $arguments = func_get_args();
-    $arguments_count = func_num_args();
-    for ($i = 0; $i < $arguments_count; $i++) {
-        echo "$i. değiştirge: " . $arguments[$i] . "<br />\n";
-    }
+    $route_functions = func_get_args();
+    $route_functions_count = func_num_args();
+    foreach ($route_functions as $route_function)
+      echo "değiştirge: " . $route_function . "<br />\n";
   }
 }
 ?>

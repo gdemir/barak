@@ -1,11 +1,11 @@
 <?php
 class UsersController extends ApplicationController {
 	$before_filter = "require_login";
-	public require_login()
+	public function require_login()
 	{
 	  echo "login olmadan asla";
 	}
-	public login()
+	public function login()
 	{
 	  echo "login olduk";
 	}

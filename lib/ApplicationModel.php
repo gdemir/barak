@@ -2,11 +2,12 @@
 class ApplicationModel {
 
 	public static function key($_table) {
-		return mysql_query("show index from " . static:$name . "where Key_name = 'PRIMARY'")[0]["Column_name"];
+		return mysql_query("show index from " . static:$name . " where Key_name = 'PRIMARY'")[0]["Column_name"];
 	}
 	// public static function where ($ask) {
 	// 	return mysql_query('select * from ' . static::$name . ' ' . $ask);
 	// }
+	// OK
 	public static function fields() {
 		$result = mysql_query('select * from ' . static::$name);
 		for ($_fields = array(); $field = mysql_fetch_field($result);)

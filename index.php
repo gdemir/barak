@@ -23,18 +23,29 @@ echo "<br/>";
 print_r(Comments::fields());
 ///////////////////////////////////////////////////////////
 
+echo "<br/> request_uri " . $_SERVER['REQUEST_URI'];
+echo "<br/> path_info " . $_SERVER['PATH_INFO'];
+echo "<br/> query_uri " . $_SERVER['QUERY_URI'];
+echo "<br/> script_name " . $_SERVER['SCRIPT_NAME'];
 
-// $sonuc = mysql_query("SHOW COLUMNS FROM Users");
-// if (!$sonuc) {
-//     echo 'Sorguyu çalıştıramadı: ' . mysql_error();
-//     exit;
-// }
-// if (mysql_num_rows($sonuc) > 0) {
-//     while ($satir = mysql_fetch_assoc($sonuc)) {
-//         print_r($satir);
-//     }
-// }
+$request_uri = explode("/", $_SERVER['REQUEST_URI']);
 
-echo "<br/>" . $_SERVER['REQUEST_URI'];
+print_r($request_uri);
+
+$controller = $request_uri[1];
+$action = $request_uri[2];
+echo $controller . " " . $action;
+
+function __autoload($class_name) {
+    require_once 'app/controllers/' . ucwords($class_name) . 'Controller.php';
+}
+$files = glob("app/controllers/*.php");
+print_r($files);
+foreach ($files as $file) {
+	include $file;
+}
+
+HomeController::index();
+//eval(" \$controller::\$action() ");
 
 ?>

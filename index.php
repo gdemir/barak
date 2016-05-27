@@ -24,8 +24,8 @@ print_r(Comments::fields());
 ///////////////////////////////////////////////////////////
 
 echo "<br/> request_uri " . $_SERVER['REQUEST_URI'];
-echo "<br/> path_info " . $_SERVER['PATH_INFO'];
-echo "<br/> query_uri " . $_SERVER['QUERY_URI'];
+echo "<br/> path_info   " . $_SERVER['PATH_INFO'];
+echo "<br/> query_uri   " . $_SERVER['QUERY_URI'];
 echo "<br/> script_name " . $_SERVER['SCRIPT_NAME'];
 
 $request_uri = explode("/", $_SERVER['REQUEST_URI']);
@@ -40,12 +40,13 @@ function __autoload($class_name) {
     require_once 'app/controllers/' . ucwords($class_name) . 'Controller.php';
 }
 $files = glob("app/controllers/*.php");
-print_r($files);
+
 foreach ($files as $file) {
 	include $file;
 }
+echo "<br/>";
 
+$class =  ucwords($controller) . 'Controller';
+$class::$action();
 HomeController::index();
-//eval(" \$controller::\$action() ");
-
 ?>

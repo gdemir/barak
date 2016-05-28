@@ -24,29 +24,33 @@ print_r(Comments::fields());
 ///////////////////////////////////////////////////////////
 
 echo "<br/> request_uri " . $_SERVER['REQUEST_URI'];
-echo "<br/> path_info   " . $_SERVER['PATH_INFO'];
-echo "<br/> query_uri   " . $_SERVER['QUERY_URI'];
+// echo "<br/> path_info   " . $_SERVER['PATH_INFO'];
+// echo "<br/> query_uri   " . $_SERVER['QUERY_URI'];
 echo "<br/> script_name " . $_SERVER['SCRIPT_NAME'];
 
-$request_uri = explode("/", $_SERVER['REQUEST_URI']);
+$uri = explode("/", trim($_SERVER['REQUEST_URI'], "/"));
 
-print_r($request_uri);
+print_r($uri);
 
-$controller = $request_uri[1];
-$action = $request_uri[2];
-echo $controller . " " . $action;
+$controller = isset($uri[0]) ? $uri[0] : "Application";
+$action = isset($uri[1]) ? $uri[1] : "index";
 
-function __autoload($class_name) {
-    require_once 'app/controllers/' . ucwords($class_name) . 'Controller.php';
-}
+echo $controller . " ############# " . $action;
+
+// function __autoload($class_name) {
+//     require_once 'app/controllers/' . ucwords($class_name) . 'Controller.php';
+// }
+
 $files = glob("app/controllers/*.php");
+foreach ($files as $file) include $file;
 
-foreach ($files as $file) {
-	include $file;
-}
 echo "<br/>";
 
-$class =  ucwords($controller) . 'Controller';
-$class::$action();
-HomeController::index();
+$class_controller =  ucwords($controller) . 'Controller';
+echo $class_controller;
+
+$class = new $class_controller;
+// $class->$action();
+// echo "<br/>";
+// HomeController::index();
 ?>

@@ -1,26 +1,38 @@
 <?php
 
-include 'lib/Database.php';
+include 'lib/barak.php';
 include 'lib/ApplicationModel.php';
 include 'lib/ApplicationController.php';
+$CONFIGFILE = "config/database.ini";
 
 ///////////////////////////////////////////////////////////
-$db_name = "test";
-Database::connect("localhost", "root", "159654", $db_name);
-$table_names = Database::table_names($db_name);
+if (!file_exists($CONFIGFILE))
+	die("Yapılandırma dosyası mevcut değil : {$CONFIGFILE}");
+
+$database = parse_ini_file($CONFIGFILE);
+
+$db = new BARAK("mysql:host={$database['host']};dbname={$database['name']}", $database["user"], $database["pass"]);
+$table_names = $db->table_names();
 
 foreach ($table_names as $table_name) {
+	print_r($table_name);
 	eval("
 		class $table_name extends ApplicationModel {
 			protected static \$name = '$table_name';
 		}
 	");
 }
-print_r(Users::first());		
+
+print_r(Users::key());
+print_r(Comments::key());
+return;
+echo "<br/>";
+print_r(Users::first());
 echo "<br/>";
 print_r(Users::all());
 echo "<br/>";
 print_r(Comments::fields());
+echo "<br/>";
 ///////////////////////////////////////////////////////////
 
 echo "<br/> request_uri " . $_SERVER['REQUEST_URI'];

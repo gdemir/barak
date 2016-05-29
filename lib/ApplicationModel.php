@@ -2,38 +2,41 @@
 class ApplicationModel {
 
 	public static function key() {
-		return mysql_fetch_assoc(mysql_query("show index from " . static::$name . " where Key_name = 'PRIMARY'"))["Column_name"];
+		$db = new BARAK('mysql:host=localhost;dbname=BARAK', "root", "barak");
+		print_r($db->query("show index from " . static::$name . " where Key_name = 'PRIMARY'")->fetch(PDO::FETCH_ASSOC)["Column_name"]);
+
+		//["Column_name"];
 	}
-	public static function find($value) {
-		return mysql_query('select * from ' . static::$name . ' where ' . Application::key() . ' = ' . $value);
-	}
-	// public static function where ($ask) {
-	// 	return mysql_query('select * from ' . static::$name . ' ' . $ask);
+	// public static function find($value) {
+	// 	return mysql_query('select * from ' . static::$name . ' where ' . Application::key() . ' = ' . $value);
 	// }
-	// OK
-	public static function fields() {
-		$result = mysql_query('select * from ' . static::$name);
-		for ($_fields = array(); $field = mysql_fetch_field($result);)
-			$_fields[] = $field->name;
-		return $_fields;
-	}
-	public static function first() {
-		return mysql_fetch_assoc(mysql_query('select * from ' . static::$name . ' order by ' . static::key() . ' asc'));
-	}
-	public static function last() {
-		return mysql_fetch_assoc(mysql_query('select * from ' . static::$name . ' order by ' . static::key() . ' desc'));
-	}
-	// OK
-	public static function all() {
-		$result = mysql_query('select * from ' . static::$name);
-		for ($_rows = array(); $row = mysql_fetch_assoc($result);)
-			$_rows[] = $row;
-		return $_rows;
-	}
-	private function mysql_to_hash ($query)
-	{
-		return mysql_fetch_assoc(mysql_query($query));
-	}
+	// // public static function where ($ask) {
+	// // 	return mysql_query('select * from ' . static::$name . ' ' . $ask);
+	// // }
+	// // OK
+	// public static function fields() {
+	// 	$result = mysql_query('select * from ' . static::$name);
+	// 	for ($_fields = array(); $field = mysql_fetch_field($result);)
+	// 		$_fields[] = $field->name;
+	// 	return $_fields;
+	// }
+	// public static function first() {
+	// 	return mysql_fetch_assoc(mysql_query('select * from ' . static::$name . ' order by ' . static::key() . ' asc'));
+	// }
+	// public static function last() {
+	// 	return mysql_fetch_assoc(mysql_query('select * from ' . static::$name . ' order by ' . static::key() . ' desc'));
+	// }
+	// // OK
+	// public static function all() {
+	// 	$result = mysql_query('select * from ' . static::$name);
+	// 	for ($_rows = array(); $row = mysql_fetch_assoc($result);)
+	// 		$_rows[] = $row;
+	// 	return $_rows;
+	// }
+	// private function mysql_to_hash ($query)
+	// {
+	// 	return mysql_fetch_assoc(mysql_query($query));
+	// }
 	// public static function rows($_fields = NULL, $_request = NULL) {
 	// 	$_requests = ($_request) ? $_request : '*';
 	// 	$_finds = ($_fields) ? ' where ' . $_fields : '';

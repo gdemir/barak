@@ -12,8 +12,7 @@ class BARAK extends PDO {
     public function table_names() {
 			$result = parent::query("show tables");
 			$name = parent::query("select database()")->fetchColumn();
-			for ($table_names = array(); $row = $result->fetch(PDO::FETCH_ASSOC);)
-				$table_names[] = $row["Tables_in_" . $name];
+			while ($row = $result->fetch(PDO::FETCH_ASSOC)) $table_names[] = $row["Tables_in_" . $name];
 			return $table_names;
 		}
 }

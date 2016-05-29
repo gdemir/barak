@@ -1,18 +1,21 @@
 <?php
 
-include 'lib/barak.php';
+include 'lib/BARAK.php';
 include 'lib/ApplicationModel.php';
 include 'lib/ApplicationController.php';
-$CONFIGFILE = "config/database.ini";
 
 ///////////////////////////////////////////////////////////
+$CONFIGFILE = "config/database.ini";
+
 if (!file_exists($CONFIGFILE))
 	die("Yapılandırma dosyası mevcut değil : {$CONFIGFILE}");
 
 $database = parse_ini_file($CONFIGFILE);
+///////////////////////////////////////////////////////////
 
-$db = new BARAK("mysql:host={$database['host']};dbname={$database['name']}", $database["user"], $database["pass"]);
-$table_names = $db->table_names();
+$GLOBALS['db'] = new BARAK("mysql:host={$database['host']};dbname={$database['name']}", $database["user"], $database["pass"]);
+
+$table_names = $GLOBALS['db']->table_names();
 
 foreach ($table_names as $table_name) {
 	print_r($table_name);
@@ -23,15 +26,19 @@ foreach ($table_names as $table_name) {
 	");
 }
 
-print_r(Users::key());
-print_r(Comments::key());
-return;
+print_r(Users::primary_key());
+print_r(Comments::primary_key());
+print_r(Users::find(1));
+
 echo "<br/>";
 print_r(Users::first());
+print_r(Users::last());
+
 echo "<br/>";
 print_r(Users::all());
+
 echo "<br/>";
-print_r(Comments::fields());
+//print_r(Comments::fields());
 echo "<br/>";
 ///////////////////////////////////////////////////////////
 
@@ -44,7 +51,7 @@ $uri = explode("/", trim($_SERVER['REQUEST_URI'], "/"));
 
 print_r($uri);
 
-$controller = isset($uri[0]) ? $uri[0] : "Application";
+$controller = (isset($uri[0]) and $uri[0] != "") ? $uri[0] : "Application";
 $action = isset($uri[1]) ? $uri[1] : "index";
 
 echo $controller . " ############# " . $action;
@@ -62,7 +69,7 @@ $class_controller =  ucwords($controller) . 'Controller';
 echo $class_controller;
 
 $class = new $class_controller;
-// $class->$action();
-// echo "<br/>";
-// HomeController::index();
+
+$class->$action();
+
 ?>

@@ -34,15 +34,18 @@ print_r(Users::primary_key());
 print_r(Comments::primary_key());
 print_r(Users::find(1));
 
+Users::update(1, array("first_name"=>"hmm1", "last_name"=>"hmm2"));
 echo "<br/>";
+
 print_r(Users::first());
 print_r(Users::last());
-
 echo "<br/>";
+
 print_r(Users::all());
-
 echo "<br/>";
-//print_r(Comments::fields());
+
+print_r(Users::fields());
+print_r(Comments::fields());
 echo "<br/>";
 
 // Uri parsing and run action of controller

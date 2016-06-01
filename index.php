@@ -20,15 +20,21 @@ $GLOBALS['db'] = new BARAK("mysql:host={$database['host']};dbname={$database['na
 $table_names = $GLOBALS['db']->table_names();
 
 foreach ($table_names as $table_name) {
-	print_r($table_name);
-	eval("
-		class $table_name extends ApplicationModel {
-			protected static \$name = '$table_name';
-		}
-	");
+  eval("
+       class $table_name extends ApplicationModel {
+         protected static \$name = '$table_name';
+         public function __construct($_table) {
+           parent::__construct();
+         }
+       } 
+  ");
 }
 
 // Model function tests 
+$user = new Users();
+$user->first_name ="sssssssssssshmm";
+echo $user->first_name;
+
 
 print_r(Users::primary_key());
 print_r(Comments::primary_key());
@@ -44,8 +50,8 @@ echo "<br/>";
 print_r(Users::all());
 echo "<br/>";
 
-print_r(Users::fields());
-print_r(Comments::fields());
+print_r(Users::fieldnames());
+print_r(Comments::fieldnames());
 echo "<br/>";
 
 // Uri parsing and run action of controller

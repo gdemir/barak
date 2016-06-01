@@ -4,14 +4,16 @@ include 'lib/BARAK.php';
 include 'lib/ApplicationModel.php';
 include 'lib/ApplicationController.php';
 
-///////////////////////////////////////////////////////////
+
+// Configuration file load
 $CONFIGFILE = "config/database.ini";
 
 if (!file_exists($CONFIGFILE))
 	die("Yapılandırma dosyası mevcut değil : {$CONFIGFILE}");
 
 $database = parse_ini_file($CONFIGFILE);
-///////////////////////////////////////////////////////////
+
+// Database connection and model create of tables
 
 $GLOBALS['db'] = new BARAK("mysql:host={$database['host']};dbname={$database['name']}", $database["user"], $database["pass"]);
 
@@ -25,6 +27,8 @@ foreach ($table_names as $table_name) {
 		}
 	");
 }
+
+// Model function tests 
 
 print_r(Users::primary_key());
 print_r(Comments::primary_key());
@@ -40,7 +44,8 @@ print_r(Users::all());
 echo "<br/>";
 //print_r(Comments::fields());
 echo "<br/>";
-///////////////////////////////////////////////////////////
+
+// Uri parsing and run action of controller
 
 echo "<br/> request_uri " . $_SERVER['REQUEST_URI'];
 // echo "<br/> path_info   " . $_SERVER['PATH_INFO'];
@@ -63,13 +68,13 @@ echo $controller . " ############# " . $action;
 $files = glob("app/controllers/*.php");
 foreach ($files as $file) include $file;
 
-echo "<br/>";
-
 $class_controller =  ucwords($controller) . 'Controller';
 echo $class_controller;
 
-$class = new $class_controller;
+// run controller class and before_filter functions
 
+$class = new $class_controller;
+$class->before_filter();
 $class->$action();
 
 ?>

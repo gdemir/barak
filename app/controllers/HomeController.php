@@ -1,6 +1,6 @@
 <?php
 class HomeController extends ApplicationController {
-  protected $filter = "login";
+  protected $filter = "login"; #TODO make array
   public function index () {
     echo "Merhaba home#index<br/>";
   }

@@ -10,12 +10,11 @@ class ApplicationModel {
   // //   return mysql_query('select * from ' . static::$name . ' ' . $ask);
   // // }
   // // OK
-  // public static function fields() {
-  //  $result = mysql_query('select * from ' . static::$name);
-  //  for ($_fields = array(); $field = mysql_fetch_field($result);)
-  //    $_fields[] = $field->name;
-  //  return $_fields;
-  // }
+
+  public static function fields() {
+    return $GLOBALS['db']->query('describe ' . static::$name)->fetchAll(PDO::FETCH_COLUMN);
+  }
+
   public static function first () {
     return $GLOBALS['db']->query("select * from " . static::$name . " order by " . self::primary_key() . " asc")->fetch(PDO::FETCH_ASSOC);
   }
@@ -23,9 +22,7 @@ class ApplicationModel {
     return $GLOBALS['db']->query("select * from " . static::$name . " order by " . self::primary_key() . " desc")->fetch(PDO::FETCH_ASSOC);
   }
   public static function all () {
-    $result = $GLOBALS['db']->query('select * from ' . static::$name);
-    while ($row = $result->fetch(PDO::FETCH_ASSOC)) $rows[] = $row;
-    return $rows;
+    return $GLOBALS['db']->query('select * from ' . static::$name)->fetchAll(PDO::FETCH_ASSOC);
   }
   // public static function select($_units) {
   //  return mysql_fetch_assoc(mysql_query('select * from ' . static::$name . ' where '. $_units));
@@ -41,13 +38,23 @@ class ApplicationModel {
   //           'values(' . $_values . ')'
   //    );
   // }
-  // public static function update($_sets, $_keys) {
-  //  if (!(is_null($_sets) && is_null($_keys)))
-  //    mysql_query(
-  //      'update ' . static::$name .
-  //        ' set ' . $_sets .
-  //      ' where ' . $_keys
-  //    );
-  // }
+
+  public static function update($primary_key, $conditions) {
+    $fields = array_keys($conditions);
+    $table_fields = self::fields();
+    foreach ($fields as $field)
+      if (!in_array($field, $table_fields))
+        die("bilinmeyen sütun adı" . $field); #TODO must notice units or class
+
+    $sets = '';
+    foreach ($conditions as $field => $value)
+      $sets .= ($sets ? ',' : '') . ($field . '="' . $value .'"');
+ 
+    $GLOBALS['db']->query(
+      "update " . static::$name .
+      " set " . $sets .
+      " where " . self::primary_key() . "=" . $primary_key
+    );
+  }
 }
 ?>

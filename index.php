@@ -3,7 +3,12 @@
 include 'lib/BARAK.php';
 include 'lib/ApplicationModel.php';
 include 'lib/ApplicationController.php';
+include 'config/routes.php';
 
+// Controller files load
+
+$files = glob("app/controllers/*.php");
+foreach ($files as $file) include $file;
 
 // Configuration file load
 $CONFIGFILE = "config/database.ini";
@@ -23,67 +28,29 @@ foreach ($table_names as $table_name) {
   eval("
        class $table_name extends ApplicationModel {
          protected static \$name = '$table_name';
-         public function __construct($_table) {
+         public function __construct() {
            parent::__construct();
          }
-       } 
+       }
   ");
 }
 
-// Model function tests 
-$user = new Users();
-$user->first_name ="sssssssssssshmm";
-echo $user->first_name;
 
-
-print_r(Users::primary_key());
-print_r(Comments::primary_key());
-print_r(Users::find(1));
-
-Users::update(1, array("first_name"=>"hmm1", "last_name"=>"hmm2"));
-echo "<br/>";
-
-print_r(Users::first());
-print_r(Users::last());
-echo "<br/>";
-
-print_r(Users::all());
-echo "<br/>";
-
-print_r(Users::fieldnames());
-print_r(Comments::fieldnames());
-echo "<br/>";
 
 // Uri parsing and run action of controller
+// echo ".".trim($_SERVER['REQUEST_URI']).".";
+// $uri = explode("/", trim($_SERVER['REQUEST_URI'], "/"));
+// print_r($uri);
+$uri = trim($_SERVER['REQUEST_URI']);
+$routes->dispatch(trim($_SERVER['REQUEST_URI']));
+// $controller = (isset($uri[0]) and $uri[0] != "") ? $uri[0] : "Application";
+// $action = isset($uri[1]) ? $uri[1] : "index";
 
-echo "<br/> request_uri " . $_SERVER['REQUEST_URI'];
-// echo "<br/> path_info   " . $_SERVER['PATH_INFO'];
-// echo "<br/> query_uri   " . $_SERVER['QUERY_URI'];
-echo "<br/> script_name " . $_SERVER['SCRIPT_NAME'];
-
-$uri = explode("/", trim($_SERVER['REQUEST_URI'], "/"));
-
-print_r($uri);
-
-$controller = (isset($uri[0]) and $uri[0] != "") ? $uri[0] : "Application";
-$action = isset($uri[1]) ? $uri[1] : "index";
-
-echo $controller . " ############# " . $action;
+// echo $controller . " ############# " . $action;
 
 // function __autoload($class_name) {
 //     require_once 'app/controllers/' . ucwords($class_name) . 'Controller.php';
 // }
 
-$files = glob("app/controllers/*.php");
-foreach ($files as $file) include $file;
-
-$class_controller =  ucwords($controller) . 'Controller';
-echo $class_controller;
-
-// run controller class and before_filter functions
-
-$class = new $class_controller;
-$class->before_filter();
-$class->$action();
-
+//$routes->dispatch($uri);
 ?>

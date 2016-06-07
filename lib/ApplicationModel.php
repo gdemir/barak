@@ -45,6 +45,7 @@ class ApplicationModel {
         " (" . $fields . ") " .
         "values(" . $values . ")"
       );
+
     }
   }
 

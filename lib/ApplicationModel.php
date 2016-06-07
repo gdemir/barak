@@ -114,14 +114,14 @@ class ApplicationModel {
         if (!in_array($field, $table_fields))
           die("bilinmeyen sütun adı" . $field); #TODO must notice units or class
 
-      $sets = '';
+      $sets = "";
       foreach ($conditions as $field => $value)
-        $sets .= ($sets ? ',' : '') . ($field . '="' . $value .'"');
+        $sets .= ($sets ? "," : "") . ($field . "='" . $value . "'");
 
       $GLOBALS['db']->query(
-        'update ' . static::$name .
-        ' set ' . $sets .
-        ' where ' . self::primary_key() . '=' . $primary_key
+        "update " . static::$name .
+        " set " . $sets .
+        " where " . self::primary_key() . "=" . $primary_key
         );
     }
   }

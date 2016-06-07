@@ -11,7 +11,8 @@ class HomeController extends ApplicationController {
     echo "Merhaba home#index<br/>";
     // Model function tests
     $user = new Users();
-    $user->first_name ="Gökhan";
+    print_r($user);
+    $user->first_name ="GökhanX";
 
     //$user->tc = 123123;
     echo $user->first_name;
@@ -19,10 +20,14 @@ class HomeController extends ApplicationController {
 
     print_r(Users::primary_key());
     print_r(Comments::primary_key());
-    print_r(Users::find(1));
 
-    Users::update(1, array("first_name" => "hmm3", "last_name" => "hmm4"));
+
+    Users::update(123342, array("first_name" => "hmm3", "last_name" => "hmm4"));
     echo "<br/>";
+    echo "<br/>s";
+    print_r(Users::where("first_name = 'GökhanX'"));
+    echo "s<br/>";
+		echo "<br/>";
 
     print_r(Users::first());
     print_r(Users::last());

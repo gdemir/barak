@@ -28,20 +28,13 @@ foreach ($table_names as $table_name) {
   eval("
        class $table_name extends ApplicationModel {
          protected static \$name = '$table_name';
-         public function __construct() {
-           parent::__construct();
+         public function __construct(\$primary_key = false) {
+           parent::__construct(\$primary_key);
          }
        }
   ");
 }
 
-
-
-// Uri parsing and run action of controller
-// echo ".".trim($_SERVER['REQUEST_URI']).".";
-// $uri = explode("/", trim($_SERVER['REQUEST_URI'], "/"));
-// print_r($uri);
-$uri = trim($_SERVER['REQUEST_URI']);
 $routes->dispatch(trim($_SERVER['REQUEST_URI']));
 // $controller = (isset($uri[0]) and $uri[0] != "") ? $uri[0] : "Application";
 // $action = isset($uri[1]) ? $uri[1] : "index";

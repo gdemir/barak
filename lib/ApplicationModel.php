@@ -14,43 +14,39 @@ class ApplicationModel {
   public function save() {
 
     if (!$this->new_record_state) {
-      $sets = '';
-      $keys = '';
+      $sets = "";
+      $keys = "";
       $primary_key = self::primary_key();
       foreach ($this->fields as $field => $value)
         if ($primary_key == $field)
-          $keys .= ($keys ? ',' : '') . ($field . '="' . $value .'"');
+          $keys .= ($keys ? "," : "") . ($field . "='" . $value . "'");
         else
-          $sets .= ($sets ? ',' : '') . ($field . '="' . $value .'"');
-        $GLOBALS['db']->query(
-          'update ' . static::$name .
-          ' set ' . $sets .
-          ' where ' . $keys
-          );
+          $sets .= ($sets ? "," : "") . ($field . "='" . $value . "'");
 
-      } else {
-        $fields = "";
-        $values = "";
-        $primary_key = self::primary_key();
-        foreach ($this->fields as $field => $value) {
-          if ($primary_key != $field or ($primary_key == $field and !empty($value))) {
-            $fields .= ($fields ? "," : "") . $field;
-            $values .= ($values ? "," : "") . "'". $value . "'";
-          }
+      $GLOBALS['db']->query(
+        "update " . static::$name .
+        " set " . $sets .
+        " where " . $keys
+      );
+
+    } else {
+      $fields = "";
+      $values = "";
+      $primary_key = self::primary_key();
+      foreach ($this->fields as $field => $value) {
+        if ($primary_key != $field or ($primary_key == $field and !empty($value))) {
+          $fields .= ($fields ? "," : "") . $field;
+          $values .= ($values ? "," : "") . "'". $value . "'";
         }
-        echo "<br/>kayıt oldu<br/>";
-        print_r(
-        	"insert into " . static::$name .
-          " (" . $fields . ") " .
-          "values(" . $values . ")"
-        	);
-        $GLOBALS["db"]->query(
-          "insert into " . static::$name .
-          " (" . $fields . ") " .
-          "values(" . $values . ")"
-          );
       }
+
+      $GLOBALS["db"]->query(
+        "insert into " . static::$name .
+        " (" . $fields . ") " .
+        "values(" . $values . ")"
+      );
     }
+  }
 
     public function __get($field) {
       if (isset($this->fields[$field]))
@@ -116,7 +112,7 @@ class ApplicationModel {
       $table_fields = self::fieldnames();
       foreach ($fields as $field)
         if (!in_array($field, $table_fields))
-        die("bilinmeyen sütun adı" . $field); #TODO must notice units or class
+          die("bilinmeyen sütun adı" . $field); #TODO must notice units or class
 
       $sets = '';
       foreach ($conditions as $field => $value)

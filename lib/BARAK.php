@@ -10,8 +10,8 @@ class BARAK extends PDO {
 			parent::query('set collation-server = "utf8_general_ci"');
     }
     public function table_names() {
+      $name = parent::query("select database()")->fetchColumn();
 			$result = parent::query("show tables");
-			$name = parent::query("select database()")->fetchColumn();
 			while ($row = $result->fetch(PDO::FETCH_ASSOC)) $table_names[] = $row["Tables_in_" . $name];
 			return $table_names;
 		}

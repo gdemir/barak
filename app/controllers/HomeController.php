@@ -22,18 +22,18 @@ class HomeController extends ApplicationController {
     print_r(Users::find(1));
 
     Users::update(1, array("first_name" => "hmm3", "last_name" => "hmm4"));
-		echo "<br/>";
+    echo "<br/>";
 
-		print_r(Users::first());
-		print_r(Users::last());
-		echo "<br/>";
+    print_r(Users::first());
+    print_r(Users::last());
+    echo "<br/>";
 
-		print_r(Users::all());
-		echo "<br/>";
+    print_r(Users::all());
+    echo "<br/>";
 
-		print_r(Users::fieldnames());
-		print_r(Comments::fieldnames());
-		echo "<br/>";
+    print_r(Users::fieldnames());
+    print_r(Comments::fieldnames());
+    echo "<br/>";
   }
   public function login() {
     echo "Her işlem öncesi login oluyoruz<br/>";

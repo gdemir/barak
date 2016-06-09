@@ -4,10 +4,10 @@ class ApplicationModel {
   private $fields;
   private $new_record_state;
 
-  public function __construct($primary_key = false) {
-    if ($primary_key) {
+  public function __construct($conditions = false) {
+    if ($conditions) {
       $this->new_record_state = false;
-      $this->fields = $this->load_fieldnames($primary_key);
+      $this->fields = $this->load_fieldnames($conditions);
     } else {
       $this->new_record_state = true;
       $this->fields = $this->draft_fieldnames();
@@ -97,18 +97,18 @@ class ApplicationModel {
   // $user->save();
 
   public static function find($primary_keys) {
-		$class = static::$name;
-		$ask = self::primary_key() . " = " . $primary_key;
+    $class = static::$name;
+    $condition = self::primary_key() . " = " . $primary_key;
 
     if (is_array($primary_keys)) {
     	$class = static::$name;
       foreach ($primary_keys as $primary_key)
         if (self::exists($primary_key))
-          $objects[] = new $class($ask);
+          $objects[] = new $class($condition);
       return isset($objects) ? $objects : null;
     } elseif (is_int($primary_keys)) {
         if (self::exists($primary_keys))
-          return new $class($ask);
+          return new $class($condition);
     }
     return null;
   }

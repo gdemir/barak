@@ -85,6 +85,14 @@ class ApplicationModel {
   }
 
   // Public Static Functions
+  
+  public static function delete($primary_key) {
+    $GLOBALS['db']->query("delete from " . static::$name . " where " . self::primary_key() . " = " . $primary_key);
+  }
+  
+  public static function delete_all($conditions) {
+    // TODO
+}
 
   public static function primary_key() {
     return $GLOBALS['db']->query("show index from " . static::$name . " where Key_name = 'PRIMARY'")->fetch(PDO::FETCH_ASSOC)["Column_name"];

@@ -24,14 +24,13 @@ class Routes {
       }
     }
     if ($match) {
-    	print_r($target);
-	    $class_controller =  ucwords($controller) . 'Controller';
-	    echo $class_controller;
-	    // run controller class and before_filter functions
-	    $class = new $class_controller;
-	    $class->run($action);
-	  } else
-	  	die("Böyle bir yönlendirme mevcut değil!");
+      $class_controller =  ucwords($controller) . 'Controller';
+      echo $class_controller;
+      // run controller class and before_filter functions
+      $class = new $class_controller;
+      $class->run($action);
+     } else
+       die("Böyle bir yönlendirme mevcut değil!");
   }
   public function draw() {
     $this->tasks = func_get_args();

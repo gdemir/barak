@@ -4,10 +4,10 @@ class ApplicationModel {
   private $fields;
   private $new_record_state;
 
-  public function __construct($conditions = false) {
-    if ($conditions) {
+  public function __construct($primary_key = false) {
+    if ($primary_key) {
       $this->new_record_state = false;
-      $this->fields = $this->load_fieldnames($conditions);
+      $this->fields = $this->load_fieldnames($primary_key);
     } else {
       $this->new_record_state = true;
       $this->fields = $this->draft_fieldnames();
@@ -70,8 +70,8 @@ class ApplicationModel {
 
   // Private Functions
 
-  private function load_fieldnames($ask) {
-    return $GLOBALS['db']->query("select * from " . static::$name . " where " . $ask)->fetch(PDO::FETCH_ASSOC);
+  private function load_fieldnames($primary_key) {
+    return $GLOBALS['db']->query("select * from " . static::$name . " where " . self::primary_key() . " = " . $primary_key)->fetch(PDO::FETCH_ASSOC);
   }
 
   private function draft_fieldnames() {
@@ -106,17 +106,15 @@ class ApplicationModel {
 
   public static function find($primary_keys) {
     $class = static::$name;
-    $condition = self::primary_key() . " = " . $primary_key;
 
     if (is_array($primary_keys)) {
-    	$class = static::$name;
       foreach ($primary_keys as $primary_key)
         if (self::exists($primary_key))
-          $objects[] = new $class($condition);
+          $objects[] = new $class($primary_key);
       return isset($objects) ? $objects : null;
     } elseif (is_int($primary_keys)) {
         if (self::exists($primary_keys))
-          return new $class($condition);
+          return new $class($primary_keys);
     }
     return null;
   }
@@ -125,9 +123,9 @@ class ApplicationModel {
     return ($GLOBALS['db']->query("select * from " . static::$name . " where " . self::primary_key() . " = " . $primary_key)->fetch(PDO::FETCH_ASSOC)) ? TRUE : false;
   }
 
-  public static function where($ask) {
+  public static function where($conditions) {
   	// $class = static::$name;
-  	// $result = $GLOBALS['db']->query("select * from " . static::$name . " where " . $ask);
+  	// $result = $GLOBALS['db']->query("select * from " . static::$name . " where " . $conditions);
 
   	// while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
 			// $objects[] = new $class($ask);

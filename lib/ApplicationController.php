@@ -1,5 +1,6 @@
 <?php
 class ApplicationController {
+  public $_params;
 
   public function index() {
     echo "Application#index";
@@ -23,15 +24,26 @@ class ApplicationController {
           }
         }
       }
+
     }
   }
-  function run ($action) {
+
+  public function run($action) {
     if (method_exists($this, $action)) {
       if (isset($this->before_actions)) $this->_filter($action, $this->before_actions);
       $this->$action();
       if (isset($this->after_actions)) $this->_filter($action, $this->after_actions);
+
     } else
-    die(get_class($this) . " içerisinde ". $action . " fonksiyonuna sahip değil<br/>");
+      die(get_class($this) . " içerisinde ". $action . " fonksiyonuna sahip değil<br/>");
+  }
+
+  public function __get($param) {
+    return $this->_params[$param];
+  }
+
+  public function __set($param, $value) {
+    $this->_params[$param] = $value;
   }
 }
 ?>

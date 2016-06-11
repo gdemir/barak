@@ -4,10 +4,10 @@ class ApplicationModel {
   private $fields;
   private $new_record_state;
 
-  public function __construct($primary_key = false) {
-    if ($primary_key) {
+  public function __construct($conditions = false) {
+    if ($conditions) {
       $this->new_record_state = false;
-      $this->fields = $this->load_fieldnames($primary_key);
+      $this->fields = $this->load_fieldnames($conditions);
     } else {
       $this->new_record_state = true;
       $this->fields = $this->draft_fieldnames();
@@ -22,10 +22,10 @@ class ApplicationModel {
 
       $sets = "";
       $keys = "";
-      $primary_key = self::primary_key();
+      $primary_keyname = self::primary_keyname();
       foreach ($this->fields as $field => $value)
         $sets .= ($sets ? "," : "") . ($field . "='" . $value . "'");
-      $key =  $primary_key . "='" . $this->fields[$primary_key] . "'";
+      $key =  $primary_keyname . "='" . $this->fields[$primary_keyname] . "'";
 
       $GLOBALS['db']->query(
         "update " . static::$name .
@@ -37,9 +37,9 @@ class ApplicationModel {
 
       $fields = "";
       $values = "";
-      $primary_key = self::primary_key();
+      $primary_keyname = self::primary_keyname();
       foreach ($this->fields as $field => $value) {
-        if ($primary_key != $field or ($primary_key == $field and !empty($value))) {
+        if ($primary_keyname != $field or ($primary_keyname == $field and !empty($value))) {
           $fields .= ($fields ? "," : "") . $field;
           $values .= ($values ? "," : "") . "'". $value . "'";
         }
@@ -70,8 +70,8 @@ class ApplicationModel {
 
   // Private Functions
 
-  private function load_fieldnames($primary_key) {
-    return $GLOBALS['db']->query("select * from " . static::$name . " where " . self::primary_key() . " = " . $primary_key)->fetch(PDO::FETCH_ASSOC);
+  private function load_fieldnames($conditions) {
+    return $GLOBALS['db']->query("select * from " . static::$name . " where " . $conditions)->fetch(PDO::FETCH_ASSOC);
   }
 
   private function draft_fieldnames() {
@@ -85,66 +85,72 @@ class ApplicationModel {
   }
 
   // Public Static Functions
-  
-  public static function delete($primary_key) {
-    $GLOBALS['db']->query("delete from " . static::$name . " where " . self::primary_key() . " = " . $primary_key);
-  }
-  
-  public static function delete_all($conditions) {
-    // TODO
-}
 
-  public static function primary_key() {
+  public static function delete($primary_key) {
+    $GLOBALS['db']->query("delete from " . static::$name . " where " . self::primary_keyname() . " = " . $primary_key);
+  }
+
+  public static function delete_all($conditions) {
+    $fields = array_keys($conditions);
+    $table_fields = self::fieldnames();
+
+    foreach ($fields as $field)
+      if (!in_array($field, $table_fields))
+          die("Bilinmeyen Sütun Adı" . $field); #TODO must notice units or class
+
+    $sets = "";
+    foreach ($conditions as $field => $value)
+      $sets .= ($sets ? "," : "") . ($field . "='" . $value . "'");
+
+    $GLOBALS['db']->query("delete from " . static::$name . " where " . $sets);
+  }
+
+  public static function primary_keyname() {
     return $GLOBALS['db']->query("show index from " . static::$name . " where Key_name = 'PRIMARY'")->fetch(PDO::FETCH_ASSOC)["Column_name"];
   }
 
-  // return object or objects
+  public static function find_all($conditions) {
+
+  }
+  // query primary_key or primary_keys
   //
-  // $user = Users::find(1);
+  // $user = Users::find(1); // return Users objects
   // $user->first_name = 'foo';
   // $user->save();
 
+  // $users = Users::find([1, 2, 3]); // return Users objects array
+
   public static function find($primary_keys) {
     $class = static::$name;
+    $condition = self::primary_keyname() . " = " . $primary_key;
 
     if (is_array($primary_keys)) {
+      $class = static::$name;
       foreach ($primary_keys as $primary_key)
         if (self::exists($primary_key))
-          $objects[] = new $class($primary_key);
-      return isset($objects) ? $objects : null;
+          $objects[] = new $class($condition);
+        return isset($objects) ? $objects : null;
     } elseif (is_int($primary_keys)) {
-        if (self::exists($primary_keys))
-          return new $class($primary_keys);
+      if (self::exists($primary_keys))
+        return new $class($condition);
     }
     return null;
   }
 
   public static function exists($primary_key) {
-    return ($GLOBALS['db']->query("select * from " . static::$name . " where " . self::primary_key() . " = " . $primary_key)->fetch(PDO::FETCH_ASSOC)) ? TRUE : false;
-  }
-
-  public static function where($conditions) {
-  	// $class = static::$name;
-  	// $result = $GLOBALS['db']->query("select * from " . static::$name . " where " . $conditions);
-
-  	// while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-			// $objects[] = new $class($ask);
-  	// }
-   //  return isset($objects) ? $objects : null;
-
-    //return $GLOBALS['db']->query("select * from " . static::$name . " where " . $ask)->fetchAll(PDO::FETCH_ASSOC);
+    return ($GLOBALS['db']->query("select * from " . static::$name . " where " . self::primary_keyname() . " = " . $primary_key)->fetch(PDO::FETCH_ASSOC)) ? TRUE : false;
   }
 
   public static function fieldnames() {
     return $GLOBALS['db']->query("describe " . static::$name)->fetchAll(PDO::FETCH_COLUMN);
   }
 
-  public static function first() {
-    return $GLOBALS['db']->query("select * from " . static::$name . " order by " . self::primary_key() . " asc limit 1")->fetch(PDO::FETCH_ASSOC);
+  public static function first($limit = 1) {
+    return $GLOBALS['db']->query("select * from " . static::$name . " order by " . self::primary_keyname() . " asc limit " . $limit)->fetch(PDO::FETCH_ASSOC);
   }
 
-  public static function last() {
-    return $GLOBALS['db']->query("select * from " . static::$name . " order by " . self::primary_key() . " desc limit 1")->fetch(PDO::FETCH_ASSOC);
+  public static function last($limit = 1) {
+    return $GLOBALS['db']->query("select * from " . static::$name . " order by " . self::primary_keyname() . " desc limit " . $limit)->fetch(PDO::FETCH_ASSOC);
   }
 
   public static function order($field, $sort_type = "asc") {
@@ -154,32 +160,35 @@ class ApplicationModel {
   }
 
   public static function all() {
-    return $GLOBALS['db']->query('select * from ' . static::$name)->fetchAll(PDO::FETCH_ASSOC);
-  }
+		$primary_keyname = self::primary_keyname();
 
-  // public static function select($_units) {
-  //  return mysql_fetch_assoc(mysql_query('select * from ' . static::$name . ' where '. $_units));
-  // }
-  // public static function erase($_units) {
-  //  return mysql_query('delete from ' . static::$name . ' where '. $_units);
-  // }
+    $records = $GLOBALS['db']->query('select * from ' . static::$name)->fetchAll(PDO::FETCH_ASSOC);
+
+    if ($records) {
+      $class = static::$name;
+      foreach ($records as $record)
+        $objects[] = new $class($primary_keyname . " = " . $record[$primary_keyname]);
+      return isset($objects) ? $objects : null;
+    } else
+      return null;
+  }
 
   public static function update($primary_key, $conditions) {
     $fields = array_keys($conditions);
     $table_fields = self::fieldnames();
     foreach ($fields as $field)
       if (!in_array($field, $table_fields))
-          die("bilinmeyen sütun adı" . $field); #TODO must notice units or class
+        die("Bilinmeyen Sütun Adı" . $field); #TODO must notice units or class
 
-        $sets = "";
-        foreach ($conditions as $field => $value)
-          $sets .= ($sets ? "," : "") . ($field . "='" . $value . "'");
+    $sets = "";
+    foreach ($conditions as $field => $value)
+      $sets .= ($sets ? "," : "") . ($field . "='" . $value . "'");
 
-        $GLOBALS['db']->query(
-          "update " . static::$name .
-          " set " . $sets .
-          " where " . self::primary_key() . "=" . $primary_key
-          );
-      }
-    }
-    ?>
+    $GLOBALS['db']->query(
+      "update " . static::$name .
+      " set " . $sets .
+      " where " . self::primary_keyname() . "=" . $primary_key
+    );
+  }
+}
+?>

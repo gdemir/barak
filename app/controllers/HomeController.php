@@ -33,6 +33,7 @@ class HomeController extends ApplicationController {
     print_r(Users::last());
     echo "<br/>";
     $this->users = Users::all();
+
     echo "<br/>!!!!!!!!!!!!!!!!!!!!!!";
     print_r($this->users);
     echo "<br/>!!!!!!!!!!!!!!!!!!!!!!";
@@ -44,6 +45,9 @@ class HomeController extends ApplicationController {
 
     Users::delete_all(["first_name" => "GökhanX"]);
 
+    $this->render("/home/index");
+    $this->render(["action" => "show"]);
+    $this->render(["layout" => "admin", "action" => "show"]);
   }
   public function login() {
     echo "Her işlem öncesi login oluyoruz<br/>";

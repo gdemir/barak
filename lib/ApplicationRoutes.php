@@ -12,34 +12,33 @@ class ApplicationRoutes {
         $target = explode("#", $route_draw[1]);
         $controller = $target[0];
         $action = $target[1];
+        $layout = $controller;
+        $view = $controller;
         $match = TRUE;
         break;
       }
     }
     if ($match) {
       $class_controller =  ucwords($controller) . 'Controller';
-      echo $class_controller;
+
       // run controller class and before_filter functions
       $class = new $class_controller;
       $class->run($action);
       $vars = get_object_vars($class);
 
-      print_r($vars);
+      $layout_path = "app/views/layouts/" . $vars["_layout"] . "_layout.php";
+      $view_path = "app/views/" . $vars["_view"] . "/" . $vars["_action"] . ".php";
 
-      $layout_path = "app/views/layouts/" . $controller . "_layout.php";
-      $view_path = "app/views/" . $controller . "/" . $action . ".php";
 
       if (file_exists($layout_path)) {
         $layout_content = file_get_contents($layout_path);
-        //var_dump($layout);
-        echo "evetttttttttttt";
       } else
-      die("Layout mevcut değil");
+      die("Layout mevcut değil" . $layout_path);
 
       if (file_exists($view_path)) {
         $view_content = file_get_contents($view_path);
       } else
-      die("View path mevcut değil");
+      die("View path mevcut değil" . $view_path);
 
       // merge layout with view content
       $page_content = str_replace("{yield}", $view_content, $layout_content);
@@ -50,7 +49,7 @@ class ApplicationRoutes {
       fwrite($file, $page_content);
       fclose($file);
 
-      foreach( $vars["_params"] as $param => $value ) {
+      foreach ($vars["_params"] as $param => $value ) {
         $$param = $value;
       }
 
@@ -65,6 +64,4 @@ class ApplicationRoutes {
     $this->tasks = func_get_args();
   }
 }
-
-
 ?>

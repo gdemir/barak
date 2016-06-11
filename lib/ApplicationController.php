@@ -2,6 +2,10 @@
 class ApplicationController {
   public $_params;
 
+  public $_layout;
+  public $_action;
+  public $_view;
+
   public function index() {
     echo "Application#index";
   }
@@ -30,14 +34,34 @@ class ApplicationController {
 
   public function run($action) {
     if (method_exists($this, $action)) {
+    	$this->_action = $action;
+
       if (isset($this->before_actions)) $this->_filter($action, $this->before_actions);
       $this->$action();
       if (isset($this->after_actions)) $this->_filter($action, $this->after_actions);
 
     } else
-      die(get_class($this) . " içerisinde ". $action . " fonksiyonuna sahip değil<br/>");
+    die(get_class($this) . " içerisinde ". $action . " fonksiyonuna sahip değil<br/>");
   }
+  public function render($render) {
+  	$controller = strtolower(substr(get_class($this), 0, -10));
+    if (is_array($render)) {
+      $this->_layout = isset($render["layout"]) ? $render["layout"] : $controller;
+      $this->_view = isset($render["view"]) ? $render["view"] : $controller;
+      $this->_action = isset($render["action"]) ? $render["action"] : $this->_action;
 
+    } else {
+      $render = explode("/", trim($render, "/"));
+      if (isset($render[1])) {
+        $this->_action = $render[1];
+        $this->_view = $render[0];
+      } else {
+        $this->_action = $render[0];
+        $this->_view = $controller;
+      }
+      $this->_layout = $controller;
+    }
+  }
   public function __get($param) {
     return $this->_params[$param];
   }

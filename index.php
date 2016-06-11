@@ -3,6 +3,10 @@
 include 'lib/BARAK.php';
 include 'lib/ApplicationModel.php';
 include 'lib/ApplicationController.php';
+include 'lib/ApplicationRoutes.php';
+
+// Router configure file load
+
 include 'config/routes.php';
 
 // Controller files load

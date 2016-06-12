@@ -3,7 +3,6 @@ class ApplicationController {
 
   public $_params;
 
-  public $_redirect_to = null;
   public $_render = [
   "layout" => "",
   "view" => "",
@@ -39,9 +38,9 @@ class ApplicationController {
   public function run($action) {
     $this->_action = $action;
 
-
     if (isset($this->before_actions)) $this->_filter($action, $this->before_actions);
-    $this->$action();
+
+    if (method_exists($this, $action)) $this->$action();
 
     if (isset($this->after_actions)) $this->_filter($action, $this->after_actions);
   }
@@ -70,9 +69,8 @@ class ApplicationController {
 
   public function redirect_to($url) {
     $url = trim($url, "/");
-
-    $this->_redirect_to = "Location : http://" . $_SERVER['SERVER_NAME'] . "/" . $url;
-    exit(header($this->_redirect_to, false, 303));
+    $redirect_to = "Location : http://" . $_SERVER['SERVER_NAME'] . "/" . $url;
+    exit(header($redirect_to, false, 303));
   }
 
   public function __get($param) {

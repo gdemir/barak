@@ -22,7 +22,7 @@ class ApplicationModel {
 
       $primary_keyname = self::primary_keyname();
 
-      $sets = self::condition_to_sql_statement($conditions, ",");
+      $sets = self::condition_to_sql_statement($this->fields, ",");
       $key =  $primary_keyname . "='" . $this->fields[$primary_keyname] . "'";
 
       $GLOBALS['db']->query(
@@ -145,7 +145,6 @@ class ApplicationModel {
 
     if ($conditions) {
       $sets = self::condition_to_sql_statement($conditions, "and");
-      echo $sets;
       $records = $GLOBALS['db']->query("select * from " . static::$name . " where " . $sets)->fetchAll(PDO::FETCH_ASSOC);
     } else
       $records = $GLOBALS['db']->query('select * from ' . static::$name)->fetchAll(PDO::FETCH_ASSOC);
@@ -188,6 +187,7 @@ class ApplicationModel {
   public static function update($primary_key, $conditions) {
     $fields = array_keys($conditions);
     $table_fields = self::fieldnames();
+
     foreach ($fields as $field)
       if (!in_array($field, $table_fields))
         die("Bilinmeyen Sütun Adı" . $field); #TODO must notice units or class

@@ -36,7 +36,6 @@ class ApplicationController {
   }
 
   public function run($action) {
-    $this->_action = $action;
 
     if (isset($this->before_actions)) $this->_filter($action, $this->before_actions);
 

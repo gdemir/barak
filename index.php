@@ -6,6 +6,8 @@ include 'lib/ApplicationRoutes.php';
 include 'lib/ApplicationException.php';
 include 'lib/ApplicationController.php';
 
+date_default_timezone_set('Europe/Istanbul');
+
 // Router configure file load
 
 include 'config/routes.php';
@@ -30,7 +32,7 @@ try {
   echo "
   <html>
   <head>
-  <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+  <meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>
   <title>404</title>
   </head>
   <body>
@@ -60,7 +62,7 @@ foreach ($table_names as $table_name) {
     }
     ");
 }
-
+echo $_SERVER['REQUEST_URI'];
 $routes->dispatch(trim($_SERVER['REQUEST_URI']));
 // $controller = (isset($uri[0]) and $uri[0] != "") ? $uri[0] : "Application";
 // $action = isset($uri[1]) ? $uri[1] : "index";

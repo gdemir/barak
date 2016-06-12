@@ -19,20 +19,17 @@
   <script src="/app/assets/js/bootstrap.min.js"></script>
 </head>
 <body style='background-color:red;'>
-
-  <div class="container" style="width:500px; min-height:200px; margin-top: 8%; ">
-
-    <div class="panel panel-default" style="box-shadow: 0 3px 12px rgba(0, 0, 0, 0.3);">
-      <div class="panel-heading">
-        <h4 class="panel-title">Kullanıcı Girişi</h4>
-      </div>
-      <div class="panel-body">
-        {yield}
-      </div>
-      <div class="panel-footer">BARAK Copyright &copy; <?php echo date("Y"); ?></div>
-    </div>
-
+  <div class="row">
+  <div class="col-xs-3">
+    <img src="<?php echo Helper::server_url(); ?>/assets/img/default.png" class="img-thumbnail" />
   </div>
-
+  <div class="col-xs-9">
+    <form class="login-form" action="/admin/login" accept-charset="UTF-8" method="post">
+      <input type="text" placeholder="Kullanıcı Adı" class="form-control" size="50" name="username" id="username" />
+      <input type="password" placeholder="Parola" class="form-control" size="50" name="password" id="password" />
+      <button type="submit" class="btn btn-primary" style="width:100%">SİSTEME GİRİŞ</button>
+    </form>
+  </div>
+</div>
 </body>
 </html>

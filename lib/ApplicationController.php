@@ -1,10 +1,14 @@
 <?php
 class ApplicationController {
+
   public $_params;
 
-  public $_layout;
-  public $_action;
-  public $_view;
+  public $_redirect_to = null;
+  public $_render = [
+  "layout" => "",
+  "view" => "",
+  "action" => ""
+  ];
 
   public function index() {
     echo "Application#index";
@@ -33,35 +37,44 @@ class ApplicationController {
   }
 
   public function run($action) {
-    if (method_exists($this, $action)) {
-    	$this->_action = $action;
+    $this->_action = $action;
 
-      if (isset($this->before_actions)) $this->_filter($action, $this->before_actions);
-      $this->$action();
-      if (isset($this->after_actions)) $this->_filter($action, $this->after_actions);
 
-    } else
-    die(get_class($this) . " içerisinde ". $action . " fonksiyonuna sahip değil<br/>");
+    if (isset($this->before_actions)) $this->_filter($action, $this->before_actions);
+    $this->$action();
+
+    if (isset($this->after_actions)) $this->_filter($action, $this->after_actions);
   }
-  public function render($render) {
-  	$controller = strtolower(substr(get_class($this), 0, -10));
-    if (is_array($render)) {
-      $this->_layout = isset($render["layout"]) ? $render["layout"] : $controller;
-      $this->_view = isset($render["view"]) ? $render["view"] : $controller;
-      $this->_action = isset($render["action"]) ? $render["action"] : $this->_action;
+
+  public function render($option) {
+    if (is_array($option)) {
+
+      $this->_render["layout"] = isset($option["layout"]) ? $option["layout"] : null;
+      $this->_render["view"] = isset($option["view"]) ? $option["view"] : null;
+      $this->_render["action"] = isset($option["action"]) ? $option["action"] : null;
 
     } else {
-      $render = explode("/", trim($render, "/"));
-      if (isset($render[1])) {
-        $this->_action = $render[1];
-        $this->_view = $render[0];
+      $url = explode("/", trim($option, "/"));
+
+      if (isset($url[1])) {
+        $this->_render["action"] = $url[1];
+        $this->_render["view"] = $url[0];
       } else {
-        $this->_action = $render[0];
-        $this->_view = $controller;
+        $this->_render["action"] = $url[0];
+        $this->_render["view"] = null;
       }
-      $this->_layout = $controller;
+
+      $this->_render["layout"] = null;
     }
   }
+
+  public function redirect_to($url) {
+    $url = trim($url, "/");
+
+    $this->_redirect_to = "Location : http://" . $_SERVER['SERVER_NAME'] . "/" . $url;
+    exit(header($this->_redirect_to, false, 303));
+  }
+
   public function __get($param) {
     return $this->_params[$param];
   }

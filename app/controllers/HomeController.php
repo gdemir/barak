@@ -35,7 +35,7 @@ class HomeController extends ApplicationController {
     $this->users = Users::all();
 
     echo "<br/>!!!!!!!!!!!!!!!!!!!!!!";
-    print_r($this->users);
+    //print_r($this->users);
     echo "<br/>!!!!!!!!!!!!!!!!!!!!!!";
 
     print_r(Users::fieldnames());
@@ -44,10 +44,13 @@ class HomeController extends ApplicationController {
     echo "<br/>xxxxxxxxxxxxxxxxxxxxx<br/>";
 
     Users::delete_all(["first_name" => "GökhanX"]);
+		//exit(header("Location: http://localhost/app/views/home/dashboard.php"));
+		//return $this->redirect_to("/home/about");
 
-    $this->render("/home/index");
-    $this->render(["action" => "show"]);
-    $this->render(["layout" => "admin", "action" => "show"]);
+
+    // $this->render("/home/index");
+    // $this->render(["action" => "show"]);
+    // $this->render(["layout" => "admin", "action" => "show"]);
   }
   public function login() {
     echo "Her işlem öncesi login oluyoruz<br/>";
@@ -61,5 +64,10 @@ class HomeController extends ApplicationController {
   public function close() {
     echo "Home#close : dükkan kapandı<br/>";
   }
+  public function dashboard() {
+  	echo "dashboard öncesi olaylar olaylar<br/>";
+  }
 }
 ?>
+
+

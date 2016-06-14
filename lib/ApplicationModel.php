@@ -1,16 +1,15 @@
 <?php
 class ApplicationModel {
 
-  private $fields;
-  private $new_record_state;
+  private $_fields;
+  private $_new_record_state;
 
-  public function __construct($conditions = false) {
+  public function __construct($conditions = false, $new_record_state = true) {
+  	$this->_new_record_state = $new_record_state;
     if ($conditions) {
-      $this->new_record_state = false;
-      $this->fields = $this->load_fieldnames($conditions);
+      $this->_fields = $this->check_fieldnames($conditions);
     } else {
-      $this->new_record_state = true;
-      $this->fields = $this->draft_fieldnames();
+      $this->_fields = $this->draft_fieldnames();
     }
   }
 
@@ -18,12 +17,12 @@ class ApplicationModel {
 
   public function save() {
 
-    if (!$this->new_record_state) {
+    if (!$this->_new_record_state) {
 
       $primary_keyname = self::primary_keyname();
 
-      $sets = self::condition_to_sql_statement($this->fields, ",");
-      $key =  $primary_keyname . "='" . $this->fields[$primary_keyname] . "'";
+      $sets = self::condition_to_sql_statement($this->_fields, ",");
+      $key =  $primary_keyname . "='" . $this->_fields[$primary_keyname] . "'";
 
       $GLOBALS['db']->query(
         "update " . static::$name .
@@ -36,7 +35,7 @@ class ApplicationModel {
       $fields = "";
       $values = "";
       $primary_keyname = self::primary_keyname();
-      foreach ($this->fields as $field => $value) {
+      foreach ($this->_fields as $field => $value) {
         if ($primary_keyname != $field or ($primary_keyname == $field and !empty($value))) {
           $fields .= ($fields ? "," : "") . $field;
           $values .= ($values ? "," : "") . "'". $value . "'";
@@ -53,23 +52,32 @@ class ApplicationModel {
   }
 
   public function __get($field) {
-    if (isset($this->fields[$field]))
-      return $this->fields[$field];
+    if (isset($this->_fields[$field]))
+      return $this->_fields[$field];
     else
       die("Tabloda böyle bir $field key (anahtar) mevcut değil<br/>");
   }
 
   public function __set($field, $value) {
-    if (in_array($field, array_keys($this->fields)))
-      $this->fields[$field] = $value;
+    if (in_array($field, array_keys($this->_fields)))
+      $this->_fields[$field] = $value;
     else
       die("Tabloda böyle bir $field $value key/value için key mevcut değil<br/>");
   }
 
   // Private Functions
 
-  private function load_fieldnames($conditions) {
-    return $GLOBALS['db']->query("select * from " . static::$name . " where " . $conditions)->fetch(PDO::FETCH_ASSOC);
+  private function check_fieldnames($conditions) {
+    $fields = array_keys($conditions);
+    $table_fields = self::fieldnames();
+
+    $checked_conditions = [];
+
+    foreach ($fields as $field)
+      if (in_array($field, $table_fields))
+        $checked_conditions[$field] = $conditions[$field];
+
+    return $checked_conditions;
   }
 
   private function draft_fieldnames() {
@@ -91,77 +99,71 @@ class ApplicationModel {
 
   // Public Static Functions
 
-  public static function delete($primary_key) {
-    $GLOBALS['db']->query("delete from " . static::$name . " where " . self::primary_keyname() . " = " . $primary_key);
-  }
-
-  public static function delete_all($conditions) {
-    $fields = array_keys($conditions);
-    $table_fields = self::fieldnames();
-
-    foreach ($fields as $field)
-      if (!in_array($field, $table_fields))
-          die("Bilinmeyen Sütun Adı" . $field); #TODO must notice units or class
-
-    $sets = self::condition_to_sql_statement($conditions, "and");
-
-    $GLOBALS['db']->query("delete from " . static::$name . " where " . $sets);
-  }
-
   public static function primary_keyname() {
     return $GLOBALS['db']->query("show index from " . static::$name . " where Key_name = 'PRIMARY'")->fetch(PDO::FETCH_ASSOC)["Column_name"];
   }
 
-  public static function find_all($conditions) {
-
-  }
-  // query primary_key or primary_keys
+  // query primary_key
   //
-  // $user = Users::find(1); // return Users objects
+  // $user = User::find(1); // return User objects
   // $user->first_name = 'foo';
   // $user->save();
 
-  // $users = Users::find([1, 2, 3]); // return Users objects array
+  public static function find($primary_key) {
+    if ($record = $GLOBALS['db']->query("select * from " . static::$name . " where " . self::primary_keyname() . " = " . $primary_key)->fetch(PDO::FETCH_ASSOC))
+      return new static::$name($record, false);
+    return null;
+  }
 
-  public static function find($primary_keys) {
-    $class = static::$name;
-    $condition = self::primary_keyname() . " = " . $primary_key;
+  // $users = User::find_all([1, 2, 3]); // return User objects array
+  //
+  // foreach ($users as $user) {
+  //   $user->first_name = "Gökhan";
+  //   $user->save();
+  // }
 
-    if (is_array($primary_keys)) {
-      $class = static::$name;
-      foreach ($primary_keys as $primary_key)
-        if (self::exists($primary_key))
-          $objects[] = new $class($condition);
-        return isset($objects) ? $objects : null;
-    } elseif (is_int($primary_keys)) {
-      if (self::exists($primary_keys))
-        return new $class($condition);
+  public static function find_all($primary_keys) {
+  	foreach ($primary_keys as $primary_key) {
+  		$objects[] = static::$name::find($primary_key);
+  	}
+    return isset($objects) ? $objects : null;
+  }
+
+  public static function where($conditions = null) {
+    $sets = ($conditions) ? " where " . self::condition_to_sql_statement($conditions, "and") : "";
+    $records = $GLOBALS['db']->query("select * from " . static::$name . $sets)->fetchAll(PDO::FETCH_ASSOC);
+
+    if ($records) {
+    	$primary_keyname = self::primary_keyname();
+
+      foreach ($records as $record) {
+        $primary_key = (int)$record[$primary_keyname];
+        $objects[] = static::$name::find($primary_key);
+      }
+      return isset($objects) ? $objects : null;
     }
     return null;
   }
 
-  public static function where($conditions = null) {
-    $primary_keyname = self::primary_keyname();
-
-    if ($conditions) {
-      $sets = self::condition_to_sql_statement($conditions, "and");
-      $records = $GLOBALS['db']->query("select * from " . static::$name . " where " . $sets)->fetchAll(PDO::FETCH_ASSOC);
-    } else
-      $records = $GLOBALS['db']->query('select * from ' . static::$name)->fetchAll(PDO::FETCH_ASSOC);
-
-    if ($records) {
-      $class = static::$name;
-      foreach ($records as $record)
-        $objects[] = new $class($primary_keyname . " = " . $record[$primary_keyname]);
-      return isset($objects) ? $objects : null;
-    } else
-    return null;
-  }
-
   public static function all() {
-    self::where(null);
+    return self::where(null);
   }
 
+  // public static function joins($tables, $conditions) {
+  // 	$table_u = ucfirst($table);
+  // 	echo "
+  // 	    select * from " . static::$name . "," . $table_u .
+  //   	" where " .
+  //   	static::$name . "." . $table . "_" . $table_u::primary_keyname() . " = " . $table_u . "." . $table_u::primary_keyname();
+
+  //   $a = $GLOBALS['db']->query("
+  //   	select * from " . static::$name . "," . $table_u .
+  //   	" where " .
+  //   	static::$name . "." . $table . "_" . $table_u::primary_keyname() . " = " . $table_u . "." . $table_u::primary_keyname()
+  //  	)->fetchAll(PDO::FETCH_ASSOC);
+  //  	print_r($a);
+
+  // }
   public static function exists($primary_key) {
     return ($GLOBALS['db']->query("select * from " . static::$name . " where " . self::primary_keyname() . " = " . $primary_key)->fetch(PDO::FETCH_ASSOC)) ? TRUE : false;
   }
@@ -200,5 +202,23 @@ class ApplicationModel {
       " where " . self::primary_keyname() . "=" . $primary_key
     );
   }
+
+  public static function delete($primary_key) {
+    $GLOBALS['db']->query("delete from " . static::$name . " where " . self::primary_keyname() . " = " . $primary_key);
+  }
+
+  public static function delete_all($conditions) {
+    $fields = array_keys($conditions);
+    $table_fields = self::fieldnames();
+
+    foreach ($fields as $field)
+      if (!in_array($field, $table_fields))
+          die("Bilinmeyen Sütun Adı" . $field); #TODO must notice units or class
+
+    $sets = self::condition_to_sql_statement($conditions, "and");
+
+    $GLOBALS['db']->query("delete from " . static::$name . " where " . $sets);
+  }
+
 }
 ?>

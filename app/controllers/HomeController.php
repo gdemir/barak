@@ -10,7 +10,7 @@ class HomeController extends ApplicationController {
   public function index() {
     echo "Merhaba home#index<br/>";
     // Model function tests
-    $user = new Users();
+    $user = new User();
     print_r($user);
     $user->first_name ="GökhanX";
 
@@ -18,32 +18,37 @@ class HomeController extends ApplicationController {
     echo $user->first_name;
     $user->save();
 
-    print_r(Users::primary_keyname());
-    print_r(Comments::primary_keyname());
+  //   print_r(User::primary_keyname());
+  //   print_r(Comments::primary_keyname());
 
 
-    Users::update(123342, array("first_name" => "hmm3", "last_name" => "hmm4"));
-    echo "<br/>";
-    echo "<br/>s";
-    //print_r(Users::where("first_name = 'GökhanX'"));
-    echo "s<br/>";
-		echo "<br/>";
+  //   User::update(123342, array("first_name" => "hmm3", "last_name" => "hmm4"));
+  //   echo "<br/>";
+  //   echo "<br/>s";
+  //   //print_r(User::where("first_name = 'GökhanX'"));
+  //   echo "s<br/>";
+		// echo "<br/>";
 
-    print_r(Users::first());
-    print_r(Users::last());
-    echo "<br/>";
-    $this->users = Users::all();
+  //   print_r(User::first());
+  //   print_r(User::last());
+  //   echo "<br/>";
+    echo ".<br/><br/><br/>";
+    print_r(User::find_all([123827,123828,123829]));
+    Comment::joins("user");
+     $this->users = User::all();
 
-    echo "<br/>!!!!!!!!!!!!!!!!!!!!!!";
-    //print_r($this->users);
-    echo "<br/>!!!!!!!!!!!!!!!!!!!!!!";
 
-    print_r(Users::fieldnames());
-    print_r(Comments::fieldnames());
 
-    echo "<br/>xxxxxxxxxxxxxxxxxxxxx<br/>";
+  //   echo "<br/>!!!!!!!!!!!!!!!!!!!!!!";
+  //   //print_r($this->user);
+  //   echo "<br/>!!!!!!!!!!!!!!!!!!!!!!";
 
-    Users::delete_all(["first_name" => "GökhanX"]);
+  //   print_r(User::fieldnames());
+  //   print_r(Comments::fieldnames());
+
+  //   echo "<br/>xxxxxxxxxxxxxxxxxxxxx<br/>";
+
+  //   User::delete_all(["first_name" => "GökhanX"]);
 		//exit(header("Location: http://localhost/app/views/home/dashboard.php"));
 		//return $this->redirect_to("/home/about");
 

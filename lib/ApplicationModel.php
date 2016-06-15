@@ -123,9 +123,8 @@ class ApplicationModel {
   // }
 
   public static function find_all($primary_keys) {
-  	foreach ($primary_keys as $primary_key) {
-  		$objects[] = static::$name::find($primary_key);
-  	}
+    foreach ($primary_keys as $primary_key)
+      $objects[] = static::$name::find($primary_key);
     return isset($objects) ? $objects : null;
   }
 

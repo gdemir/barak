@@ -5,8 +5,6 @@ class AdminController extends ApplicationController {
                                   ["name" => "require_login", "except" => ["login"]]
                               ];
 
-
-
   public function login() {
   	if (isset($_SESSION['admin']))
 			return $this->redirect_to("/admin/home");

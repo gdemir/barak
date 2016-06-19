@@ -17,4 +17,20 @@ class BARAK extends PDO {
   }
 }
 
+// Global functions
+
+function resource($table) {
+  return [
+    new ApplicationRoute("get", "$table/index", false), // all record
+    new ApplicationRoute("get", "$table/new", false)    // new record
+    ];
+}
+
+function post($rule, $target = false) {
+  return new ApplicationRoute("post", $rule, $target);
+}
+
+function get($rule, $target = false) {
+  return new ApplicationRoute("get", $rule, $target);
+}
 ?>

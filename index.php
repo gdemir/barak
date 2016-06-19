@@ -12,6 +12,7 @@ date_default_timezone_set('Europe/Istanbul');
 // /tmp : create a folder if it doesn't exist
 
 $TEMP = "tmp";
+
 if (!file_exists($TEMP))
     mkdir($TEMP, 0777, true);
 

@@ -53,7 +53,7 @@ class HomeController extends ApplicationController {
 		//return $this->redirect_to("/home/about");
 
 
-    // $this->render("/home/index");
+    //return $this->render(["layout" => false]);
     // $this->render(["action" => "show"]);
     // $this->render(["layout" => "admin", "action" => "show"]);
   }

@@ -1,14 +1,17 @@
 <?php
-// $routes = new ApplicationRoutes2();
 // # TODO get/post
 
 ApplicationRoutes::draw(
 
-  ApplicationRoutes::get("/", "home#index"),
-  ApplicationRoutes::get("/admin/home"),
-  ApplicationRoutes::get("/admin/login"),
-  ApplicationRoutes::get("/admin", "home#index"),
-  ApplicationRoutes::resource("/user")
+  get("/", "home#index"),
+  get("/home/about"),
+  get("/home/show"),
+
+  get("/admin", "home#show"),
+  get("/admin/home"),
+  get("/admin/login"),
+
+  resource("/user")
 
   // ["/", "home#index"],
   // ["/home/about", "home#about"],

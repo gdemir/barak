@@ -2,12 +2,9 @@
 class ApplicationController {
 
   public $_params;
+  public $_render = [];
+  //private $_render_struct_keys = ["layout", "view", "action"];
 
-  public $_render = [
-  "layout" => "",
-  "view" => "",
-  "action" => ""
-  ];
 
   public function index() {
     echo "Application#index";
@@ -46,11 +43,7 @@ class ApplicationController {
 
   public function render($option) {
     if (is_array($option)) {
-
-      $this->_render["layout"] = isset($option["layout"]) ? $option["layout"] : null;
-      $this->_render["view"] = isset($option["view"]) ? $option["view"] : null;
-      $this->_render["action"] = isset($option["action"]) ? $option["action"] : null;
-
+      $this->_render = $option;
     } else {
       $url = explode("/", trim($option, "/"));
 

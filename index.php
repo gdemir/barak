@@ -2,6 +2,7 @@
 
 include 'lib/BARAK.php';
 include 'lib/ApplicationModel.php';
+include 'lib/ApplicationRoute.php';
 include 'lib/ApplicationRoutes.php';
 include 'lib/ApplicationException.php';
 include 'lib/ApplicationController.php';

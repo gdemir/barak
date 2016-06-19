@@ -12,7 +12,7 @@ class AdminController extends ApplicationController {
 			return $this->redirect_to("/admin/home");
 
     if (isset($_POST["username"]) and isset($_POST["password"])) {
-			$user = Users::where([
+			$user = User::where([
 				"username" => $_POST["username"],
 				"password" => $_POST["password"]
 				]);

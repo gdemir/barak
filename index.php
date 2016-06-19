@@ -8,16 +8,18 @@ include 'lib/ApplicationController.php';
 
 date_default_timezone_set('Europe/Istanbul');
 
-// Router configure file load
+// /tmp : create a folder if it doesn't exist
 
-include 'config/routes.php';
+$TEMP = "tmp";
+if (!file_exists($TEMP))
+    mkdir($TEMP, 0777, true);
 
-// Controller files load
+// /app/controllers/*.php : files load
 
 $files = glob("app/controllers/*.php");
 foreach ($files as $file) include $file;
 
-// Configuration file load
+// /config/database.ini : configuration file load
 
 $CONFIGFILE = "config/database.ini";
 try {
@@ -62,8 +64,8 @@ foreach ($table_names as $table_name) {
     }
     ");
 }
-echo $_SERVER['REQUEST_URI'];
-$routes->dispatch(trim($_SERVER['REQUEST_URI']));
+//echo $_SERVER['REQUEST_URI'];
+//$routes->dispatch($_SERVER['REQUEST_URI']);
 // $controller = (isset($uri[0]) and $uri[0] != "") ? $uri[0] : "Application";
 // $action = isset($uri[1]) ? $uri[1] : "index";
 
@@ -73,5 +75,7 @@ $routes->dispatch(trim($_SERVER['REQUEST_URI']));
 //     require_once 'app/controllers/' . ucwords($class_name) . 'Controller.php';
 // }
 
-//$routes->dispatch($uri);
+// /config/routes.php : Router configure file load and run
+
+include 'config/routes.php';
 ?>

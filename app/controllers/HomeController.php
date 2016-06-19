@@ -34,8 +34,8 @@ class HomeController extends ApplicationController {
   //   echo "<br/>";
     echo ".<br/><br/><br/>";
     print_r(User::find_all([123827,123828,123829]));
-    Comment::joins("user");
-     $this->users = User::all();
+    //Comment::joins("user");
+    $this->users = User::all();
 
 
 

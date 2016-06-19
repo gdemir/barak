@@ -1,80 +1,130 @@
 <?php
+
 class ApplicationRoutes {
-  public $tasks;
-  public function dispatch($request_uri) {
+  public $routes = [];
+  public $request_route;
 
-    $route_draws = $this->tasks;
-    $match = FALSE;
-    foreach ($route_draws as $route_draw) {
-      if ($route_draw[0] == $request_uri) {
-        $target = explode("#", $route_draw[1]);
-        $controller = $target[0];
-        $action = $target[1];
-        $layout = $controller;
-        $view = $controller;
-        $match = TRUE;
-        break;
-      }
-    }
-    if ($match) {
-      $class_controller =  ucwords($controller) . 'Controller';
+  public function __construct() {
+    //trim(trim($_SERVER['REQUEST_URI']), "/")
+    //echo $_SERVER["REQUEST_METHOD"].".". $_SERVER['REQUEST_URI'];
+    $this->request_route = new Route($_SERVER["REQUEST_METHOD"], $_SERVER['REQUEST_URI'], false);
+  }
 
-      // run controller class and before_filter functions
-      $class = new $class_controller;
+  public static function dispatch($route) {
+  	print_r($route);
 
-      $class->run($action);
+    // run controller class and before_filter functions
+    $class = new $route->controller();
 
-      $vars = get_object_vars($class);
+    $class->run($route->action);
 
-      // if ($vars["_redirect_to"]) {
+    // for render page
 
-      //   return header($vars["_redirect_to"], true, 302);
+    $vars = get_object_vars($class);
 
-      // } else {
+    $render = $vars["_render"];
 
-      $render = $vars["_render"];
+    $render["layout"] = $render["layout"] ? $render["layout"] : $route->layout;
+    $render["action"] = $render["action"] ? $render["action"] : $route->action;
+    $render["view"] = $render["view"] ? $render["view"] : $route->view;
 
-      $render["layout"] = $render["layout"] ? $render["layout"] : $controller;
-      $render["action"] = $render["action"] ? $render["action"] : $action;
-      $render["view"] = $render["view"] ? $render["view"] : $controller;
+    $layout_path = "app/views/layouts/" . $render["layout"] . ".php";
+    $view_path = "app/views/" . $render["view"] . "/" . $render["action"] . ".php";
 
-      $layout_path = "app/views/layouts/" . $render["layout"] . "_layout.php";
-      $view_path = "app/views/" . $render["view"] . "/" . $render["action"] . ".php";
+    if (file_exists($layout_path)) {
+      $layout_content = file_get_contents($layout_path);
+    } else
+    die("Layout mevcut değil" . $layout_path);
 
-      if (file_exists($layout_path)) {
-        $layout_content = file_get_contents($layout_path);
-      } else
-      die("Layout mevcut değil" . $layout_path);
-
-      if (file_exists($view_path)) {
-        $view_content = file_get_contents($view_path);
-      } else
-      die("View path mevcut değil" . $view_path);
+    if (file_exists($view_path)) {
+      $view_content = file_get_contents($view_path);
+    } else
+    die("View path mevcut değil" . $view_path);
 
         // merge layout with view content
-      $page_content = str_replace("{yield}", $view_content, $layout_content);
+    $page_content = str_replace("{yield}", $view_content, $layout_content);
 
-      $filename = 'tmp/' . time() . '.php';
-      $file = fopen($filename, 'a');
-      fwrite($file, $page_content);
-      fclose($file);
+    $filename = 'tmp/' . time() . '.php';
+    $file = fopen($filename, 'a');
+    fwrite($file, $page_content);
+    fclose($file);
 
-      if (isset($vars["_params"])) {
-        foreach ($vars["_params"] as $param => $value ) {
-          $$param = $value;
-        }
+    if (isset($vars["_params"])) {
+      foreach ($vars["_params"] as $param => $value ) {
+        $$param = $value;
       }
+    }
 
-      include $filename;
+    include $filename;
 
-      unlink($filename);
-//      }
+    unlink($filename);
+
+  }
+
+  public static function post($rule, $target = false) {
+    return new Route("post", $rule, $target);
+  }
+
+  public static function get($rule, $target = false) {
+    return new Route("get", $rule, $target);
+  }
+
+  public static function draw() {
+    $r = new ApplicationRoutes();
+
+    // İzin verilmiş route'ları routes'a yükle
+    $permitted_routes = func_get_args();
+    foreach ($permitted_routes as $permitted_route) {
+
+      if (array_key_exists($permitted_route->rule, $r->routes))
+        die("Bu yönlendirme daha önceden tanımlanmış!: →" . $permitted_route->rule . "←");
+
+      $r->routes[$permitted_route->rule] = $permitted_route;
+    }
+
+    // İstek url ile routes'ı içinden bul ve sevk et
+    if (array_key_exists($r->request_route->rule, $r->routes)) {
+      $route = $r->routes[$r->request_route->rule];
+      ApplicationRoutes::dispatch($route);
 
     } else
     die("Böyle bir yönlendirme mevcut değil!");
   }
-  public function draw() {
-    $this->tasks = func_get_args();
+}
+
+
+
+class Route {
+
+  private $is_correct_route = false;
+
+  public $rule;
+  public $controller;
+  public $layout;
+  public $action;
+  public $view;
+
+  function __construct($method, $rule, $target = false) {
+
+    $this->rule = $rule;
+    $this->method = $method;
+
+    if ($target) {
+      $rule = explode("#", $target);
+      self::set($rule[0], $rule[0], $rule[0], $rule[1]);
+    } elseif (strpos($rule, "/") !== false) {
+      $rule = explode("/", $rule);
+      self::set($rule[0], $rule[0], $rule[0], $rule[1]);
+    } else
+    die("/config/routes.php içinde beklenmedik kurallar!: →" . $rule . "←");
+  }
+
+  private function set($controller, $view, $layout, $action) {
+    $this->controller = ucwords($controller) . 'Controller';
+    $this->view = $view;
+    $this->layout = $layout . "_layout";
+    $this->action = $action;
+    $this->is_correct_route = true;
   }
 }
 ?>

@@ -86,7 +86,7 @@ class ApplicationModel {
     return $fields;
   }
 
-  private function check_field($field) {
+  private function field_exists($field) {
     return in_array($field, self::fieldnames()) ? true : false;
   }
 
@@ -101,6 +101,12 @@ class ApplicationModel {
 
   public static function primary_keyname() {
     return $GLOBALS['db']->query("show index from " . static::$name . " where Key_name = 'PRIMARY'")->fetch(PDO::FETCH_ASSOC)["Column_name"];
+  }
+
+  public static function select($field) {
+    if (self::field_exists($field))
+      return $GLOBALS['db']->query("select $field from " . static::$name)->fetchAll(PDO::FETCH_ASSOC);
+    die("Bilinmeyen Sütun Adı" . $field); #TODO must notice units or class
   }
 
   // query primary_key
@@ -180,7 +186,7 @@ class ApplicationModel {
   }
 
   public static function order($field, $sort_type = "asc") {
-    if (self::check_field($field))
+    if (self::field_exists($field))
       return $GLOBALS['db']->query("select * from " . static::$name . " order by " . $field . " " . $sort_type)->fetchAll(PDO::FETCH_ASSOC);
     die("Tabloda böyle bir $field key (anahtar) mevcut değil<br/>");
   }

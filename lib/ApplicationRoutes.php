@@ -14,13 +14,15 @@ class ApplicationRoutes {
     $permitted_routes = func_get_args();
     foreach ($permitted_routes as $permitted_route) {
       if (is_array($permitted_route)) { // for ApplicationRoutes::resource();
-
         foreach ($permitted_route as $permitted_r)
           $r->{$permitted_r->_rule} = $permitted_r;
-      } else
-      $r->{$permitted_route->_rule} = $permitted_route;
+      } else {
+        $r->{$permitted_route->_rule} = $permitted_route;
+      }
 
     }
+    
+    // TEST $route list
     foreach ($r->_routes as $route) {
       print_r($route);
       echo "<br/>";
@@ -32,11 +34,9 @@ class ApplicationRoutes {
   }
 
   public function __get($route) {
-    if (array_key_exists($this->_request_route->_rule, $this->_routes)) {
-      return $this->_routes[$route];
-    } else {
+    if (!array_key_exists($this->_request_route->_rule, $this->_routes)) {
       die("Böyle bir yönlendirme mevcut değil!: →" . $this->_request_route->_rule . "←");
-    }
+    return $this->_routes[$route];
   }
 
   public function __set($route_rule, $route) {

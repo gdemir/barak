@@ -46,13 +46,6 @@ class ApplicationRoutes {
           $request_rule = explode("/", trim($this->_request_route->_rule, "/"));
           $permit_rule = explode("/", trim($_route->_rule, "/"));
 
-          echo "###################<br/>";
-          print_r($request_rule);
-          echo "<br/>###################";
-          echo "###################<br/>";
-          print_r($permit_rule);
-          echo "<br/>###################";
-
           if (count($request_rule) == count($permit_rule)) {
             $match = true;
             foreach ($request_rule as $index => $value)

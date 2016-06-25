@@ -101,7 +101,7 @@ class ApplicationRoute {
     $filename = 'tmp/' . time() . '.php';
 
     if (!($fp = fopen($filename, 'a')))
-      throw new FileNotFoundException("File does not exist: $filename");
+      throw new FileNotFoundException("Sayfayı görüntülemek için geçici dosya oluşturulamadı", $filename);
 
     fwrite($fp, $content);
     fclose($fp);

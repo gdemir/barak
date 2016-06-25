@@ -1,7 +1,7 @@
 <?php
 class ApplicationRoute {
 
-  const dynamical_segment = "_dynamical_segment_";
+  const dynamical_segment = "_dynamical_segment_"; // change name for :id/:action
 
   const default_controller = "default";
   const default_layout = "default";
@@ -41,7 +41,7 @@ class ApplicationRoute {
       $rule = explode("/", trim($this->_rule, "/"));
       self::set($rule[0], $rule[0], $rule[0], $rule[1]);
     } else
-    die("/config/routes.php içinde beklenmedik kurallar!: →" . $rule . "←");
+    throw new ConfigurationException("/config/routes.php içinde beklenmedik kurallar", $rule);
   }
 
   public function set($controller, $view, $layout, $action) {
@@ -55,7 +55,7 @@ class ApplicationRoute {
 
     // run controller class and before_filter functions
     if (!class_exists($this->_controller))
-      die("Controller dosyası yüklenemedi!:" . $this->_controller);
+      throw new FileNotFoundException("Controller sınıfı/dosyası yüklenemedi", $this->_controller);
 
     $class = new $this->_controller();
 
@@ -81,28 +81,37 @@ class ApplicationRoute {
     if (file_exists($view_path)) {
       $view_content = file_get_contents($view_path);
     } else {
-      die("View path mevcut değil!: →" . $view_path . "←");
+      throw new FileNotFoundException("View path mevcut değil", $view_path);
     }
 
     // merge layout with view content
     $page_content = (isset($layout_content)) ? str_replace("{yield}", $view_content, $layout_content) : $view_content;
 
+    // controller'in paramsları
+    // $vars["_params"]
+
+    // router'in paramslarını(sayfadan :id, çekmek için), controller'dan gelen paramslara yükle
+    $vars["_params"]["params"] = $this->_params;
+
+    self::display($page_content, $vars["_params"]);
+  }
+
+  public function display($content, $params) {
+
     $filename = 'tmp/' . time() . '.php';
-    $file = fopen($filename, 'a');
-    fwrite($file, $page_content);
-    fclose($file);
 
+    if (!($fp = fopen($filename, 'a')))
+      throw new FileNotFoundException("File does not exist: $filename");
 
-    // router'in paramslarını yükle
-    foreach ($this->_params as $param => $value) {
-      $$param = $value;
-    }
+    fwrite($fp, $content);
+    fclose($fp);
+
+    unset($content);
+    unset($fp);
 
     // controller'in paramslarını yükle
-    if (isset($vars["_params"])) {
-      foreach ($vars["_params"] as $param => $value) {
-        $$param = $value;
-      }
+    foreach ($params as $param => $value) {
+      $$param = $value;
     }
 
     include $filename;

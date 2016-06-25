@@ -1,5 +1,4 @@
 <?php
-
 class UserController extends ApplicationController {
 
   public function edit() {
@@ -8,5 +7,4 @@ class UserController extends ApplicationController {
   }
 
 }
-
 ?>

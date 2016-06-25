@@ -27,7 +27,7 @@ function resource($table) {
   return [
     new ApplicationRoute("get", "$table/index", false),          // all record
     new ApplicationRoute("get", "$table/new", false),            // new record
-    new ApplicationRoute("get", "$table/:id", false, true),      // display record
+    new ApplicationRoute("get", "$table/show/:id", false, true),      // display record
     new ApplicationRoute("get", "$table/edit/:id", false, true)  // edit record
     ];
 }

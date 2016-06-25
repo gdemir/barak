@@ -2,7 +2,7 @@
 class AdminController extends ApplicationController {
 
   protected $before_actions = [
-                                  ["name" => "require_login", "except" => ["login"]]
+                                  ["require_login", "except" => ["login"]]
                               ];
 
   public function login() {

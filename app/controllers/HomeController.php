@@ -2,9 +2,9 @@
 class HomeController extends ApplicationController {
 
   protected $before_actions = [
-                                  ["name" => "login", "except" => ["login", "index"]],
-                                  ["name" => "notice_clear", "only" => ["index"]],
-                                  ["name" => "every_time"]
+                                  ["login", "except" => ["login", "index"]],
+                                  ["notice_clear", "only" => ["index"]],
+                                  ["every_time"]
                               ];
 
   public function index() {

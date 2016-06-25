@@ -7,6 +7,8 @@ include 'lib/ApplicationRoutes.php';
 include 'lib/ApplicationException.php';
 include 'lib/ApplicationController.php';
 
+ini_set("display_errors", 1); // for message of ApplicationException on html page
+
 date_default_timezone_set('Europe/Istanbul');
 
 // /tmp : create a folder if it doesn't exist
@@ -24,28 +26,9 @@ foreach ($files as $file) include $file;
 // /config/database.ini : configuration file load
 
 $CONFIGFILE = "config/database.ini";
-try {
 
-  if (!file_exists($CONFIGFILE))
-
-    throw new ApplicationFileNotFoundException("Yapılandırma dosyası mevcut değil : {$CONFIGFILE}");
-
-//  die("Yapılandırma dosyası mevcut değil : {$CONFIGFILE}");
-} catch (ApplicationFileNotFoundException $e) {
-  // TODO render 404page
-  echo "
-  <html>
-  <head>
-  <meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>
-  <title>404</title>
-  </head>
-  <body>
-  " . $e->getMessage() . "
-  </body>
-  </html>";
-  return;
-
-}
+if (!file_exists($CONFIGFILE))
+  throw new FileNotFoundException("Yapılandırma dosyası mevcut değil", $CONFIGFILE);
 
 
 $database = parse_ini_file($CONFIGFILE);

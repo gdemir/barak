@@ -1,3 +1,4 @@
 <?php
-echo "id" . $id;
+echo "id" . $params["id"];
+echo $content;
 ?>

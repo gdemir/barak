@@ -19,18 +19,24 @@ class BARAK extends PDO {
 
 // Global functions
 
+function include_dynamical_segment($rule) {
+	return strpos($rule, ":") ? true : false;
+}
+
 function resource($table) {
   return [
-    new ApplicationRoute("get", "$table/index", false), // all record
-    new ApplicationRoute("get", "$table/new", false)    // new record
+    new ApplicationRoute("get", "$table/index", false),          // all record
+    new ApplicationRoute("get", "$table/new", false),            // new record
+    new ApplicationRoute("get", "$table/:id", false, true),      // display record
+    new ApplicationRoute("get", "$table/edit/:id", false, true)  // edit record
     ];
 }
 
 function post($rule, $target = false) {
-  return new ApplicationRoute("post", $rule, $target);
+  return new ApplicationRoute("post", $rule, $target, include_dynamical_segment($rule));
 }
 
 function get($rule, $target = false) {
-  return new ApplicationRoute("get", $rule, $target);
+	return new ApplicationRoute("get", $rule, $target, include_dynamical_segment($rule));
 }
 ?>

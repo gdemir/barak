@@ -3,6 +3,9 @@
 
 ApplicationRoutes::draw(
 
+  //get("/", "/default/index"),
+
+  get("/:controller/:action"),
   get("/", "home#index"),
   get("/home/about"),
   get("/home/show"),

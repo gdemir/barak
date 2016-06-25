@@ -3,8 +3,16 @@ Options -Indexes
 RewriteEngine On
 RewriteBase /
 
-#comment out to keep trailing slashes
-RewriteRule ^(.+)/$ $1 [R=307,L]
+# blocked /config/database.ini and *.php all file
+#<FilesMatch "\.(html|php|ini)$">
+#  Order Deny,Allow
+#  Deny from all
+#</FilesMatch>
+
+<Files index.php>
+  Order Deny,Allow
+  Allow from all
+</Files>
 
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f

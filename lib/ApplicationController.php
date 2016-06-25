@@ -33,7 +33,6 @@ class ApplicationController {
   }
 
   public function run($action) {
-
     if (isset($this->before_actions)) $this->_filter($action, $this->before_actions);
 
     if (method_exists($this, $action)) $this->$action();

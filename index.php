@@ -14,7 +14,7 @@ date_default_timezone_set('Europe/Istanbul');
 $TEMP = "tmp";
 
 if (!file_exists($TEMP))
-    mkdir($TEMP, 0777, true);
+  mkdir($TEMP, 0777, true);
 
 // /app/controllers/*.php : files load
 
@@ -32,7 +32,7 @@ try {
 
 //  die("Yapılandırma dosyası mevcut değil : {$CONFIGFILE}");
 } catch (ApplicationFileNotFoundException $e) {
-	// TODO render 404page
+  // TODO render 404page
   echo "
   <html>
   <head>
@@ -40,7 +40,7 @@ try {
   <title>404</title>
   </head>
   <body>
-    " . $e->getMessage() . "
+  " . $e->getMessage() . "
   </body>
   </html>";
   return;

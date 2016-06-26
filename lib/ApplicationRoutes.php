@@ -1,13 +1,15 @@
 <?php
 class ApplicationRoutes {
-  private $_routes = [];
-  private $_request_route;
+  private $_routes = [ "GET" => [], "POST" => [] ]; // http put, delete is not support
+//  private $_request_route;
 
-  public function __construct() {
-    $this->_request_route = new ApplicationRoute($_SERVER["REQUEST_METHOD"], $_SERVER['REQUEST_URI'], false);
-  }
+  // public function __construct() {
+  //   $this->_request_route = new ApplicationRoute($_SERVER["REQUEST_METHOD"], $_SERVER['REQUEST_URI'], false);
+  // }
 
   public static function draw() {
+    $request_route = new ApplicationRoute($_SERVER["REQUEST_METHOD"], $_SERVER['REQUEST_URI'], false);
+
     $r = new ApplicationRoutes();
 
     // İzin verilmiş route'ları routes'a yükle
@@ -15,34 +17,47 @@ class ApplicationRoutes {
     foreach ($permitted_routes as $permitted_route) {
       if (is_array($permitted_route)) { // for ApplicationRoutes::resource();
         foreach ($permitted_route as $permitted_r)
-          $r->{$permitted_r->_rule} = $permitted_r;
+          $r->{$permitted_r->_method} = $permitted_r;
       } else {
-        $r->{$permitted_route->_rule} = $permitted_route;
+        $r->{$permitted_route->_method} = $permitted_route;
       }
 
     }
 
     // // TEST $route list
-    // foreach ($r->_routes as $route) {
-    //   print_r($route);
-    //   echo "<br/>";
-    // }
+    //print_r($r->_routes);
+    foreach ($r->_routes as $method => $routes) {
+      echo "<br/>";
+      print_r($method);
+      echo "<br/>";
+
+      foreach ($routes as $route) {
+      	echo "<br/>";
+        print_r($route);
+        echo "<br/>";
+      }
+    }
 
     // İstek url ile routes'ı içinden bul ve sevk et
-    $route = $r->{$r->_request_route->_rule};
+
+    $route = $r->get_route($request_route);
+
     $route->run();
   }
 
-  public function __get($route) {
+  public function get_route(ApplicationRoute $request_route) {
 
-    if (array_key_exists($this->_request_route->_rule, $this->_routes)) {
-      return $this->_routes[$route];
+    if (array_key_exists($request_route->_method, $this->_routes)) {
+
+      if (array_key_exists($request_route->_rule, $this->_routes[$request_route->_method])) {
+        return $this->_routes[$request_route->_method][$request_route->_rule];
     } else { // search for match routes
 
-      foreach ($this->_routes as $_route) {
+
+      foreach ($this->_routes[$request_route->_method] as $_route) {
         if ($_route->_match) {
 
-          $request_rule = explode("/", trim($this->_request_route->_rule, "/"));
+          $request_rule = explode("/", trim($request_route->_rule, "/"));
           $permit_rule = explode("/", trim($_route->_rule, "/"));
 
           if (count($request_rule) == count($permit_rule)) {
@@ -68,17 +83,17 @@ class ApplicationRoutes {
               return $_route;
             }
           }
-
         }
       }
     }
-    throw new ConfigurationException("Böyle bir yönlendirme mevcut değil", $this->_request_route->_rule);
   }
+  throw new ConfigurationException("Böyle bir yönlendirme mevcut değil", $request_route->_rule);
+}
 
-  public function __set($route_rule, $route) {
-    if (array_key_exists($route_rule, $this->_routes))
-      throw new ConfigurationException("Bu yönlendirme daha önceden tanımlanmış", $route_rule);
-    $this->_routes[$route_rule] = $route;
-  }
+public function __set($route_method, $route) {
+  if (array_key_exists($route->_rule, $this->_routes[$route_method]))
+    throw new ConfigurationException("Bu yönlendirme daha önceden tanımlanmış", $route->_rule);
+  $this->_routes[$route_method][$route->_rule] = $route;
+}
 }
 ?>

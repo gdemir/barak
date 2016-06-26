@@ -23,13 +23,13 @@ class ApplicationRoute {
 
   public function __construct($method, $rule, $target = false, $match = false) {
 
+    self::set(self::default_controller, self::default_view, self::default_layout, self::default_action);
     $this->_match = $match;
-    $this->_method = $method;
+    $this->_method = strtoupper($method);
 
     if ($match) {
       $this->_rule = preg_replace("|:[\w]+|", self::dynamical_segment, $rule);
       $this->_match_rule = $rule;
-      self::set(self::default_controller, self::default_view, self::default_layout, self::default_action);
     } elseif ($target) {
       $this->_rule = $rule;
       $this->_match_rule = "";
@@ -39,7 +39,8 @@ class ApplicationRoute {
       $this->_rule = $rule;
       $this->_match_rule = "";
       $rule = explode("/", trim($this->_rule, "/"));
-      self::set($rule[0], $rule[0], $rule[0], $rule[1]);
+      if (count($rule) == 2)
+        self::set($rule[0], $rule[0], $rule[0], $rule[1]);
     } else
     throw new ConfigurationException("/config/routes.php içinde beklenmedik kurallar", $rule);
   }

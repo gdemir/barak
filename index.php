@@ -49,18 +49,7 @@ foreach ($table_names as $table_name) {
     }
     ");
 }
-//echo $_SERVER['REQUEST_URI'];
-//$routes->dispatch($_SERVER['REQUEST_URI']);
-// $controller = (isset($uri[0]) and $uri[0] != "") ? $uri[0] : "Application";
-// $action = isset($uri[1]) ? $uri[1] : "index";
 
-// echo $controller . " ############# " . $action;
-
-// function __autoload($class_name) {
-//     require_once 'app/controllers/' . ucwords($class_name) . 'Controller.php';
-// }
-
-// /config/routes.php : Router configure file load and run
-
+// configuration routes load and route action dispatch
 include 'config/routes.php';
 ?>

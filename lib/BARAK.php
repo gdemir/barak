@@ -25,10 +25,13 @@ function include_dynamical_segment($rule) {
 
 function resource($table) {
   return [
-    new ApplicationRoute("get", "$table/index", false),          // all record
-    new ApplicationRoute("get", "$table/new", false),            // new record
-    new ApplicationRoute("get", "$table/show/:id", false, true),      // display record
-    new ApplicationRoute("get", "$table/edit/:id", false, true)  // edit record
+    new ApplicationRoute("get",  "$table/index", false),           // all record
+    new ApplicationRoute("get",  "$table/new", false),             // new record form
+    new ApplicationRoute("post", "$table/create", false),          // new record create
+    new ApplicationRoute("get",  "$table/show/:id", false, true),  // display record
+    new ApplicationRoute("get",  "$table/edit/:id", false, true),  // edit record
+    new ApplicationRoute("post", "$table/update", false, true),    // update record
+    new ApplicationRoute("post", "$table/destroy", false, true)    // destroy record
     ];
 }
 

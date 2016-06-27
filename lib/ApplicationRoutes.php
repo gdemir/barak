@@ -86,7 +86,7 @@ class ApplicationRoutes {
       }
       throw new ConfigurationException("Böyle bir yönlendirme mevcut değil", $request_route->_rule);
     }
-    throw new ConfigurationException("Uzay teknolojisinde bizim henüz desteklemediğimiz bir method", $request_route->_method);
+    throw new ConfigurationException("Uzay çağında bizim henüz desteklemediğimiz bir method", $request_route->_method);
   }
 
   public function __set($route_method, $route) {

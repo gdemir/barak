@@ -5,7 +5,7 @@ class ApplicationModel {
   private $_new_record_state;
 
   public function __construct($conditions = false, $new_record_state = true) {
-  	$this->_new_record_state = $new_record_state;
+    $this->_new_record_state = $new_record_state;
     if ($conditions) {
       $this->_fields = $this->check_fieldnames($conditions);
     } else {
@@ -55,14 +55,14 @@ class ApplicationModel {
     if (isset($this->_fields[$field]))
       return $this->_fields[$field];
     else
-      die("Tabloda böyle bir $field key (anahtar) mevcut değil<br/>");
+      throw new FieldNotFoundException("Tabloda böyle bir anahtar mevcut değil", $field);
   }
 
   public function __set($field, $value) {
     if (in_array($field, array_keys($this->_fields)))
       $this->_fields[$field] = $value;
     else
-      die("Tabloda böyle bir $field $value key/value için key mevcut değil<br/>");
+      throw new FieldNotFoundException("Tabloda böyle bir anahtar mevcut değil", $field);
   }
 
   // Private Functions
@@ -106,7 +106,7 @@ class ApplicationModel {
   public static function select($field) {
     if (self::field_exists($field))
       return $GLOBALS['db']->query("select $field from " . static::$name)->fetchAll(PDO::FETCH_ASSOC);
-    die("Bilinmeyen Sütun Adı" . $field); #TODO must notice units or class
+    throw new FieldNotFoundException("Tabloda böyle bir anahtar mevcut değil", $field);
   }
 
   // query primary_key
@@ -188,7 +188,7 @@ class ApplicationModel {
   public static function order($field, $sort_type = "asc") {
     if (self::field_exists($field))
       return $GLOBALS['db']->query("select * from " . static::$name . " order by " . $field . " " . $sort_type)->fetchAll(PDO::FETCH_ASSOC);
-    die("Tabloda böyle bir $field key (anahtar) mevcut değil<br/>");
+    throw new FieldNotFoundException("Tabloda böyle bir anahtar mevcut değil", $field);
   }
 
   public static function update($primary_key, $conditions) {
@@ -218,7 +218,7 @@ class ApplicationModel {
 
     foreach ($fields as $field)
       if (!in_array($field, $table_fields))
-          die("Bilinmeyen Sütun Adı" . $field); #TODO must notice units or class
+          throw new FieldNotFoundException("Tabloda böyle bir anahtar mevcut değil", $field);
 
     $sets = self::condition_to_sql_statement($conditions, "and");
 

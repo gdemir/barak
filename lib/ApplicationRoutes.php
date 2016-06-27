@@ -48,11 +48,9 @@ class ApplicationRoutes {
   public function get_route(ApplicationRoute $request_route) {
 
     if (array_key_exists($request_route->_method, $this->_routes)) {
-
       if (array_key_exists($request_route->_rule, $this->_routes[$request_route->_method])) {
         return $this->_routes[$request_route->_method][$request_route->_rule];
     } else { // search for match routes
-
 
       foreach ($this->_routes[$request_route->_method] as $_route) {
         if ($_route->_match) {
@@ -86,8 +84,9 @@ class ApplicationRoutes {
         }
       }
     }
+    throw new ConfigurationException("Böyle bir yönlendirme mevcut değil", $request_route->_rule);
   }
-  throw new ConfigurationException("Böyle bir yönlendirme mevcut değil", $request_route->_rule);
+  throw new ConfigurationException("Uzay teknolojisinde bizim henüz desteklemediğimiz bir method", $request_route->_method);
 }
 
 public function __set($route_method, $route) {

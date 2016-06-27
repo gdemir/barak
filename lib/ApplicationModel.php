@@ -197,7 +197,7 @@ class ApplicationModel {
 
     foreach ($fields as $field)
       if (!in_array($field, $table_fields))
-        die("Bilinmeyen Sütun Adı" . $field); #TODO must notice units or class
+        throw new FieldNotFoundException("Tabloda böyle bir anahtar mevcut değil", $field);
 
     $sets = self::condition_to_sql_statement($conditions, ",");
 

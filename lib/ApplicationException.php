@@ -31,5 +31,6 @@ class ApplicationException extends Exception {
 
 class FileNotFoundException extends ApplicationException {};
 class ConfigurationException extends ApplicationException {};
+class FieldNotFoundException extends ApplicationException {};
 
 ?>

@@ -6,7 +6,7 @@ class ApplicationController {
   //private $_render_struct_keys = ["layout", "view", "action"];
 
   public function _filter($action, $filter_actions) {
-    echo "<br/>Çocuk class için geldik, öncelik için bir şeyler yapacağız<br/>";
+   //echo "<br/>Çocuk class için geldik, öncelik için bir şeyler yapacağız<br/>";
 
     foreach ($filter_actions as $filter_action) {
 

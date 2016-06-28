@@ -87,7 +87,7 @@ class ApplicationRoute {
 
     // merge layout with view content
     $page_content = (isset($layout_content)) ? str_replace("{yield}", $view_content, $layout_content) : $view_content;
-    
+
     // http://www.php.net/manual/fr/ref.outcontrol.php
     /*
       ob_start();
@@ -95,7 +95,7 @@ class ApplicationRoute {
       $result = ob_get_contents();
       ob_end_clean();
     */
-    
+
     // controller'in paramsları
     // $vars["_params"]
 

@@ -13,7 +13,7 @@ foreach ($directories as $directory) {
     }
 }
 
-define("TEMP", "temp"); // render pages of folder
+define("TEMP", "tmp"); // render pages of folder
 define("CONFIGFILE", "config/database.ini"); // configuration file
 
 ini_set("display_errors", 1); // for message of ApplicationException on html page

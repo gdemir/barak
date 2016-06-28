@@ -4,10 +4,10 @@ RewriteEngine On
 RewriteBase /
 
 # blocked /config/database.ini and *.php all file
-#<FilesMatch "\.(html|php|ini)$">
-#  Order Deny,Allow
-#  Deny from all
-#</FilesMatch>
+<FilesMatch "\.(html|php|ini)$">
+  Order Deny,Allow
+  Deny from all
+</FilesMatch>
 
 <Files index.php>
   Order Deny,Allow

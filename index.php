@@ -21,24 +21,23 @@ foreach ($directories as $directory) {
     }
 }
 
+define("TEMP", "temp"); // render pages of folder
+define("CONFIGFILE", "config/database.ini"); // configuration file
+
 ini_set("display_errors", 1); // for message of ApplicationException on html page
 date_default_timezone_set('Europe/Istanbul');
 
 // /tmp : create render pages of folder if it doesn't exist
 
-$TEMP = "tmp";
-
-if (!file_exists($TEMP))
-  mkdir($TEMP, 0777, true);
+if (!file_exists(TEMP))
+  mkdir(TEMP, 0777, true);
 
 // /config/database.ini : configuration file load
 
-$CONFIGFILE = "config/database.ini";
+if (!file_exists(CONFIGFILE))
+  throw new FileNotFoundException("Yapılandırma dosyası mevcut değil", CONFIGFILE);
 
-if (!file_exists($CONFIGFILE))
-  throw new FileNotFoundException("Yapılandırma dosyası mevcut değil", $CONFIGFILE);
-
-$database = parse_ini_file($CONFIGFILE);
+$database = parse_ini_file(CONFIGFILE);
 
 // Database connection and model create of tables
 

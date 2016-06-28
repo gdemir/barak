@@ -1,11 +1,24 @@
 <?php
-
+/*
 include 'lib/BARAK.php';
 include 'lib/ApplicationModel.php';
 include 'lib/ApplicationRoute.php';
 include 'lib/ApplicationRoutes.php';
 include 'lib/ApplicationException.php';
 include 'lib/ApplicationController.php';
+*/
+// lib/*.php files load
+// app/controllers/*.php  files load
+
+$directories = [
+            'lib/',
+            'app/controllers/'
+];
+foreach ($directories as $directory) {
+    foreach(glob($directory . "*.php") as $class) {
+        include_once $class;
+    }
+}
 
 ini_set("display_errors", 1); // for message of ApplicationException on html page
 
@@ -17,11 +30,6 @@ $TEMP = "tmp";
 
 if (!file_exists($TEMP))
   mkdir($TEMP, 0777, true);
-
-// /app/controllers/*.php : files load
-
-$files = glob("app/controllers/*.php");
-foreach ($files as $file) include $file;
 
 // /config/database.ini : configuration file load
 

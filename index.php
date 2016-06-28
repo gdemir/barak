@@ -7,6 +7,7 @@ include 'lib/ApplicationRoutes.php';
 include 'lib/ApplicationException.php';
 include 'lib/ApplicationController.php';
 */
+
 // lib/*.php files load
 // app/controllers/*.php  files load
 
@@ -21,10 +22,9 @@ foreach ($directories as $directory) {
 }
 
 ini_set("display_errors", 1); // for message of ApplicationException on html page
-
 date_default_timezone_set('Europe/Istanbul');
 
-// /tmp : create a folder if it doesn't exist
+// /tmp : create render pages of folder if it doesn't exist
 
 $TEMP = "tmp";
 
@@ -38,16 +38,13 @@ $CONFIGFILE = "config/database.ini";
 if (!file_exists($CONFIGFILE))
   throw new FileNotFoundException("Yapılandırma dosyası mevcut değil", $CONFIGFILE);
 
-
 $database = parse_ini_file($CONFIGFILE);
 
 // Database connection and model create of tables
 
 $GLOBALS['db'] = new BARAK("mysql:host={$database['host']};dbname={$database['name']}", $database["user"], $database["pass"]);
 
-$table_names = $GLOBALS['db']->table_names();
-
-foreach ($table_names as $table_name) {
+foreach ($GLOBALS['db']->table_names() as $table_name) {
   eval("
     class $table_name extends ApplicationModel {
       protected static \$name = '$table_name';

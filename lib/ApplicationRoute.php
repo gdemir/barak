@@ -105,7 +105,7 @@ class ApplicationRoute {
     self::display($page_content, $vars["_params"]);
   }
 
-  public function display($content, $params) {
+  public function display($content, $params) { // $content 
 
     $filename = 'tmp/' . time() . '.php';
 

@@ -15,9 +15,8 @@
 #### Trailer
 ---
 
-[![BarakTurkmens](https://img.youtube.com/vi/cYNnHN5w1ok/0.jpg)](https://www.youtube.com/watch?v=cYNnHN5w1ok)
-
-[![BarakTurkmens](https://img.youtube.com/vi/m21oNITMdyI/0.jpg)](https://www.youtube.com/watch?v=m21oNITMdyI)
+[![BarakTurkmens](https://img.youtube.com/vi/cYNnHN5w1ok/2.jpg)](https://www.youtube.com/watch?v=cYNnHN5w1ok) [![BarakTurkmens](https://img.youtube.com/vi/m21oNITMdyI/2.jpg)](https://www.youtube.com/watch?v=m21oNITMdyI)
+[![BarakTurkmens](https://img.youtube.com/vi/haNqSJKs_j4/2.jpg)](https://www.youtube.com/watch?v=haNqSJKs_j4)
 
 
 #### Sources

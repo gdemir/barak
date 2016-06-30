@@ -21,9 +21,6 @@
 [![BarakTurkmens#MürselBey](https://img.youtube.com/vi/uSoz28QpHRI/2.jpg)](https://www.youtube.com/watch?v=uSoz28QpHRI)
 [![BarakTurkmens#VeledBey](https://img.youtube.com/vi/3RBtPGWRnsI/2.jpg)](https://www.youtube.com/watch?v=3RBtPGWRnsI)
 
-
-https://www.youtube.com/watch?v=uSoz28QpHRI
-
 #### Sources
 ---
 

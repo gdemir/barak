@@ -13,16 +13,10 @@ foreach ($directories as $directory) {
     }
 }
 
-define("TEMP", "tmp"); // render pages of folder
 define("CONFIGFILE", "config/database.ini"); // configuration file
 
 ini_set("display_errors", 1); // for message of ApplicationException on html page
 date_default_timezone_set('Europe/Istanbul');
-
-// /tmp : create render pages of folder if it doesn't exist
-
-if (!file_exists(TEMP))
-  mkdir(TEMP, 0777, true);
 
 // /config/database.ini : configuration file load
 

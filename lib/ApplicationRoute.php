@@ -23,29 +23,39 @@ class ApplicationRoute {
 
   public function __construct($method, $rule, $target = false, $match = false) {
 
-    self::set(self::default_controller, self::default_view, self::default_layout, self::default_action);
-    $this->_match = $match;
-    $this->_method = strtoupper($method);
-
     if ($match) {
-      $this->_rule = preg_replace("|:[\w]+|", self::dynamical_segment, $rule);
-      $this->_match_rule = $rule;
+      self::set(
+        $method, $match, $rule, preg_replace("|:[\w]+|", self::dynamical_segment, $rule),
+        self::default_controller, self::default_view, self::default_layout, self::default_action
+        );
     } elseif ($target) {
-      $this->_rule = $rule;
-      $this->_match_rule = "";
-      $rule = explode("#", $target);
-      self::set($rule[0], $rule[0], $rule[0], $rule[1]);
+      $target_option = explode("#", $target);
+      self::set(
+        $method, $match, "", $rule,
+        $target_option[0], $target_option[0], $target_option[0], $target_option[1]
+        );
     } elseif (strpos($rule, "/") !== false) { // dizgi içerisinde konum(indexi) yok değilse (yani varsa)
-      $this->_rule = $rule;
-      $this->_match_rule = "";
-      $rule = explode("/", trim($this->_rule, "/"));
-      if (count($rule) == 2)
-        self::set($rule[0], $rule[0], $rule[0], $rule[1]);
+      $target_option = explode("/", trim($rule, "/"));
+      if (count($target_option) == 2)
+        self::set(
+          $method, $match, "", $rule,
+          $target_option[0], $target_option[0], $target_option[0], $target_option[1]
+          );
+      else
+        self::set(
+          $method, $match, "", $rule,
+          self::default_controller, self::default_view, self::default_layout, self::default_action
+          );
     } else
     throw new ConfigurationException("/config/routes.php içinde beklenmedik kurallar", $rule);
   }
 
-  public function set($controller, $view, $layout, $action) {
+  public function set($method, $match, $match_rule, $rule, $controller, $view, $layout, $action) {
+    $this->_method = strtoupper($method);
+    $this->_match = $match;
+    $this->_match_rule = $match_rule;
+    $this->_rule = $rule;
+
     $this->_controller = ucwords($controller) . 'Controller';
     $this->_view = $view;
     $this->_layout = $layout . "_layout";
@@ -88,14 +98,6 @@ class ApplicationRoute {
     // merge layout with view content
     $page_content = (isset($layout_content)) ? str_replace("{yield}", $view_content, $layout_content) : $view_content;
 
-    // http://www.php.net/manual/fr/ref.outcontrol.php
-    /*
-      ob_start();
-      eval(file_get_contents($file));
-      $result = ob_get_contents();
-      ob_end_clean();
-    */
-
     // controller'in paramsları
     // $vars["_params"]
 
@@ -105,27 +107,17 @@ class ApplicationRoute {
     self::display($page_content, $vars["_params"]);
   }
 
-  public function display($content, $params) { // $content 
-
-    $filename = 'tmp/' . time() . '.php';
-
-    if (!($fp = fopen($filename, 'a')))
-      throw new FileNotFoundException("Sayfayı görüntülemek için geçici dosya oluşturulamadı", $filename);
-
-    fwrite($fp, $content);
-    fclose($fp);
-
-    unset($content);
-    unset($fp);
+  public function display($content, $params) {
 
     // controller'in paramslarını yükle
     foreach ($params as $param => $value) {
       $$param = $value;
     }
 
-    include $filename;
+    // http://stackoverflow.com/questions/1184628/php-equivalent-of-include-using-eval)
+    eval("?> $content <?php");
 
-    unlink($filename);
+    unset($content);
   }
 }
 ?>

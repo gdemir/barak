@@ -1,11 +1,6 @@
 <?php
 class ApplicationRoutes {
   private $_routes = [ "GET" => [], "POST" => [] ]; // http put, delete is not support
-//  private $_request_route;
-
-  // public function __construct() {
-  //   $this->_request_route = new ApplicationRoute($_SERVER["REQUEST_METHOD"], $_SERVER['REQUEST_URI'], false);
-  // }
 
   public static function draw() {
     $request_route = new ApplicationRoute($_SERVER["REQUEST_METHOD"], $_SERVER['REQUEST_URI'], false);
@@ -18,26 +13,26 @@ class ApplicationRoutes {
 
       if (is_array($permitted_route)) { // for ApplicationRoutes::resource();
         foreach ($permitted_route as $permitted_r)
-          $r->{$permitted_r->_method} = $permitted_r;
+          $r->set_route($permitted_r);
       } else {
-        $r->{$permitted_route->_method} = $permitted_route;
+        $r->set_route($permitted_route);
       }
 
     }
 
-    // // TEST $route list
-    //print_r($r->_routes);
-    foreach ($r->_routes as $method => $routes) {
-      echo "<br/>";
-      print_r($method);
-      echo "<br/>";
+    // // // TEST $route list
+    // //print_r($r->_routes);
+    // foreach ($r->_routes as $method => $routes) {
+    //   echo "<br/>";
+    //   print_r($method);
+    //   echo "<br/>";
 
-      foreach ($routes as $route) {
-      	echo "<br/>";
-        print_r($route);
-        echo "<br/>";
-      }
-    }
+    //   foreach ($routes as $route) {
+    //   	echo "<br/>";
+    //     print_r($route);
+    //     echo "<br/>";
+    //   }
+    // }
 
     // İstek url ile routes'ı içinden bul ve sevk et
     $route = $r->get_route($request_route);
@@ -89,10 +84,10 @@ class ApplicationRoutes {
     throw new ConfigurationException("Uzay çağında bizim henüz desteklemediğimiz bir method", $request_route->_method);
   }
 
-  public function __set($route_method, $route) {
-    if (array_key_exists($route->_rule, $this->_routes[$route_method]))
+  public function set_route(ApplicationRoute $route) {
+    if (array_key_exists($route->_rule, $this->_routes[$route->_method]))
       throw new ConfigurationException("Bu yönlendirme daha önceden tanımlanmış", $route->_rule);
-    $this->_routes[$route_method][$route->_rule] = $route;
+    $this->_routes[$route->_method][$route->_rule] = $route;
   }
 }
 ?>

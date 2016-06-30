@@ -6,17 +6,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title></title>
   <link href="" rel="alternate" title="" type="application/atom+xml" />
-  <link rel="shortcut icon" href="../assets/img/default.ico">
-  <link rel="stylesheet" href="../assets/css/syntax.css" type="text/css" />
+  <link rel="shortcut icon" href="/app/assets/img/default.ico">
+  <link rel="stylesheet" href="/app/assets/css/syntax.css" type="text/css" />
   <link href='http://fonts.googleapis.com/css?family=Monda' rel='stylesheet' type='text/css'>
   <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!--[if lt IE 9]>
-    <script src="../assets/js/html5shiv.js"></script>
-    <script src="../assets/js/respond.min.js"></script>
+    <script src="/app/assets/js/html5shiv.js"></script>
+    <script src="/app/assets/js/respond.min.js"></script>
    <![endif]-->
   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
   <script src="http://code.jquery.com/jquery.js"></script>
-  <script src="../assets/js/bootstrap.min.js"></script>
+  <script src="/app/assets/js/bootstrap.min.js"></script>
 </head>
 <body>
   {yield}

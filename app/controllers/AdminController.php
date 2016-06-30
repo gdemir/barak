@@ -22,6 +22,7 @@ class AdminController extends ApplicationController {
 				echo "şifre veya parola hatalı";
 		}
 		echo "otomatik render, login paneli gelmeli";
+		$this->render(["layout" => false]);
   }
 
   // public function home() {

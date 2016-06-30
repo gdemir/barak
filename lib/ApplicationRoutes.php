@@ -1,5 +1,6 @@
 <?php
 class ApplicationRoutes {
+  // http://stackoverflow.com/questions/165779/are-the-put-delete-head-etc-methods-available-in-most-web-browsers
   private $_routes = [ "GET" => [], "POST" => [] ]; // http put, delete is not support
 
   public static function draw() {

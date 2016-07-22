@@ -1,5 +1,5 @@
 <?php
-// DRAFT #TODO
+// DRAFT #TODO or builder : https://github.com/ryangurn/PHP-MVC/blob/master/libraries/activerecord/lib/SQLBuilder.php
 class ApplicationSql {
 
   public static insert($fields, $values) {

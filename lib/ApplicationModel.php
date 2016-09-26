@@ -96,7 +96,7 @@ class ApplicationModel {
       $sets .= ($sets ? " $delimiter " : "") . ($field . "='" . $value . "'");
     return $sets;
   }
-
+  
   // Public Static Functions
 
   public static function primary_keyname() {
@@ -153,22 +153,28 @@ class ApplicationModel {
   public static function all() {
     return self::where(null);
   }
-
-  // public static function joins($tables, $conditions) {
-  // 	$table_u = ucfirst($table);
-  // 	echo "
-  // 	    select * from " . static::$name . "," . $table_u .
-  //   	" where " .
-  //   	static::$name . "." . $table . "_" . $table_u::primary_keyname() . " = " . $table_u . "." . $table_u::primary_keyname();
-
-  //   $a = $GLOBALS['db']->query("
-  //   	select * from " . static::$name . "," . $table_u .
-  //   	" where " .
-  //   	static::$name . "." . $table . "_" . $table_u::primary_keyname() . " = " . $table_u . "." . $table_u::primary_keyname()
-  //  	)->fetchAll(PDO::FETCH_ASSOC);
-  //  	print_r($a);
-
-  // }
+  
+  public static function belongs() {
+    $belongs = preg_grep("/(.*)_id/", static::$name::fieldnames());
+  }
+  
+  public static function joins($tables) {
+    $tables_from = condition_to_sql_statement($tables, ",");
+    
+    $belongs = "";
+    foreach ($tables as $table) {
+      $table_belongs = $table::belongs();
+      $table_belong_sets = "";
+      foreach ($table_belongs as $table_belong)
+        $table_belong_sets .= ($table_belong_sets ? " , " : "") . ($table . "." . $table_belong  . "=" . ucfirst(str_replace("_", ".", $table_belong)));
+      $belongs .= ($belongs ? " , " : "") . $table_belong_sets;
+    }
+    
+    $a = $GLOBALS['db']->query(
+      "select * from " . static::$name . "," . $tables_from . 
+      " where " . $belongs)->fetchAll(PDO::FETCH_ASSOC);
+    print_r($a);
+  }
   public static function exists($primary_key) {
     return ($GLOBALS['db']->query("select * from " . static::$name . " where " . self::primary_keyname() . " = " . $primary_key)->fetch(PDO::FETCH_ASSOC)) ? TRUE : false;
   }

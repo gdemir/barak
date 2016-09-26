@@ -96,7 +96,7 @@ class ApplicationModel {
       $sets .= ($sets ? " $delimiter " : "") . ($field . "='" . $value . "'");
     return $sets;
   }
-  
+
   // Public Static Functions
 
   public static function primary_keyname() {
@@ -153,30 +153,31 @@ class ApplicationModel {
   public static function all() {
     return self::where(null);
   }
-  
+
   public static function belongs() {
     return preg_grep("/(.*)_id/", static::$name::fieldnames());
   }
-  
+
   public static function joins($tables, $conditions = null) {
-    $tables_from = condition_to_sql_statement($tables, ",");
-    
-    $belongs = "";
+    $belong_tables = implode(",", $tables);
+
+    $belong_conditions = "";
     foreach ($tables as $table) {
       $table_belongs = $table::belongs();
       $table_belong_sets = "";
       foreach ($table_belongs as $table_belong)
         $table_belong_sets .= ($table_belong_sets ? " and " : "") . ($table . "." . $table_belong  . "=" . ucfirst(str_replace("_", ".", $table_belong)));
-      $belongs .= ($belongs ? " and " : "") . $table_belong_sets;
+      $belong_conditions .= ($belong_conditions ? " and " : "") . $table_belong_sets;
     }
 
     $sets = ($conditions) ? " and " . self::condition_to_sql_statement($conditions, "and") : "";
+
     $a = $GLOBALS['db']->query(
-      "select * from " . static::$name . "," . $tables_from . 
-      " where " . $belongs . $sets)->fetchAll(PDO::FETCH_ASSOC);
+      "select * from " . static::$name . "," . $belong_tables .
+      " where " . $belong_conditions . $sets)->fetchAll(PDO::FETCH_ASSOC);
     print_r($a);
   }
-  
+
   public static function exists($primary_key) {
     return ($GLOBALS['db']->query("select * from " . static::$name . " where " . self::primary_keyname() . " = " . $primary_key)->fetch(PDO::FETCH_ASSOC)) ? TRUE : false;
   }

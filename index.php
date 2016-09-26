@@ -2,12 +2,11 @@
 
 // lib/*.php files load
 // app/controllers/*.php  files load
-// app/models/*.php  files load
+
 
 $directories = [
             'lib/',              // system class files
             'app/controllers/',  // controller class files
-            'app/models/'        // model class files
 ];
 foreach ($directories as $directory) {
     foreach(glob($directory . "*.php") as $class) {
@@ -33,7 +32,7 @@ $GLOBALS['db'] = new BARAK("mysql:host={$database['host']};dbname={$database['na
 
 foreach ($GLOBALS['db']->table_names() as $table_name) {
   eval("
-    class $table_name extends '$table_name'Model {
+    class $table_name extends ApplicationModel {
       protected static \$name = '$table_name';
       public function __construct(\$primary_key = false) {
         parent::__construct(\$primary_key);

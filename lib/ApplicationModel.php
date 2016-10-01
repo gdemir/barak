@@ -1,5 +1,13 @@
 <?php
+
 class ApplicationModel {
+
+  private $_select;
+  private $_table;
+  private $_where;
+  private $_group;
+  private $_limit;
+  private $_order;
 
   private $_fields;
   private $_new_record_state;
@@ -7,10 +15,57 @@ class ApplicationModel {
   public function __construct($conditions = false, $new_record_state = true) {
     $this->_new_record_state = $new_record_state;
     if ($conditions) {
-      $this->_fields = $this->check_fieldnames($conditions);
+      $this->check_fieldnames(array_keys($conditions));
+      $this->_fields = $conditions;
     } else {
       $this->_fields = $this->draft_fieldnames();
     }
+  }
+
+  public static function load() {
+    $object = new static::$name();
+    $object->_table = static::$name;
+    return $object;
+  }
+
+  public function get() {
+
+    $record = $GLOBALS['db']->query(
+      "select " . ($this->_select ? $this->_select : "*") .
+      " from " . $this->_table .
+      ($this->_where ? " where " . self::implode_key_and_value($this->_where, "and") : "") .
+      ($this->_order ? " order by " . $this->_order : "") .
+      ($this->_group ? " group by " . $this->_group : "") .
+      ($this->_limit ? " limit " . $this->_limit : "")
+      )->fetch(PDO::FETCH_ASSOC);
+
+    return $record ? $record : null;
+  }
+
+  public function get_all() {
+echo       "select " . ($this->_select ? implode(",", array_flip($this->_select)) : "*") .
+      " from " . $this->_table .
+      ($this->_where ? " where " . self::implode_key_and_value($this->_where, "and") : "") .
+      ($this->_order ? " order by " . $this->_order : "") .
+      ($this->_group ? " group by " . $this->_group : "") .
+      ($this->_limit ? " limit " . $this->_limit : "");
+
+    $records = $GLOBALS['db']->query(
+      "select " . ($this->_select ? implode(",", array_flip($this->_select)) : "*") .
+      " from " . $this->_table .
+      ($this->_where ? " where " . self::implode_key_and_value($this->_where, "and") : "") .
+      ($this->_order ? " order by " . $this->_order : "") .
+      ($this->_group ? " group by " . $this->_group : "") .
+      ($this->_limit ? " limit " . $this->_limit : "")
+      )->fetchAll(PDO::FETCH_ASSOC);
+
+    if ($records) {
+      foreach ($records as $record)
+        //$objects[] = static::$name::find($record["id"]);
+        $objects[] = static::$name::load()->where(["id" => $record["id"]])->select(($this->_select ? implode(",", array_flip($this->_select)) : "*"));
+      return isset($objects) ? $objects : null;
+    }
+    return null;
   }
 
 // Public Functions
@@ -19,36 +74,75 @@ class ApplicationModel {
 
     if (!$this->_new_record_state) {
 
-      $primary_keyname = self::primary_keyname();
+      $sets = self::implode_key_and_value($this->_fields, ",");
+      $key =  "id = '" . $this->_fields["id"] . "'";
 
-      $sets = self::condition_to_sql_statement($this->_fields, ",");
-      $key =  $primary_keyname . "='" . $this->_fields[$primary_keyname] . "'";
-
-      $GLOBALS['db']->query(
-        "update " . static::$name .
-        " set " . $sets .
-        " where " . $key
-        );
+      ApplicationSql::update(static::$name, $sets, $key);
 
     } else {
 
       $fields = "";
       $values = "";
-      $primary_keyname = self::primary_keyname();
       foreach ($this->_fields as $field => $value) {
-        if ($primary_keyname != $field or ($primary_keyname == $field and !empty($value))) {
+        if ("id" != $field or ("id" == $field and !empty($value))) {
           $fields .= ($fields ? "," : "") . $field;
           $values .= ($values ? "," : "") . "'". $value . "'";
         }
       }
 
-      $GLOBALS["db"]->query(
-        "insert into " . static::$name .
-        " (" . $fields . ") " .
-        "values(" . $values . ")"
-        );
-
+      ApplicationSql::create(static::$name, $fields, $values);
     }
+  }
+
+  // ok
+  public function select($fields) {
+print_r($fields);
+  	echo "x";print_r(array_flip(explode(",", $fields)));echo "x";
+    $fields = self::check_table_and_field(array_flip(explode(",", $fields)));
+    print_r($fields);
+    echo "son";
+    $this->_select = $fields;
+    return $this;
+  }
+
+
+  // ok
+  public function where($conditions = null) {
+    $conditions = self::check_table_and_field($conditions);
+
+    $this->_where = ($this->_where) ? array_merge($this->_where, $conditions) : $conditions;
+    return $this;
+  }
+
+  public function group($field = null) {
+    self::check_fieldname($field);
+    $this->_group = $field;
+    return $this;
+  }
+
+  // ok
+  public function limit($count = null) {
+    $this->_limit = $count;
+    return $this;
+  }
+
+  // ok
+  public function order($field, $sort_type = "asc") {
+    self::check_fieldname($field);
+    $this->_order = $field . " " . $sort_type;
+    return $this;
+  }
+
+  // ok
+  public function first($limit = 1) {
+    $this->_order = "id asc limit " . $limit;
+    return $this;
+  }
+
+  // ok
+  public function last($limit = 1) {
+    $this->_order = "id desc limit " . $limit;
+    return $this;
   }
 
   public function __get($field) {
@@ -67,46 +161,71 @@ class ApplicationModel {
 
   // Private Functions
 
-  private function check_fieldnames($conditions) {
-    $fields = array_keys($conditions);
-    $table_fields = self::fieldnames();
+  private function check_table_and_field($conditions) {
+    foreach ($conditions as $field => $value) {
+      if (strpos($field, '.') !== false) {
+        list($request_table, $request_field) = explode('.', $field);
 
-    $checked_conditions = [];
+        self::check_tablename(trim($request_table));
+        self::check_fieldname(trim($request_field));
+      } else {
+        $conditions[$this->_table . '.' .  $field] = "'" . $value . "'";
+        unset($conditions[$field]);
+      }
+    }
+    return $conditions;
+  }
 
-    foreach ($fields as $field)
-      if (in_array($field, $table_fields))
-        $checked_conditions[$field] = $conditions[$field];
+// ok
+  private function check_tablename($table) {
+    if (!in_array($table, ApplicationSql::tablenames()))
+      throw new FieldNotFoundException("Veritabanında böyle bir tablo mevcut değil2", $table);
+  }
 
-    return $checked_conditions;
+  private function check_tablenames($tables) {
+    $database_tables = ApplicationSql::tablenames();
+    foreach ($tables as $table) {
+      if (!in_array($table, $database_tables))
+        throw new FieldNotFoundException("Veritabanında böyle bir tablo mevcut değil", $table);
+    }
+  }
+
+  private function check_fieldname($field) {
+    if (!in_array($field, ApplicationSql::fieldnames(static::$name)))
+      throw new FieldNotFoundException("Tabloda böyle bir anahtar mevcut değil", $field);
+  }
+
+  private function check_fieldnames($fields) {
+    $table_fields = ApplicationSql::fieldnames(static::$name);
+
+    foreach ($fields as $field) {
+      if (!in_array($field, $table_fields))
+        throw new FieldNotFoundException("Tabloda böyle bir anahtar mevcut değil", $field);
+    }
   }
 
   private function draft_fieldnames() {
-    $result = $GLOBALS['db']->query("describe " . static::$name);
+    $result = ApplicationSql::describe(static::$name);
     while ($field = $result->fetch(PDO::FETCH_COLUMN)) $fields[$field] = "";
     return $fields;
   }
 
   private function field_exists($field) {
-    return in_array($field, self::fieldnames()) ? true : false;
+    return in_array($field, ApplicationSql::fieldnames(static::$name)) ? true : false;
   }
 
-  private function condition_to_sql_statement($conditions, $delimiter = ",") {
-    $sets = "";
-    foreach ($conditions as $field => $value)
-      $sets .= ($sets ? " $delimiter " : "") . ($field . "='" . $value . "'");
-    return $sets;
+  // ok
+  private function implode_key_and_value($conditions, $delimiter = ",") {
+    return implode(" $delimiter ", array_map(function ($key, $value) { return $key . "=" . $value; }, array_keys($conditions), $conditions));
   }
 
   // Public Static Functions
 
-  public static function primary_keyname() {
-    return $GLOBALS['db']->query("show index from " . static::$name . " where Key_name = 'PRIMARY'")->fetch(PDO::FETCH_ASSOC)["Column_name"];
-  }
+  // echo User::primary_keyname();
 
-  public static function select($field) {
-    if (self::field_exists($field))
-      return $GLOBALS['db']->query("select $field from " . static::$name)->fetchAll(PDO::FETCH_ASSOC);
-    throw new FieldNotFoundException("Tabloda böyle bir anahtar mevcut değil", $field);
+  // ok
+  public static function primary_keyname() {
+    return ApplicationSql::primary_keyname(static::$name);
   }
 
   // query primary_key
@@ -116,7 +235,7 @@ class ApplicationModel {
   // $user->save();
 
   public static function find($primary_key) {
-    if ($record = $GLOBALS['db']->query("select * from " . static::$name . " where " . self::primary_keyname() . " = " . $primary_key)->fetch(PDO::FETCH_ASSOC))
+    if ($record = ApplicationSql::read(static::$name, "id = " . $primary_key)->fetch(PDO::FETCH_ASSOC))
       return new static::$name($record, false);
     return null;
   }
@@ -134,105 +253,52 @@ class ApplicationModel {
     return isset($objects) ? $objects : null;
   }
 
-  public static function where($conditions = null) {
-    $sets = ($conditions) ? " where " . self::condition_to_sql_statement($conditions, "and") : "";
-    $records = $GLOBALS['db']->query("select * from " . static::$name . $sets)->fetchAll(PDO::FETCH_ASSOC);
-
-    if ($records) {
-    	$primary_keyname = self::primary_keyname();
-
-      foreach ($records as $record) {
-        $primary_key = (int)$record[$primary_keyname];
-        $objects[] = static::$name::find($primary_key);
-      }
-      return isset($objects) ? $objects : null;
-    }
-    return null;
-  }
-
+  // ok
   public static function all() {
-    return self::where(null);
+    return static::$name::load()->get_all();
   }
 
-  public static function belongs() {
-    return preg_grep("/(.*)_id/", static::$name::fieldnames());
+  public function belongs() {
+    return preg_grep("/(.*)_id/", ApplicationSql::fieldnames(static::$name));
   }
 
-  public static function joins($tables, $conditions = null) {
-    $belong_tables = implode(",", $tables);
+  public function joins($tables) {
 
-    $belong_conditions = "";
+    $table_belong_array = [];
     foreach ($tables as $table) {
-      $table_belongs = $table::belongs();
-      $table_belong_sets = "";
-      foreach ($table_belongs as $table_belong)
-        $table_belong_sets .= ($table_belong_sets ? " and " : "") . ($table . "." . $table_belong  . "=" . ucfirst(str_replace("_", ".", $table_belong)));
-      $belong_conditions .= ($belong_conditions ? " and " : "") . $table_belong_sets;
+      foreach ($table::belongs() as $table_belong)
+        $table_belong_array[$table . "." . $table_belong] = ucfirst(str_replace("_", ".", $table_belong));
     }
 
-    $sets = ($conditions) ? " and " . self::condition_to_sql_statement($conditions, "and") : "";
+    $this->_table = $this->_table . "," . implode(",", $tables);
+    $this->_where = ($this->_where) ? array_merge($this->_where, $table_belong_array) : $table_belong_array;
 
-    $a = $GLOBALS['db']->query(
-      "select * from " . static::$name . "," . $belong_tables .
-      " where " . $belong_conditions . $sets)->fetchAll(PDO::FETCH_ASSOC);
-    print_r($a);
+    return $this;
   }
 
-  public static function exists($primary_key) {
-    return ($GLOBALS['db']->query("select * from " . static::$name . " where " . self::primary_keyname() . " = " . $primary_key)->fetch(PDO::FETCH_ASSOC)) ? TRUE : false;
-  }
+    // public static function exists($primary_key) {
+    //   return static::$name::load()->find($primary_key)->get() ? TRUE : false;
+    //   // return ($GLOBALS['db']->query("select * from " . static::$name . " where " . self::primary_keyname() . " = " . $primary_key)->fetch(PDO::FETCH_ASSOC)) ? TRUE : false;
+    // }
 
-  public static function fieldnames() {
-    return $GLOBALS['db']->query("describe " . static::$name)->fetchAll(PDO::FETCH_COLUMN);
-  }
-
-  public static function first($limit = 1) {
-    return $GLOBALS['db']->query("select * from " . static::$name . " order by " . self::primary_keyname() . " asc limit " . $limit)->fetch(PDO::FETCH_ASSOC);
-  }
-
-  public static function last($limit = 1) {
-    return $GLOBALS['db']->query("select * from " . static::$name . " order by " . self::primary_keyname() . " desc limit " . $limit)->fetch(PDO::FETCH_ASSOC);
-  }
-
-  public static function order($field, $sort_type = "asc") {
-    if (self::field_exists($field))
-      return $GLOBALS['db']->query("select * from " . static::$name . " order by " . $field . " " . $sort_type)->fetchAll(PDO::FETCH_ASSOC);
-    throw new FieldNotFoundException("Tabloda böyle bir anahtar mevcut değil", $field);
-  }
+  // ok
 
   public static function update($primary_key, $conditions) {
-    $fields = array_keys($conditions);
-    $table_fields = self::fieldnames();
+    self::check_fieldnames(array_keys($conditions));
 
-    foreach ($fields as $field)
-      if (!in_array($field, $table_fields))
-        throw new FieldNotFoundException("Tabloda böyle bir anahtar mevcut değil", $field);
-
-    $sets = self::condition_to_sql_statement($conditions, ",");
-
-    $GLOBALS['db']->query(
-      "update " . static::$name .
-      " set " . $sets .
-      " where " . self::primary_keyname() . "=" . $primary_key
-    );
+    $sets = self::implode_key_and_value($conditions, ",");
+    ApplicationSql::update(static::$name, $sets, "id = " . $primary_key);
   }
 
   public static function delete($primary_key) {
-    $GLOBALS['db']->query("delete from " . static::$name . " where " . self::primary_keyname() . " = " . $primary_key);
+    ApplicationSql::delete(static::$name, "id = " . $primary_key);
   }
 
   public static function delete_all($conditions) {
-    $fields = array_keys($conditions);
-    $table_fields = self::fieldnames();
+    self::check_fieldnames(array_keys($conditions));
 
-    foreach ($fields as $field)
-      if (!in_array($field, $table_fields))
-          throw new FieldNotFoundException("Tabloda böyle bir anahtar mevcut değil", $field);
-
-    $sets = self::condition_to_sql_statement($conditions, "and");
-
-    $GLOBALS['db']->query("delete from " . static::$name . " where " . $sets);
+    $sets = self::implode_key_and_value($conditions, "and");
+    ApplicationSql::delete(static::$name, $sets);
   }
-
 }
 ?>

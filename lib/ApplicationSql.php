@@ -3,36 +3,55 @@
 // DRAFT #TODO or builder : https://github.com/ryangurn/PHP-MVC/blob/master/libraries/activerecord/lib/SQLBuilder.php
 class ApplicationSql {
 
-  // public static create($fields, $values) {
-  //   $GLOBALS["db"]->query(
-  //       "insert into " . static::$name .
-  //       " (" . $fields . ") " .
-  //       "values(" . $values . ")"
-  //       );
-  // }
+  public static function create($table, $fields, $values) {
+    $GLOBALS["db"]->query(
+      "insert into " . $table .
+      " (" . $fields . ") " .
+      "values(" . $values . ")"
+      );
+  }
 
-  // public static read($conditions) {
-  //   $GLOBALS["db"]->query(
-  //       "select * from " . static::$name .
-  //       " where " . $conditions
-  //       );
-  // }
+  public static function read($table, $conditions) {
+    return $GLOBALS["db"]->query(
+      "select * from " . $table .
+      " where " . $conditions
+      );
+  }
 
-  // public static update($sets, $conditions) {
-  //   $GLOBALS['db']->query(
-  //       "update " . static::$name .
-  //       " set " . $sets .
-  //       " where " . $conditions
-  //       );
-  // }
+  public static function update($table, $sets, $conditions) {
+    $GLOBALS['db']->query(
+      "update " . $table .
+      " set " . $sets .
+      " where " . $conditions
+      );
+  }
 
-  // public static delete($conditions) {
-  //   $GLOBALS['db']->query(
-  //       "delete from " . static::$name .
-  //       " where " . $conditions
-  //       );
-  // }
+  public static function delete($table, $conditions) {
+    $GLOBALS['db']->query(
+      "delete from " . $table .
+      " where " . $conditions
+      );
+  }
+
+  public static function query($query) {
+    return $GLOBALS['db']->query($query);
+  }
+
+  public static function describe($table) {
+    return $GLOBALS['db']->query("describe " . $table);
+  }
+
+  public static function tablenames() {
+  	return $GLOBALS['db']->tablenames();
+  }
+
+  public static function fieldnames($table) {
+    return self::describe($table)->fetchAll(PDO::FETCH_COLUMN);
+  }
+
+  public static function primary_keyname($table) {
+    return $GLOBALS['db']->query("show index from " . $table . " where Key_name = 'PRIMARY'")->fetch(PDO::FETCH_ASSOC)["Column_name"];
+  }
 
 }
-
 ?>

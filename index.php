@@ -30,7 +30,7 @@ $database = parse_ini_file(CONFIGFILE);
 
 $GLOBALS['db'] = new BARAK("mysql:host={$database['host']};dbname={$database['name']}", $database["user"], $database["pass"]);
 
-foreach ($GLOBALS['db']->table_names() as $table_name) {
+foreach ($GLOBALS['db']->tablenames() as $table_name) {
   eval("
     class $table_name extends ApplicationModel {
       protected static \$name = '$table_name';

@@ -43,8 +43,9 @@ class HomeController extends ApplicationController {
   // //   echo "<br/>";
 
     print_r(User::find_all([123827,123828,123829]));
-     echo ">>><br/><br/><br/>";
-    $this->users = User::load()->joins(["Comment", "Address"])->where(["User.id" => 2])->select("User.first_name, User.id")->get_all();
+    echo "<br/><br/><br/>>>>";
+    echo User::exists(340) == null ? "evet" : "hayir";
+    $this->users = User::load()->joins(["Comment", "Address"])->where(["Comment.name" => "XxxxxX"])->get_all();
 
     echo ">>>><br/><br/><br/>";
 //    $this->users = User::all();

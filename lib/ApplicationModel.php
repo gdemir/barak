@@ -12,6 +12,8 @@ class ApplicationModel {
   private $_fields;
   private $_new_record_state;
 
+  // System Main Functions
+
   public function __construct($conditions = false, $new_record_state = true) {
     $this->_new_record_state = $new_record_state;
     if ($conditions) {
@@ -31,7 +33,7 @@ class ApplicationModel {
   public function get() {
 
     $record = $GLOBALS['db']->query(
-      "select " . ($this->_select ? $this->_select : "*") .
+      "select " . ($this->_select ? implode(",", array_flip($this->_select)) : "*") .
       " from " . $this->_table .
       ($this->_where ? " where " . self::implode_key_and_value($this->_where, "and") : "") .
       ($this->_order ? " order by " . $this->_order : "") .
@@ -43,12 +45,6 @@ class ApplicationModel {
   }
 
   public function get_all() {
-echo       "select " . ($this->_select ? implode(",", array_flip($this->_select)) : "*") .
-      " from " . $this->_table .
-      ($this->_where ? " where " . self::implode_key_and_value($this->_where, "and") : "") .
-      ($this->_order ? " order by " . $this->_order : "") .
-      ($this->_group ? " group by " . $this->_group : "") .
-      ($this->_limit ? " limit " . $this->_limit : "");
 
     $records = $GLOBALS['db']->query(
       "select " . ($this->_select ? implode(",", array_flip($this->_select)) : "*") .
@@ -61,11 +57,25 @@ echo       "select " . ($this->_select ? implode(",", array_flip($this->_select)
 
     if ($records) {
       foreach ($records as $record)
-        //$objects[] = static::$name::find($record["id"]);
-        $objects[] = static::$name::load()->where(["id" => $record["id"]])->select(($this->_select ? implode(",", array_flip($this->_select)) : "*"));
+        $objects[] = static::$name::find($record["id"]);
+        //$objects[] = static::$name::load()->where(["id" => $record["id"]])->select(($this->_select ? implode(",", array_flip($this->_select)) : "*"));
       return isset($objects) ? $objects : null;
     }
     return null;
+  }
+
+  public function __get($field) {
+    if (isset($this->_fields[$field]))
+      return $this->_fields[$field];
+    else
+      throw new FieldNotFoundException("Tabloda böyle bir anahtar mevcut değil", $field);
+  }
+
+  public function __set($field, $value) {
+    if (in_array($field, array_keys($this->_fields)))
+      $this->_fields[$field] = $value;
+    else
+      throw new FieldNotFoundException("Tabloda böyle bir anahtar mevcut değil", $field);
   }
 
 // Public Functions
@@ -96,11 +106,8 @@ echo       "select " . ($this->_select ? implode(",", array_flip($this->_select)
 
   // ok
   public function select($fields) {
-print_r($fields);
-  	echo "x";print_r(array_flip(explode(",", $fields)));echo "x";
     $fields = self::check_table_and_field(array_flip(explode(",", $fields)));
-    print_r($fields);
-    echo "son";
+
     $this->_select = $fields;
     return $this;
   }
@@ -110,7 +117,25 @@ print_r($fields);
   public function where($conditions = null) {
     $conditions = self::check_table_and_field($conditions);
 
+    // all value change to string like $value -> "$value"
+    array_walk($conditions, function(&$value, $key) { $value = '"' . $value . '"'; });
+
     $this->_where = ($this->_where) ? array_merge($this->_where, $conditions) : $conditions;
+    return $this;
+  }
+
+  public function joins($tables) {
+
+    $table_belong_array = [];
+    foreach ($tables as $table) {
+      $table_belongs = preg_grep("/(.*)_id/", ApplicationSql::fieldnames(static::$name));
+      foreach ($table_belongs as $table_belong)
+        $table_belong_array[$table . "." . $table_belong] = ucfirst(str_replace("_", ".", $table_belong));
+    }
+
+    $this->_table = $this->_table . "," . implode(",", $tables);
+    $this->_where = ($this->_where) ? array_merge($this->_where, $table_belong_array) : $table_belong_array;
+
     return $this;
   }
 
@@ -145,20 +170,6 @@ print_r($fields);
     return $this;
   }
 
-  public function __get($field) {
-    if (isset($this->_fields[$field]))
-      return $this->_fields[$field];
-    else
-      throw new FieldNotFoundException("Tabloda böyle bir anahtar mevcut değil", $field);
-  }
-
-  public function __set($field, $value) {
-    if (in_array($field, array_keys($this->_fields)))
-      $this->_fields[$field] = $value;
-    else
-      throw new FieldNotFoundException("Tabloda böyle bir anahtar mevcut değil", $field);
-  }
-
   // Private Functions
 
   private function check_table_and_field($conditions) {
@@ -167,7 +178,7 @@ print_r($fields);
         list($request_table, $request_field) = explode('.', $field);
 
         self::check_tablename(trim($request_table));
-        self::check_fieldname(trim($request_field));
+        self::check_fieldname(trim($request_field), trim($request_table));
       } else {
         $conditions[$this->_table . '.' .  $field] = "'" . $value . "'";
         unset($conditions[$field]);
@@ -176,31 +187,32 @@ print_r($fields);
     return $conditions;
   }
 
-// ok
+  // ok
   private function check_tablename($table) {
     if (!in_array($table, ApplicationSql::tablenames()))
-      throw new FieldNotFoundException("Veritabanında böyle bir tablo mevcut değil2", $table);
+      throw new TableNotFoundException("Veritabanında böyle bir tablo mevcut değil", $table);
   }
 
   private function check_tablenames($tables) {
     $database_tables = ApplicationSql::tablenames();
     foreach ($tables as $table) {
       if (!in_array($table, $database_tables))
-        throw new FieldNotFoundException("Veritabanında böyle bir tablo mevcut değil", $table);
+        throw new TableNotFoundException("Veritabanında böyle bir tablo mevcut değil", $table);
     }
   }
 
-  private function check_fieldname($field) {
-    if (!in_array($field, ApplicationSql::fieldnames(static::$name)))
-      throw new FieldNotFoundException("Tabloda böyle bir anahtar mevcut değil", $field);
+  private function check_fieldname($field, $table = null) {
+    $table = $table ?? static::$name;
+    if (!in_array($field, ApplicationSql::fieldnames($table)))
+      throw new FieldNotFoundException("Tabloda böyle bir anahtar mevcut değil", $table . "." . $field);
   }
 
-  private function check_fieldnames($fields) {
-    $table_fields = ApplicationSql::fieldnames(static::$name);
-
+  private function check_fieldnames($fields, $table = null) {
+    $table = $table ?? static::$name;
+    $table_fields = ApplicationSql::fieldnames($table);
     foreach ($fields as $field) {
       if (!in_array($field, $table_fields))
-        throw new FieldNotFoundException("Tabloda böyle bir anahtar mevcut değil", $field);
+        throw new FieldNotFoundException("Tabloda böyle bir anahtar mevcut değil", $table . "." . $field);
     }
   }
 
@@ -258,31 +270,11 @@ print_r($fields);
     return static::$name::load()->get_all();
   }
 
-  public function belongs() {
-    return preg_grep("/(.*)_id/", ApplicationSql::fieldnames(static::$name));
+  public static function exists($primary_key) {
+    return static::$name::find($primary_key) ? true : false;
   }
-
-  public function joins($tables) {
-
-    $table_belong_array = [];
-    foreach ($tables as $table) {
-      foreach ($table::belongs() as $table_belong)
-        $table_belong_array[$table . "." . $table_belong] = ucfirst(str_replace("_", ".", $table_belong));
-    }
-
-    $this->_table = $this->_table . "," . implode(",", $tables);
-    $this->_where = ($this->_where) ? array_merge($this->_where, $table_belong_array) : $table_belong_array;
-
-    return $this;
-  }
-
-    // public static function exists($primary_key) {
-    //   return static::$name::load()->find($primary_key)->get() ? TRUE : false;
-    //   // return ($GLOBALS['db']->query("select * from " . static::$name . " where " . self::primary_keyname() . " = " . $primary_key)->fetch(PDO::FETCH_ASSOC)) ? TRUE : false;
-    // }
 
   // ok
-
   public static function update($primary_key, $conditions) {
     self::check_fieldnames(array_keys($conditions));
 

@@ -42,7 +42,7 @@ class ApplicationSql {
   }
 
   public static function tablenames() {
-  	return $GLOBALS['db']->tablenames();
+    return $GLOBALS['db']->tablenames();
   }
 
   public static function fieldnames($table) {

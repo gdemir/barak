@@ -115,7 +115,12 @@ class ApplicationModel {
     $this->_select = $fields;
     return $this;
   }
-
+  
+  // This function DRAFT
+  public function value($field) {
+    self::check_fieldname($field);
+    return $this->get().$field;
+  }
 
   // ok
   public function where($conditions = null) {
@@ -177,7 +182,7 @@ class ApplicationModel {
   //////////////////////////////////////////////////
   // Private Functions
   //////////////////////////////////////////////////
-  
+  // name check_join_table_and_field
   private function check_table_and_field($conditions) {
     foreach ($conditions as $field => $value) {
       if (strpos($field, '.') !== false) {

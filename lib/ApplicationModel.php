@@ -12,7 +12,9 @@ class ApplicationModel {
   private $_fields;
   private $_new_record_state;
 
+  //////////////////////////////////////////////////
   // System Main Functions
+  //////////////////////////////////////////////////
 
   public function __construct($conditions = false, $new_record_state = true) {
     $this->_new_record_state = $new_record_state;
@@ -78,7 +80,9 @@ class ApplicationModel {
       throw new FieldNotFoundException("Tabloda böyle bir anahtar mevcut değil", $field);
   }
 
-// Public Functions
+  //////////////////////////////////////////////////
+  // Public Functions
+  //////////////////////////////////////////////////
 
   public function save() {
 
@@ -139,7 +143,7 @@ class ApplicationModel {
     return $this;
   }
 
-  public function group($field = null) {
+  public function group($field) {
     self::check_fieldname($field);
     $this->_group = $field;
     return $this;
@@ -170,8 +174,10 @@ class ApplicationModel {
     return $this;
   }
 
+  //////////////////////////////////////////////////
   // Private Functions
-
+  //////////////////////////////////////////////////
+  
   private function check_table_and_field($conditions) {
     foreach ($conditions as $field => $value) {
       if (strpos($field, '.') !== false) {
@@ -231,7 +237,9 @@ class ApplicationModel {
     return implode(" $delimiter ", array_map(function ($key, $value) { return $key . "=" . $value; }, array_keys($conditions), $conditions));
   }
 
+  //////////////////////////////////////////////////
   // Public Static Functions
+  //////////////////////////////////////////////////
 
   // echo User::primary_keyname();
 

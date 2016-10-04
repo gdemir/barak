@@ -65,7 +65,7 @@ class ApplicationModel {
   // ok
   public function get() {
 
-    echo "select " . ($this->_select ? implode(",", array_flip($this->_select)) : "*") .
+    echo "select " . ($this->_select ? implode(",", $this->_select) : "*") .
     " from " . $this->_table .
     ($this->_where ? " where " . self::implode_key_and_value($this->_where, "and") : "") .
     ($this->_order ? " order by " . $this->_order : "") .
@@ -73,7 +73,7 @@ class ApplicationModel {
     ($this->_limit ? " limit " . $this->_limit : "");
 
     $record = $GLOBALS['db']->query(
-      "select " . ($this->_select ? implode(",", array_flip($this->_select)) : "*") .
+      "select " . ($this->_select ? implode(",", $this->_select) : "*") .
       " from " . $this->_table .
       ($this->_where ? " where " . self::implode_key_and_value($this->_where, "and") : "") .
       ($this->_order ? " order by " . $this->_order : "") .
@@ -89,14 +89,14 @@ class ApplicationModel {
   // ok
   public function get_all() {
 
-    echo "select " . ($this->_select ? implode(",", array_flip($this->_select)) : "*") .
+    echo "select " . ($this->_select ? implode(",", $this->_select) : "*") .
     " from " . $this->_table .
     ($this->_where ? " where " . self::implode_key_and_value($this->_where, "and") : "") .
     ($this->_order ? " order by " . $this->_order : "") .
     ($this->_group ? " group by " . $this->_group : "") .
     ($this->_limit ? " limit " . $this->_limit : "");
     $records = $GLOBALS['db']->query(
-      "select " . ($this->_select ? implode(",", array_flip($this->_select)) : "*") .
+      "select " . ($this->_select ? implode(",", $this->_select) : "*") .
       " from " . $this->_table .
       ($this->_where ? " where " . self::implode_key_and_value($this->_where, "and") : "") .
       ($this->_order ? " order by " . $this->_order : "") .

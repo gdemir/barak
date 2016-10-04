@@ -1,5 +1,5 @@
 <?php
-
+//
 class ApplicationModel {
 
   private $_select;
@@ -179,6 +179,18 @@ class ApplicationModel {
     return $this;
   }
 
+  // this function DRAFT
+  public function delete_all() {
+  //public static function delete_all($conditions) {
+    //self::check_fieldnames(array_keys($conditions));
+
+    //$sets = self::implode_key_and_value($conditions, "and");
+    //ApplicationSql::delete(static::$name, $sets);
+    $conditions = $this->where ? $this->where : "";
+    ApplicationSql::delete(static::$name, $conditions);
+  }
+  
+  
   //////////////////////////////////////////////////
   // Private Functions
   //////////////////////////////////////////////////
@@ -297,13 +309,6 @@ class ApplicationModel {
 
   public static function delete($primary_key) {
     ApplicationSql::delete(static::$name, "id = " . $primary_key);
-  }
-
-  public static function delete_all($conditions) {
-    self::check_fieldnames(array_keys($conditions));
-
-    $sets = self::implode_key_and_value($conditions, "and");
-    ApplicationSql::delete(static::$name, $sets);
   }
 }
 ?>

@@ -10,26 +10,32 @@ class HomeController extends ApplicationController {
   public function index() {
     echo "Merhaba home#index<br/>";
     // Model function tests
-    $a = new User(["last_name" => "ddd"]);
-    print_r($a);
-    echo "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz" . "<br/>";
-    print_r(User::load()->where(["last_name" => "ddd"])->where(["first_name" => "GökhanX"])->order("last_name", "desc")->get_all());
-    echo "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz" . "<br/>";
-    $user = new User();
-    print_r($user);
-    $user->first_name ="GökhanX22";
 
-    //$user->tc = 123123;
-    // if (User::load()->exists(1))
-    //   echo "evet";
-    // else
-    //   echo "haryhir";
-    echo $user->first_name;
-    $user->save();
+    // $a = new User(["first_name" => "ddd"]);
 
-  // //   print_r(User::primary_keyname());
-  // //   print_r(Comments::primary_keyname());
+    // print_r(User::load()->where(["last_name" => "ddd"])->where(["first_name" => "GökhanX"])->order("last_name", "desc")->get_all());
 
+    $user1 = new User(["last_name" => "Demir"]);
+    print_r($user1);
+    echo "<br/>### yeni obje alındı<br/><br/>";
+    $user1->first_name ="Gökhan";
+    $user1->save();
+    print_r($user1);
+    echo "<br/>### yeni kullanıcı oluşturuldu!<br/>";
+
+    echo "<br/>id" . $user1->id . "<br/>";
+
+    $user2 = User::find($user1->id);
+    print_r($user2);
+    echo "<br/>### eski obje okundu<br/><br/>";
+    $user2->last_name = "Bakır";
+    $user2->save();
+
+    print_r($user2);
+    echo "<br/>### eski kullanıcı güncellendi!<br/>";
+
+    $user3 = User::load()->where(["first_name" => $user1->first_name])->select("first_name")->get_all();
+    print_r($user3);
 
   // //   User::update(123342, array("first_name" => "hmm3", "last_name" => "hmm4"));
   // //   echo "<br/>";
@@ -42,12 +48,12 @@ class HomeController extends ApplicationController {
   // //   print_r(User::last());
   // //   echo "<br/>";
 
-    print_r(User::find_all([123827,123828,123829]));
-    echo "<br/><br/><br/>>>>";
-    echo User::exists(340) == null ? "evet" : "hayir";
+    // print_r(User::find_all([123827,123828,123829]));
+
+    // echo User::exists(340) == null ? "evet" : "hayir";
     $this->users = User::load()->joins(["Comment", "Address"])->where(["Comment.name" => "XxxxxX"])->get_all();
 
-    echo ">>>><br/><br/><br/>";
+    // echo ">>>><br/><br/><br/>";
 //    $this->users = User::all();
 
 

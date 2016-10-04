@@ -9,6 +9,7 @@ class ApplicationSql {
       " (" . $fields . ") " .
       "values(" . $values . ")"
       );
+    return $GLOBALS["db"]->lastInsertId();
   }
 
   public static function read($table, $conditions) {

@@ -34,8 +34,9 @@ class HomeController extends ApplicationController {
     print_r($user2);
     echo "<br/>### eski kullanıcı güncellendi!<br/>";
 
-    $user3 = User::load()->where(["first_name" => $user1->first_name])->select("first_name")->get_all();
+    $user3 = User::load()->where(["first_name" => $user1->first_name, "last_name" => "ddd"])->select("first_name")->get_all();
     print_r($user3);
+    echo "<br/>### select kullanıldı!<br/>";
 
   // //   User::update(123342, array("first_name" => "hmm3", "last_name" => "hmm4"));
   // //   echo "<br/>";
@@ -51,7 +52,15 @@ class HomeController extends ApplicationController {
     // print_r(User::find_all([123827,123828,123829]));
 
     // echo User::exists(340) == null ? "evet" : "hayir";
-    $this->users = User::load()->joins(["Comment", "Address"])->where(["Comment.name" => "XxxxxX"])->get_all();
+    $this->users = User::load()->joins(["Comment"])->where(["User.last_name" => "Demir"])->get_all();
+    print_r($this->users);
+    echo "<br/>### join kullanıldı!<br/>";
+
+    $this->users = User::load()->joins(["Comment"])->where(["User.last_name" => "Demir"])->select("User.first_name, Comment.name")->get_all();
+    print_r($this->users);
+    echo "<br/>### join+select kullanıldı!<br/>";
+
+    //print_r($this->users);
 
     // echo ">>>><br/><br/><br/>";
 //    $this->users = User::all();

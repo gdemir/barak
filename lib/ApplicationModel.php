@@ -65,12 +65,12 @@ class ApplicationModel {
   // ok
   public function get() {
 
-      echo "select " . ($this->_select ? implode(",", array_flip($this->_select)) : "*") .
-      " from " . $this->_table .
-      ($this->_where ? " where " . self::implode_key_and_value($this->_where, "and") : "") .
-      ($this->_order ? " order by " . $this->_order : "") .
-      ($this->_group ? " group by " . $this->_group : "") .
-      ($this->_limit ? " limit " . $this->_limit : "");
+    echo "select " . ($this->_select ? implode(",", array_flip($this->_select)) : "*") .
+    " from " . $this->_table .
+    ($this->_where ? " where " . self::implode_key_and_value($this->_where, "and") : "") .
+    ($this->_order ? " order by " . $this->_order : "") .
+    ($this->_group ? " group by " . $this->_group : "") .
+    ($this->_limit ? " limit " . $this->_limit : "");
 
     $record = $GLOBALS['db']->query(
       "select " . ($this->_select ? implode(",", array_flip($this->_select)) : "*") .
@@ -81,7 +81,7 @@ class ApplicationModel {
       ($this->_limit ? " limit " . $this->_limit : "")
       )->fetch(PDO::FETCH_ASSOC);
 
-print_r($record);
+    print_r($record);
 
     return $record ? $record : null;
   }
@@ -89,12 +89,12 @@ print_r($record);
   // ok
   public function get_all() {
 
-echo "select " . ($this->_select ? implode(",", array_flip($this->_select)) : "*") .
-      " from " . $this->_table .
-      ($this->_where ? " where " . self::implode_key_and_value($this->_where, "and") : "") .
-      ($this->_order ? " order by " . $this->_order : "") .
-      ($this->_group ? " group by " . $this->_group : "") .
-      ($this->_limit ? " limit " . $this->_limit : "");
+    echo "select " . ($this->_select ? implode(",", array_flip($this->_select)) : "*") .
+    " from " . $this->_table .
+    ($this->_where ? " where " . self::implode_key_and_value($this->_where, "and") : "") .
+    ($this->_order ? " order by " . $this->_order : "") .
+    ($this->_group ? " group by " . $this->_group : "") .
+    ($this->_limit ? " limit " . $this->_limit : "");
     $records = $GLOBALS['db']->query(
       "select " . ($this->_select ? implode(",", array_flip($this->_select)) : "*") .
       " from " . $this->_table .
@@ -103,6 +103,8 @@ echo "select " . ($this->_select ? implode(",", array_flip($this->_select)) : "*
       ($this->_group ? " group by " . $this->_group : "") .
       ($this->_limit ? " limit " . $this->_limit : "")
       )->fetchAll(PDO::FETCH_ASSOC);
+    echo "<br/>";echo "<br/>";echo "<br/>";
+    print_r($records);
 
     if ($records) {
       foreach ($records as $record)
@@ -173,16 +175,16 @@ echo "select " . ($this->_select ? implode(",", array_flip($this->_select)) : "*
 
   // ok
   public function select($fields) {
-    $fields = self::check_table_and_field(array_flip(explode(",", $fields)));
+    $array_fields = explode(",", $fields);
+    $fields = self::check_table_and_field(array_combine($array_fields, $array_fields));
+
+    // varsayılan olarak ekle, objeler yüklenirken her zaman id olmalıdır.
+    $table_and_primary_key = static::$name . ".id";
+
+    $fields[$table_and_primary_key] = $table_and_primary_key;
 
     $this->_select = $fields;
     return $this;
-  }
-
-  // This function DRAFT
-  public function value($field) {
-    self::check_fieldname($field);
-    return $this->get().$field;
   }
 
   // ok
@@ -202,13 +204,27 @@ echo "select " . ($this->_select ? implode(",", array_flip($this->_select)) : "*
 
     $table_belong_array = [];
     foreach ($tables as $table) {
-      $table_belongs = preg_grep("/(.*)_id/", ApplicationSql::fieldnames(static::$name));
+      $table_fieldnames = ApplicationSql::fieldnames($table);
+      $table_belongs = preg_grep("/(.*)_id/", $table_fieldnames);
+
+      // join işlemi için User.id = Comment.user_id gibi where'ye eklemeler yap
       foreach ($table_belongs as $table_belong)
-        $table_belong_array[$table . "." . $table_belong] = ucfirst(str_replace("_", ".", $table_belong));
+        $this->_where[$table . "." . $table_belong] = ucfirst(str_replace("_", ".", $table_belong));
+
+      // join işleminde select çakışması önlenmesi için User.first_name, User.last_name gibi ekleme yap
+      foreach ($table_fieldnames as $fieldname) {
+      	$table_and_fieldname = $table . "." . $fieldname;
+        $this->_select[$table_and_fieldname] = $table_and_fieldname;
+      }
+
+      // join işleminde tüm tabloları arka arkaya ekle
+      $this->_table .= "," . $table;
     }
 
-    $this->_table = $this->_table . "," . implode(",", $tables);
-    $this->_where = ($this->_where) ? array_merge($this->_where, $table_belong_array) : $table_belong_array;
+    // tablonun kendi select için eklemeler yap
+    foreach (ApplicationSql::fieldnames(static::$name) as $fieldname) {
+      $this->_select[static::$name . "." . $fieldname] = static::$name . "." . $fieldname;
+    }
 
     return $this;
   }
@@ -333,12 +349,12 @@ echo "select " . ($this->_select ? implode(",", array_flip($this->_select)) : "*
   private function check_table_and_field($conditions) {
     foreach ($conditions as $field => $value) {
       if (strpos($field, '.') !== false) {
-        list($request_table, $request_field) = explode('.', $field);
+        list($request_table, $request_field) = array_map('trim', explode('.', $field));
 
-        self::check_tablename(trim($request_table));
-        self::check_fieldname(trim($request_field), trim($request_table));
+        self::check_tablename($request_table);
+        self::check_fieldname($request_field, $request_table);
       } else {
-        $conditions[$this->_table . '.' .  $field] = "'" . $value . "'";
+        $conditions[static::$name . '.' .  $field] = trim($value);
         unset($conditions[$field]);
       }
     }

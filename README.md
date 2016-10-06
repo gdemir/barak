@@ -159,7 +159,7 @@ After Action (`protected $after_actions`) özelliği, `app/controller/*.php` dos
  
 3. Anahtar yok ise her yerde çalışacağını
 
-#TODO
+`#TODO`
 
 ### Views (`app/views/DIRECTORY/*.php`)
 ---

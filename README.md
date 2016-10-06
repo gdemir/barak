@@ -56,9 +56,7 @@ class HomeController extends ApplicationController {
   
 ```
 
-#### Router
-
-> page : `config/routes.php`
+#### Router (`config/routes.php`)
 
 - Simple
 

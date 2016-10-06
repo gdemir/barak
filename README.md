@@ -164,7 +164,7 @@ After Action (`protected $after_actions`) özelliği, `app/controller/*.php` dos
 ### Views (`app/views/DIRECTORY/*.php`)
 ---
 
-Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `action` adlarını alarak, `app/views/CONTROLLER/action.php` html sayfası `app/views/layout/DIRECTORY_layout.php` içerisine `{yield}` değişken kısmına gömülür ve görüntülenir. 
+Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `action` adlarını alarak, `app/views/CONTROLLER/action.php` html sayfası `app/views/layout/DIRECTORY_layouts.php` içerisine `{yield}` değişken kısmına gömülür ve görüntülenir. 
 
 > `app/views/DIRECTORY/*.php`
 
@@ -172,7 +172,7 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
 <h1> Hello World </h1>
 ```
 
-> `app/views/layout/DIRECTORY_layout.php`
+> `app/views/layout/DIRECTORY_layouts.php`
 
 ```html
 <!DOCTYPE html>

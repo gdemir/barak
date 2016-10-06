@@ -49,6 +49,8 @@ class HomeController extends ApplicationController {
 ---
 ### Router (`config/routes.php`)
 
+#### GET 
+
 - Simple
 
 ```php
@@ -57,7 +59,7 @@ class HomeController extends ApplicationController {
   );
 ```
 
-- Dynamical Segment GET
+- Dynamical Segment
 
 > `config/routes.php`
 
@@ -76,8 +78,39 @@ class HomeController extends ApplicationController {
   ?>
 ```
 
+#### POST
+
+- Simple
+
+```php
+  ApplicationRoutes::draw(
+    post("/admin/login")
+  );
+```
+
+#### RESOURCE
+
+```php
+  ApplicationRoutes::draw(
+    resource("/user")
+  );
+```
+
+> *Generates the following routes:*
+
+```php
+  ApplicationRoutes::draw(
+    get("/user/index"),           // all record
+    get("/user/new"),             // new record form
+    post("user/create"),          // new record create
+    get("user/show/:id"),         // display record
+    get("user/edit/:id"),         // edit record
+    post("user/update"),          // update record
+    post("user/destroy")          // destroy record
+  );
+```
+
 ## Trailer
----
 
 [![BarakTurkmens](https://img.youtube.com/vi/cYNnHN5w1ok/2.jpg)](https://www.youtube.com/watch?v=cYNnHN5w1ok)
 [![BarakTurkmens#İskan](https://img.youtube.com/vi/haNqSJKs_j4/2.jpg)](https://www.youtube.com/watch?v=haNqSJKs_j4)
@@ -86,6 +119,5 @@ class HomeController extends ApplicationController {
 [![BarakTurkmens#VeledBey](https://img.youtube.com/vi/3RBtPGWRnsI/2.jpg)](https://www.youtube.com/watch?v=3RBtPGWRnsI)
 
 ## Sources
----
 
 - [https://tr.wikipedia.org/wiki/Barak_T%C3%BCrkmenleri](https://tr.wikipedia.org/wiki/Barak_T%C3%BCrkmenleri)

@@ -51,9 +51,9 @@ class HomeController extends ApplicationController {
 - Simple
 
 ```php
-    ApplicationRoutes::draw(
-      get("/", "home#index")
-    );
+  ApplicationRoutes::draw(
+    get("/", "home#index")
+  );
 ```
 
 - Dynamical Segment
@@ -61,18 +61,18 @@ class HomeController extends ApplicationController {
 > `config/routes.php`
 
 ```php
-    ApplicationRoutes::draw(
-      get("/home/index/:id"),
-    );
+  ApplicationRoutes::draw(
+    get("/home/index/:id"),
+  );
 ```
 
 > `app/view/home/index.html`
 
 ```html
-Home#Index
-<?php
-  echo "id" . $params["id"];
-?>
+  Home#Index
+  <?php
+    echo "id" . $params["id"];
+  ?>
 ```
 
 ### Trailer

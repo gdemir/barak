@@ -161,6 +161,34 @@ After Action (`protected $after_actions`) özelliği, `app/controller/*.php` dos
 
 #TODO
 
+### Views (`app/views/DIRECTORY/*.php`)
+---
+
+Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `action` adlarını alarak, `app/views/CONTROLLER/action.php` html sayfası `app/views/layout/DIRECTORY_layout.php` içerisine `{yield}` değişken kısmına gömülür ve görüntülenir. 
+
+> `app/views/DIRECTORY/*.php`
+
+```html
+<h1> Hello World </h1>
+```
+
+> `app/views/layout/DIRECTORY_layout.php`
+
+```html
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title></title>
+</head>
+<body>
+  {yield}
+</body>
+</html>
+```
+
 ## Trailer
 
 [![BarakTurkmens](https://img.youtube.com/vi/cYNnHN5w1ok/2.jpg)](https://www.youtube.com/watch?v=cYNnHN5w1ok)

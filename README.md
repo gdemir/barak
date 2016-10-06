@@ -1,6 +1,6 @@
 # Barak
 
-####  Requirements Packages and Versions
+###  Requirements Packages and Versions
 ---
 
 - MySQL
@@ -12,7 +12,7 @@
 - Install : [LAMP](http://gdemir.me/categories/linux/lamp/) or [LEMP](http://gdemir.me/categories/linux/lemp/)
 
 
-#### Trailer
+### Trailer
 ---
 
 [![BarakTurkmens](https://img.youtube.com/vi/cYNnHN5w1ok/2.jpg)](https://www.youtube.com/watch?v=cYNnHN5w1ok)
@@ -21,10 +21,10 @@
 [![BarakTurkmens#MürselBey](https://img.youtube.com/vi/uSoz28QpHRI/2.jpg)](https://www.youtube.com/watch?v=uSoz28QpHRI)
 [![BarakTurkmens#VeledBey](https://img.youtube.com/vi/3RBtPGWRnsI/2.jpg)](https://www.youtube.com/watch?v=3RBtPGWRnsI)
 
-#### Guides
+### Guides
 ---
 
-##### Simple Usage
+#### Simple Usage
 
 
 > `config/routes.php`
@@ -56,9 +56,9 @@ class HomeController extends ApplicationController {
   
 ```
 
-##### Router
+#### Router
 
-page : `config/routes.php`
+> page : `config/routes.php`
 
 - Simple
 
@@ -69,6 +69,8 @@ page : `config/routes.php`
 ```
 
 - Dynamical Segment
+
+> `config/routes.php`
 
 ```php
     ApplicationRoutes::draw(
@@ -84,7 +86,7 @@ echo "id" . $params["id"];
 ?>
 ```
 
-#### Sources
+### Sources
 ---
 
 - [https://tr.wikipedia.org/wiki/Barak_T%C3%BCrkmenleri](https://tr.wikipedia.org/wiki/Barak_T%C3%BCrkmenleri)

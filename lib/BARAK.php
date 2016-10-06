@@ -20,7 +20,7 @@ class BARAK extends PDO {
 // Global functions
 
 function include_dynamical_segment($rule) {
-	return strpos($rule, ":") ? true : false;
+  return strpos($rule, ":") ? true : false;
 }
 
 function resource($table) {
@@ -40,6 +40,6 @@ function post($rule, $target = false) {
 }
 
 function get($rule, $target = false) {
-	return new ApplicationRoute("get", $rule, $target, include_dynamical_segment($rule));
+  return new ApplicationRoute("get", $rule, $target, include_dynamical_segment($rule));
 }
 ?>

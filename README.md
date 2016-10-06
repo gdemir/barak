@@ -2,7 +2,6 @@
 
 ##  Requirements Packages and Versions
 
-
 - MySQL
 
 - Web server: apache2 or nginx (#TODO configuration file)
@@ -12,7 +11,6 @@
 - Install : [LAMP](http://gdemir.me/categories/linux/lamp/) or [LEMP](http://gdemir.me/categories/linux/lemp/)
 
 ## Guides
-
 
 ### Simple Usage
 ---
@@ -108,6 +106,37 @@ class HomeController extends ApplicationController {
     post("user/update"),          // update record
     post("user/destroy")          // destroy record
   );
+```
+
+### Controller (`app/controller/*.php`)
+---
+
+- Before Action
+
+```php
+class HomeController extends ApplicationController {
+
+ protected $before_actions = [
+                               ["login", "except" => ["login", "index"]],
+                               ["notice_clear", "only" => ["index"]],
+                               ["every_time"]
+                             ];
+  
+  public function index() {
+    echo "HomeIndex : Anasayfa görüntülerim. (get/post için login fonksiyonu çalışmaz, nitce_clear ve every_time çalışır)";
+  }
+  
+  public function login() {
+    echo "Home#Login : Her işlem öncesi login oluyoruz. (get/post için /home/login, /home/index hariç)";
+  }
+  
+  public function notice_clear() {
+    echo "Home#NoticeClear : Duyular silindi. (get/post için sadece /home/index'de çalışır)";
+  }
+  
+  public function every_time() {
+    echo "Home#EveryTime : Her zaman get/post öncesi çalışırım.";
+  }
 ```
 
 ## Trailer

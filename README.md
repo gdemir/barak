@@ -44,7 +44,7 @@ class HomeController extends ApplicationController {
   
 ```
 
-> `app/views/layout/DIRECTORY_layouts.php`
+> `app/views/layouts/home_layout.php`
 
 ```html
 <!DOCTYPE html>
@@ -181,7 +181,7 @@ After Action (`protected $after_actions`) özelliği, `app/controller/*.php` dos
 ### Views (`app/views/DIRECTORY/*.php`)
 ---
 
-Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `action` adlarını alarak, `app/views/CONTROLLER/action.php` html sayfası `app/views/layout/DIRECTORY_layouts.php` içerisine `{yield}` değişken kısmına gömülür ve görüntülenir. 
+Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `action` adlarını alarak, `app/views/CONTROLLER/ACTION.php` html sayfası `app/views/layouts/CONTROLLER_layout.php` içerisine `{yield}` değişken kısmına gömülür ve görüntülenir. 
 
 > `app/views/DIRECTORY/*.php`
 
@@ -189,7 +189,7 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
 <h1> Hello World </h1>
 ```
 
-> `app/views/layout/DIRECTORY_layouts.php`
+> `app/views/layouts/DIRECTORY_layout.php`
 
 ```html
 <!DOCTYPE html>

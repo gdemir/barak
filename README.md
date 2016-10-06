@@ -94,7 +94,7 @@ class HomeController extends ApplicationController {
   );
 ```
 
-> *Generates the following routes:*
+> *Aşağıdaki routes kümesini üretir:*
 
 ```php
   ApplicationRoutes::draw(
@@ -111,6 +111,10 @@ class HomeController extends ApplicationController {
 ### Controller (`app/controller/*.php`)
 ---
 
+Her `config/routes.php` içerisinde tanımlanan `get` işlemi için `app/controller/*.php` dosyası içerisinde fonksiyon tanımlamak zorunlu değildir, tanımlanırsa bir değişken yükü/yükleri ilgili web sayfasına `$params[KEY]` şeklinde çekilebilir. Her `config/routes.php` içerisinde tanımlanan `post` için ilgili `app/controller/*.php` dosyası içerisinde fonksiyon tanımlamak zorunludur. Before Action (`protected $before_actions`) özelliği `app/controller/*.php` dosyası içerisinde her çalışacak get/post fonksiyonları için önceden çalışacak fonksiyonları belirtmeye yarayan özelliktir, After Action (`protected $after_actions`) ise sonradan çalışacak fonksiyonları belirtmeye yarayan özelliktir.
+
+
+
 - Before Action
 
 ```php
@@ -123,7 +127,7 @@ class HomeController extends ApplicationController {
                              ];
   
   public function index() {
-    echo "HomeIndex : Anasayfa görüntülerim. (get/post için login fonksiyonu çalışmaz, nitce_clear ve every_time çalışır)";
+    echo "HomeIndex : Anasayfa (bu işlem için login fonksiyonu çalışmaz, notice_clear ve every_time çalışır)";
   }
   
   public function login() {
@@ -138,6 +142,10 @@ class HomeController extends ApplicationController {
     echo "Home#EveryTime : Her zaman get/post öncesi çalışırım.";
   }
 ```
+
+- After Action
+
+#TODO
 
 ## Trailer
 

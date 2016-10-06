@@ -53,7 +53,7 @@ class HomeController extends ApplicationController {
 
 ```php
   ApplicationRoutes::draw(
-    get("/", "home#index")
+    get("/home/index")
   );
 ```
 

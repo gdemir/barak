@@ -79,8 +79,9 @@ class HomeController extends ApplicationController {
 > `app/view/home/index.html`
 
 ```html
+Home#Index
 <?php
-echo "id" . $params["id"];
+  echo "id" . $params["id"];
 ?>
 ```
 

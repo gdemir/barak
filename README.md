@@ -206,6 +206,11 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
 </html>
 ```
 
+### Model
+---
+
+`#TODO`
+
 ## Trailer
 
 [![BarakTurkmens](https://img.youtube.com/vi/cYNnHN5w1ok/2.jpg)](https://www.youtube.com/watch?v=cYNnHN5w1ok)

@@ -21,6 +21,41 @@
 [![BarakTurkmens#MürselBey](https://img.youtube.com/vi/uSoz28QpHRI/2.jpg)](https://www.youtube.com/watch?v=uSoz28QpHRI)
 [![BarakTurkmens#VeledBey](https://img.youtube.com/vi/3RBtPGWRnsI/2.jpg)](https://www.youtube.com/watch?v=3RBtPGWRnsI)
 
+#### Guides
+---
+
+##### Simple Usage
+
+
+> `config/routes.php`
+
+```php
+    ApplicationRoutes::draw(
+      get("/", "home#index")
+    );
+```
+
+> `app/controller/HomeController.php`
+
+```php
+class HomeController extends ApplicationController {
+ 
+  public function index() {
+    $this->message = "Hello";
+  }
+
+}
+```
+
+> `app/view/home/index.html`
+
+```html
+
+  Home#Index
+  <?php echo $message; ?>
+  
+```
+
 #### Sources
 ---
 

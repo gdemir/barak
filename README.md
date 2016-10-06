@@ -41,7 +41,7 @@
 class HomeController extends ApplicationController {
  
   public function index() {
-    $this->message = "Hello";
+    $this->message = "Hello World";
   }
 
 }
@@ -54,6 +54,34 @@ class HomeController extends ApplicationController {
   Home#Index
   <?php echo $message; ?>
   
+```
+
+##### Router
+
+page : `config/routes.php`
+
+- Simple
+
+```php
+    ApplicationRoutes::draw(
+      get("/", "home#index")
+    );
+```
+
+- Dynamical Segment
+
+```php
+    ApplicationRoutes::draw(
+      get("/home/index/:id"),
+    );
+```
+
+> `app/view/home/index.html`
+
+```html
+<?php
+echo "id" . $params["id"];
+?>
 ```
 
 #### Sources

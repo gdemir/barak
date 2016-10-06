@@ -111,12 +111,18 @@ class HomeController extends ApplicationController {
 ### Controller (`app/controller/*.php`)
 ---
 
-Her `config/routes.php` içerisinde tanımlanan `get` işlemi için `app/controller/*.php` dosyası içerisinde fonksiyon tanımlamak zorunlu değildir, tanımlanırsa bir değişken yükü/yükleri ilgili web sayfasına `$params[KEY]` şeklinde çekilebilir. Her `config/routes.php` içerisinde tanımlanan `post` için ilgili `app/controller/*.php` dosyası içerisinde fonksiyon tanımlamak zorunludur. Before Action (`protected $before_actions`) özelliği `app/controller/*.php` dosyası içerisinde her çalışacak get/post fonksiyonları için önceden çalışacak fonksiyonları belirtmeye yarayan özelliktir, After Action (`protected $after_actions`) ise sonradan çalışacak fonksiyonları belirtmeye yarayan özelliktir.
-
-
+Her `config/routes.php` içerisinde tanımlanan `get` işlemi için `app/controller/*.php` dosyası içerisinde fonksiyon tanımlamak zorunlu değildir, tanımlanırsa bir değişken yükü/yükleri ilgili web sayfasına `$params[KEY]` şeklinde çekilebilir. Her `config/routes.php` içerisinde tanımlanan `post` için ilgili `app/controller/*.php` dosyası içerisinde fonksiyon tanımlamak zorunludur.
 
 - Before Action
 
+Before Action (`protected $before_actions`) özelliği, `app/controller/*.php` dosyası içerisinde her çalışacak get/post fonksiyonları için önceden çalışacak fonksiyonları belirtmeye yarayan özelliktir. Özelliğin etkisini ayarlamak için aşağıdaki 3 şekilde kullanılabilir:
+
+1. `except` anahtarı ile nerelerde çalışmayacağını
+ 
+2. `only` anahtarı ile nerelerde çalışacağını
+ 
+3. Anahtar yok ise her yerde çalışacağını
+ 
 ```php
 class HomeController extends ApplicationController {
 
@@ -144,6 +150,14 @@ class HomeController extends ApplicationController {
 ```
 
 - After Action
+
+After Action (`protected $after_actions`) özelliği, `app/controller/*.php` dosyası içerisinde her çalışacak get/post fonksiyonları için sonradan çalışacak fonksiyonları belirtmeye yarayan özelliktir. Özelliğin etkisini ayarlamak için aşağıdaki 3 şekilde kullanılabilir:
+
+1. `except` anahtarı ile nerelerde çalışmayacağını
+ 
+2. `only` anahtarı ile nerelerde çalışacağını
+ 
+3. Anahtar yok ise her yerde çalışacağını
 
 #TODO
 

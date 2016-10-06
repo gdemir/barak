@@ -30,8 +30,8 @@ function resource($table) {
     new ApplicationRoute("post", "$table/create", false),          // new record create
     new ApplicationRoute("get",  "$table/show/:id", false, true),  // display record
     new ApplicationRoute("get",  "$table/edit/:id", false, true),  // edit record
-    new ApplicationRoute("post", "$table/update", false, true),    // update record
-    new ApplicationRoute("post", "$table/destroy", false, true)    // destroy record
+    new ApplicationRoute("post", "$table/update", false, false),    // update record
+    new ApplicationRoute("post", "$table/destroy", false, false)    // destroy record
     ];
 }
 

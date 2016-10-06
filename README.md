@@ -1,7 +1,7 @@
 # Barak
 
 ##  Requirements Packages and Versions
----
+
 
 - MySQL
 
@@ -12,10 +12,10 @@
 - Install : [LAMP](http://gdemir.me/categories/linux/lamp/) or [LEMP](http://gdemir.me/categories/linux/lemp/)
 
 ## Guides
----
+
 
 ### Simple Usage
-
+---
 
 > `config/routes.php`
 

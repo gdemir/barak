@@ -178,6 +178,93 @@ After Action (`protected $after_actions`) özelliği, `app/controller/*.php` dos
 
 `#TODO`
 
+- Simple
+
+> `config/routes.php`
+
+```php
+    ApplicationRoutes::draw(
+      get("/admin/home"),
+      get("/admin/login"),
+      post("/admin/login")
+    );
+```
+
+> `app/controller/AdminController.php`
+
+```php
+    class AdminController extends ApplicationController {
+      protected $before_actions = [
+                                      ["require_login", "except" => ["login"]]
+                                  ];
+                                  
+      public function login() {
+        if (isset($_SESSION['admin']))
+          return $this->redirect_to("/admin/home");
+        if (isset($_POST["username"]) and isset($_POST["password"])) {
+          $user = User::where([
+                    "username" => $_POST["username"],
+                    "password" => $_POST["password"]
+                    ]);
+          if ($user) {
+            echo "tebrikler";
+            $_SESSION["admin"] = true;
+            return $this->render("/admin/home");
+          } else {
+            echo "şifre veya parola hatalı";
+          }
+        }
+        echo "otomatik render, login paneli gelmeli";
+      }
+      
+      public function require_login() {
+        echo "Her işlem öncesi login oluyoruz<br/>";
+        if (!isset($_SESSION['admin']))
+          return $this->redirect_to("/admin/login");
+      }
+    }
+```
+
+> `app/views/admin/login.php`
+
+```php
+    <div class="row">
+      <div class="col-xs-3">
+        <img src="/app/assets/img/default.png" class="img-thumbnail" />
+      </div>
+      <div class="col-xs-9">
+        <form class="login-form" action="/admin/login" accept-charset="UTF-8" method="post">
+          <input type="text" placeholder="Kullanıcı Adı" class="form-control" size="50" name="username" id="username" />
+          <input type="password" placeholder="Parola" class="form-control" size="50" name="password" id="password" />
+          <button type="submit" class="btn btn-primary" style="width:100%">SİSTEME GİRİŞ</button>
+        </form>
+      </div>
+    </div>
+```
+
+> `app/views/admin/home.php`
+
+```php
+    Admin#Home
+```
+
+> `app/views/layouts/admin_layout.php`
+
+```html
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="tr" lang="tr">
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title></title>
+</head>
+<body>
+  {yield}
+</body>
+</html>
+```
+
 ### Views (`app/views/DIRECTORY/*.php`)
 ---
 

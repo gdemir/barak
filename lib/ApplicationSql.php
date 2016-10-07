@@ -1,6 +1,18 @@
 <?php
 // CRUD
 // DRAFT #TODO or builder : https://github.com/ryangurn/PHP-MVC/blob/master/libraries/activerecord/lib/SQLBuilder.php
+
+// #TODO http://php.net/manual/en/pdo.prepare.php for php real_escape_string()
+/*
+
+$sth = $dbh->prepare('SELECT name, colour, calories
+    FROM fruit
+    WHERE calories < ? AND colour = ?');
+$sth->execute(array(150, 'red'));
+$red = $sth->fetchAll();
+
+*/
+
 class ApplicationSql {
 
   public static function create($table, $fields, $values) {

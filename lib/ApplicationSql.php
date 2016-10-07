@@ -4,7 +4,7 @@
 
 // #TODO http://php.net/manual/en/pdo.prepare.php for php real_escape_string()
 /*
-
+// SQL injection protection http://stackoverflow.com/questions/60174/how-can-i-prevent-sql-injection-in-php
 $sth = $dbh->prepare('SELECT name, colour, calories
     FROM fruit
     WHERE calories < ? AND colour = ?');

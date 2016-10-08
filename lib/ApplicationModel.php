@@ -37,14 +37,14 @@ class ApplicationModel {
   //   user.save();
   // }
 
-  public function __construct($conditions = null) {
+  public function __construct($fields = null) {
     $this->_new_record_state = true;
 
     foreach (ApplicationSql::fieldnames(static::$name) as $fieldname) {
-      if ($conditions) {
+      if ($fields) {
 
           // simple load for create
-        $this->_fields[$fieldname] = in_array($fieldname, array_keys($conditions)) ? $conditions[$fieldname] : "";
+        $this->_fields[$fieldname] = in_array($fieldname, array_keys($fields)) ? $fields[$fieldname] : "";
 
       } else {
 
@@ -146,24 +146,12 @@ class ApplicationModel {
 
       self::check_id();
 
-      $sets = self::implode_key_and_value($this->_fields, ",");
-      $primary_key = $this->_fields["id"];
-
-      ApplicationSql::update(static::$name, $sets, "id = '" . $primary_key . "'");
+      ApplicationSql::update(static::$name, $this->_fields, ["id" => $this->_fields["id"]]);
 
     } else {
 
-      $fields = "";
-      $values = "";
-      foreach ($this->_fields as $field => $value) {
-        if ("id" != $field or ("id" == $field and !empty($value))) {
-          $fields .= ($fields ? "," : "") . $field;
-          $values .= ($values ? "," : "") . "'". $value . "'";
-        }
-      }
-
       // kayıt tamamlandıktan sonra en son id döndür
-      $primary_key = ApplicationSql::create(static::$name, $fields, $values);
+      $primary_key = ApplicationSql::create(static::$name, $this->_fields);
 
       // artık yeni kayıt değil
       $this->_new_record_state = false;
@@ -188,14 +176,14 @@ class ApplicationModel {
   }
 
   // ok
-  public function where($conditions = null) {
-    $conditions = self::check_table_and_field($conditions);
+  public function where($fields = null) {
+    $fields = self::check_table_and_field($fields);
 
     // all value change to string like $value -> "$value"
-    //array_walk($conditions, function(&$value, $key) { $value = '"' . $value . '"'; });
-    array_walk($conditions, function(&$value, $key) { $value = '"' . $value . '"'; });
+    //array_walk($fields, function(&$value, $key) { $value = '"' . $value . '"'; });
+    array_walk($fields, function(&$value, $key) { $value = '"' . $value . '"'; });
 
-    $this->_where = ($this->_where) ? array_merge($this->_where, $conditions) : $conditions;
+    $this->_where = ($this->_where) ? array_merge($this->_where, $fields) : $fields;
     return $this;
   }
 
@@ -213,7 +201,7 @@ class ApplicationModel {
 
       // join işleminde select çakışması önlenmesi için User.first_name, User.last_name gibi ekleme yap
       foreach ($table_fieldnames as $fieldname) {
-      	$table_and_fieldname = $table . "." . $fieldname;
+        $table_and_fieldname = $table . "." . $fieldname;
         $this->_select[$table_and_fieldname] = $table_and_fieldname;
       }
 
@@ -262,13 +250,13 @@ class ApplicationModel {
 
   // this function DRAFT
   public function delete_all() {
-  //public static function delete_all($conditions) {
-    //self::check_fieldnames(array_keys($conditions));
+  //public static function delete_all($fields) {
+    //self::check_fieldnames(array_keys($fields));
 
-    //$sets = self::implode_key_and_value($conditions, "and");
+    //$sets = self::implode_key_and_value($fields, "and");
     //ApplicationSql::delete(static::$name, $sets);
-    $conditions = $this->where ? $this->where : "";
-    ApplicationSql::delete(static::$name, $conditions);
+    $fields = $this->where ? $this->where : "";
+    ApplicationSql::delete(static::$name, $fields);
   }
 
   //////////////////////////////////////////////////
@@ -283,7 +271,7 @@ class ApplicationModel {
   }
 
   // TODO
-  public static function create($conditions) {
+  public static function create($fields) {
 
   }
 
@@ -296,7 +284,7 @@ class ApplicationModel {
   // ok
   public static function find($primary_key) {
 
-    if ($record = ApplicationSql::read(static::$name, "id = " . $primary_key)->fetch(PDO::FETCH_ASSOC)) {
+    if ($record = ApplicationSql::read(static::$name, ["id" => $primary_key])->fetch(PDO::FETCH_ASSOC)) {
       $object = static::$name::load();
       foreach ($record as $fieldname => $value) {
         $object->$fieldname = $value;
@@ -330,35 +318,34 @@ class ApplicationModel {
   }
 
   // ok
-  public static function update($primary_key, $conditions) {
-    self::check_fieldnames(array_keys($conditions));
+  public static function update($primary_key, $fields) {
+    self::check_fieldnames(array_keys($fields));
 
-    $sets = self::implode_key_and_value($conditions, ",");
-    ApplicationSql::update(static::$name, $sets, "id = " . $primary_key);
+    ApplicationSql::update(static::$name, $fields, ["id" => $primary_key]);
   }
 
   // ok
-  public static function delete($primary_key) {
-    ApplicationSql::delete(static::$name, "id = " . $primary_key);
+  public static function delete($primary_key = null) {
+    ApplicationSql::delete(static::$name, ["id" => $primary_key]);
   }
 
   //////////////////////////////////////////////////
   // Private Functions
   //////////////////////////////////////////////////
   // name check_join_table_and_field
-  private function check_table_and_field($conditions) {
-    foreach ($conditions as $field => $value) {
+  private function check_table_and_field($fields) {
+    foreach ($fields as $field => $value) {
       if (strpos($field, '.') !== false) {
         list($request_table, $request_field) = array_map('trim', explode('.', $field));
 
         self::check_tablename($request_table);
         self::check_fieldname($request_field, $request_table);
       } else {
-        $conditions[static::$name . '.' .  $field] = trim($value);
-        unset($conditions[$field]);
+        $fields[static::$name . '.' .  $field] = trim($value);
+        unset($fields[$field]);
       }
     }
-    return $conditions;
+    return $fields;
   }
 
   private function check_id(){
@@ -400,8 +387,8 @@ class ApplicationModel {
   }
 
   // ok
-  private function implode_key_and_value($conditions, $delimiter = ",") {
-    return implode(" $delimiter ", array_map(function ($key, $value) { return $key . "=" . $value; }, array_keys($conditions), $conditions));
+  private function implode_key_and_value($fields, $delimiter = ",") {
+    return implode(" $delimiter ", array_map(function ($key, $value) { return $key . "=" . $value; }, array_keys($fields), $fields));
   }
 }
 ?>

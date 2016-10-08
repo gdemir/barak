@@ -33,5 +33,6 @@ class FileNotFoundException extends ApplicationException {};
 class ConfigurationException extends ApplicationException {};
 class FieldNotFoundException extends ApplicationException {};
 class TableNotFoundException extends ApplicationException {};
+class SQLException extends ApplicationException {};
 
 ?>

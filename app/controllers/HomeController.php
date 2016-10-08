@@ -9,6 +9,7 @@ class HomeController extends ApplicationController {
 
   public function index() {
     echo "Merhaba home#index<br/>";
+
     // Model function tests
 
     // $a = new User(["first_name" => "ddd"]);

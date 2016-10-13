@@ -10,59 +10,64 @@ class HomeController extends ApplicationController {
   public function index() {
     echo "Merhaba home#index<br/>";
 
+
     // Model function tests
+    echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><br/>";
 
-    // $a = new User(["first_name" => "ddd"]);
+    print_r(User::find(593));
 
-    // print_r(User::load()->where(["last_name" => "ddd"])->where(["first_name" => "GökhanX"])->order("last_name", "desc")->get_all());
+    echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><br/>";
+    $users = User::load()->where(["id" => 1])->select("first_name")->get();
+    print_r($users);
+    echo "<br/><b>### select kullanıldı!</b><br/>";
+
+    print_r(User::load()->where(["last_name" => "ddd"])->where(["first_name" => "GökhanX"])->order("last_name", "desc")->get());
 
     $user1 = new User(["last_name" => "Demir"]);
     print_r($user1);
-    echo "<br/>### yeni obje alındı<br/><br/>";
+    echo "<br/><b>### yeni obje alındı</b><br/>";
     $user1->first_name ="Gökhan";
     $user1->save();
     print_r($user1);
-    echo "<br/>### yeni kullanıcı oluşturuldu!<br/>";
+    echo "<br/><b>### yeni kullanıcı oluşturuldu!</b><br/>";
 
-    echo "<br/>id" . $user1->id . "<br/>";
-
+    echo "<br/>id ->" . $user1->id . "<br/>";
     $user2 = User::find($user1->id);
     print_r($user2);
-    echo "<br/>### eski obje okundu<br/><br/>";
+    echo "<br/><b>### eski obje okundu</b><br/>";
     $user2->last_name = "Bakır";
     $user2->save();
 
     print_r($user2);
-    echo "<br/>### eski kullanıcı güncellendi!<br/>";
+    echo "<br/><b>### eski kullanıcı güncellendi!</b><br/>";
 
-    $user3 = User::load()->where(["first_name" => $user1->first_name, "last_name" => "ddd"])->select("first_name")->get_all();
+    $user3 = User::load()->where(["first_name" => $user1->first_name, "last_name" => "Bakır"])->select("first_name")->get();
     print_r($user3);
-    echo "<br/>### select kullanıldı!<br/>";
+    echo "<br/><b>### select kullanıldı!</b><br/>";
 
-  // //   User::update(123342, array("first_name" => "hmm3", "last_name" => "hmm4"));
-  // //   echo "<br/>";
-  // //   echo "<br/>s";
-  // //   //print_r(User::where("first_name = 'GökhanX'"));
-  // //   echo "s<br/>";
-  //   // echo "<br/>";
+  // // //   User::update(123342, array("first_name" => "hmm3", "last_name" => "hmm4"));
+  // // //   echo "<br/>";
+  // // //   echo "<br/>s";
+  // // //   //print_r(User::where("first_name = 'GökhanX'"));
+  // // //   echo "s<br/>";
+  // //   // echo "<br/>";
 
-  // //   print_r(User::first());
-  // //   print_r(User::last());
-  // //   echo "<br/>";
+  // // //   print_r(User::first());
+  // // //   print_r(User::last());
+  // // //   echo "<br/>";
 
-    // print_r(User::find_all([123827,123828,123829]));
+  //   // print_r(User::find_all([123827,123828,123829]));
 
-    // echo User::exists(340) == null ? "evet" : "hayir";
-    $this->users = User::load()->joins(["Comment"])->where(["User.last_name" => "Demir"])->get_all();
-    print_r($this->users);
-    echo "<br/>### join kullanıldı!<br/>";
+  //   // echo User::exists(340) == null ? "evet" : "hayir";
+    //$this->users = User::load()->joins(["Comment"])->where(["User.last_name" => "Demir"])->get();
+    // print_r($this->users);
+    // echo "<br/>### join kullanıldı!<br/>";
 
-    $this->users = User::load()->joins(["Comment"])->where(["User.last_name" => "Demir"])->select("User.first_name, Comment.name")->get_all();
-    print_r($this->users);
-    echo "<br/>### join+select kullanıldı!<br/>";
+  //   $this->users = User::load()->joins(["Comment"])->where(["User.last_name" => "Demir"])->select("User.first_name, Comment.name")->get();
+  //   print_r($this->users);
+  //   echo "<br/>### join+select kullanıldı!<br/>";
 
-    //print_r($this->users);
-
+    // $this->users = User::load()->group("first_name, last_name")->select("User.first_name")->get();
     // echo ">>>><br/><br/><br/>";
 //    $this->users = User::all();
 
@@ -103,5 +108,3 @@ class HomeController extends ApplicationController {
   }
 }
 ?>
-
-

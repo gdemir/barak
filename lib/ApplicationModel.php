@@ -1,18 +1,18 @@
-<?php
+s<?php
 //
 class ApplicationModel {
 
-  private $_select;
-  private $_table;
-  private $_where;
-  private $_group;
+  private $_select = []; // list
+  private $_table  = []; // list
+  private $_where  = []; // hash
+  private $_group  = []; // list
   private $_limit;
-  private $_order;
+  private $_order  = []; // list
 
   private $_fields;
   private $_new_record_state;
 
-  //////////////////////////////////////////////////
+  //////s////////////////////////////////////////////
   // System Main Functions
   //////////////////////////////////////////////////
 
@@ -58,57 +58,30 @@ class ApplicationModel {
 
   public static function load() {
     $object = new static::$name();
-    $object->_table = static::$name;
+    $object->_table = [static::$name];
     return $object;
   }
 
   // ok
   public function get() {
 
-    echo "select " . ($this->_select ? implode(",", $this->_select) : "*") .
-    " from " . $this->_table .
-    ($this->_where ? " where " . self::implode_key_and_value($this->_where, "and") : "") .
-    ($this->_order ? " order by " . $this->_order : "") .
-    ($this->_group ? " group by " . $this->_group : "") .
-    ($this->_limit ? " limit " . $this->_limit : "");
-
-    $record = $GLOBALS['db']->query(
-      "select " . ($this->_select ? implode(",", $this->_select) : "*") .
-      " from " . $this->_table .
-      ($this->_where ? " where " . self::implode_key_and_value($this->_where, "and") : "") .
-      ($this->_order ? " order by " . $this->_order : "") .
-      ($this->_group ? " group by " . $this->_group : "") .
-      ($this->_limit ? " limit " . $this->_limit : "")
-      )->fetch(PDO::FETCH_ASSOC);
-
-    print_r($record);
-
-    return $record ? $record : null;
-  }
-
-  // ok
-  public function get_all() {
-
-    echo "select " . ($this->_select ? implode(",", $this->_select) : "*") .
-    " from " . $this->_table .
-    ($this->_where ? " where " . self::implode_key_and_value($this->_where, "and") : "") .
-    ($this->_order ? " order by " . $this->_order : "") .
-    ($this->_group ? " group by " . $this->_group : "") .
-    ($this->_limit ? " limit " . $this->_limit : "");
-    $records = $GLOBALS['db']->query(
-      "select " . ($this->_select ? implode(",", $this->_select) : "*") .
-      " from " . $this->_table .
-      ($this->_where ? " where " . self::implode_key_and_value($this->_where, "and") : "") .
-      ($this->_order ? " order by " . $this->_order : "") .
-      ($this->_group ? " group by " . $this->_group : "") .
-      ($this->_limit ? " limit " . $this->_limit : "")
-      )->fetchAll(PDO::FETCH_ASSOC);
-    echo "<br/>";echo "<br/>";echo "<br/>";
-    print_r($records);
+    $records = ApplicationSql::query(
+      $this->_select,
+      $this->_table,
+      $this->_where,
+      $this->_order,
+      $this->_group,
+      $this->_limit
+      );
+    echo "KAYIT VAR?";
+    echo $records ? "evet" : "hayir";
 
     if ($records) {
-      foreach ($records as $record)
-        $objects[] = static::$name::find($record["id"]);
+      foreach ($records as $record) {
+        $object = static::$name::find((int)$record["id"]);
+        $object->_select = $this->_select;
+        $objects[] = $object;
+      }
       return isset($objects) ? $objects : null;
     }
     return null;
@@ -157,31 +130,37 @@ class ApplicationModel {
       $this->_new_record_state = false;
 
       // id'si olan kaydın alan değerlerini yeni kayıtta güncelle, (ör.: id otomatik olarak alması için)
+      echo "kayit";
+      echo $primary_key;
+      echo is_string($primary_key) ? "evet":"hayir";
+      print_r(static::$name::find($primary_key));
       $this->_fields = static::$name::find($primary_key)->_fields;
     }
   }
 
+  // $users = User::load()->select("first_name, last_name")->get();
+
   // ok
   public function select($fields) {
-    $array_fields = explode(",", $fields);
-    $fields = self::check_table_and_field(array_combine($array_fields, $array_fields));
+
+    $fields = self::check_fields_of_table_list(array_map('trim', explode(',', $fields)));
 
     // varsayılan olarak ekle, objeler yüklenirken her zaman id olmalıdır.
     $table_and_primary_key = static::$name . ".id";
+    if (!in_array($table_and_primary_key, $fields))
+      array_push($fields, $table_and_primary_key);
 
-    $fields[$table_and_primary_key] = $table_and_primary_key;
+    $this->_select = $fields; // ["User.first_name", "User.last_name", "Comment.name"]
 
-    $this->_select = $fields;
     return $this;
   }
 
   // ok
   public function where($fields = null) {
-    $fields = self::check_table_and_field($fields);
+    $fields = self::check_fields_of_table_hash($fields);
 
     // all value change to string like $value -> "$value"
-    //array_walk($fields, function(&$value, $key) { $value = '"' . $value . '"'; });
-    array_walk($fields, function(&$value, $key) { $value = '"' . $value . '"'; });
+//    array_walk($fields, function(&$value, $key) { $value = '"' . $value . '"'; });
 
     $this->_where = ($this->_where) ? array_merge($this->_where, $fields) : $fields;
     return $this;
@@ -205,8 +184,8 @@ class ApplicationModel {
         $this->_select[$table_and_fieldname] = $table_and_fieldname;
       }
 
-      // join işleminde tüm tabloları arka arkaya ekle
-      $this->_table .= "," . $table;
+      // join işleminde tüm tabloları listeye ekle
+      array_push($this->_table, $table);
     }
 
     // tablonun kendi select için eklemeler yap
@@ -217,34 +196,37 @@ class ApplicationModel {
     return $this;
   }
 
-  public function group($field) {
-    self::check_fieldname($field);
-    $this->_group = $field;
+  public function group($fields) {
+    $fields = self::check_fields_of_table_list(array_map('trim', explode(',', $fields)));
+
+    $this->_group = $fields;
     return $this;
   }
 
   // ok
   public function limit($count = null) {
-    $this->_limit = $count;
+    $this->_limit = [$count];
     return $this;
   }
 
   // ok
   public function order($field, $sort_type = "asc") {
+    // TODO $sort_type check asc, desc ??
     self::check_fieldname($field);
-    $this->_order = $field . " " . $sort_type;
+
+    $this->_order[] = "$field $sort_type";
     return $this;
   }
 
   // ok
   public function first($limit = 1) {
-    $this->_order = "id asc limit " . $limit;
+    $this->_order[] = "id asc limit " . $limit;
     return $this;
   }
 
   // ok
   public function last($limit = 1) {
-    $this->_order = "id desc limit " . $limit;
+    $this->_order[] = "id desc limit " . $limit;
     return $this;
   }
 
@@ -282,9 +264,9 @@ class ApplicationModel {
   // $user->save();
 
   // ok
-  public static function find($primary_key) {
+  public static function find(int $primary_key) {
 
-    if ($record = ApplicationSql::read(static::$name, ["id" => $primary_key])->fetch(PDO::FETCH_ASSOC)) {
+    if ($record = ApplicationSql::read(static::$name, ["id" => $primary_key])) {
       $object = static::$name::load();
       foreach ($record as $fieldname => $value) {
         $object->$fieldname = $value;
@@ -303,6 +285,7 @@ class ApplicationModel {
   // }
 
   public static function find_all($primary_keys) {
+
     foreach ($primary_keys as $primary_key)
       $objects[] = static::$name::find($primary_key);
     return isset($objects) ? $objects : null;
@@ -310,7 +293,7 @@ class ApplicationModel {
 
   // ok
   public static function all() {
-    return static::$name::load()->get_all();
+    return static::$name::load()->get();
   }
 
   public static function exists($primary_key) {
@@ -333,15 +316,37 @@ class ApplicationModel {
   // Private Functions
   //////////////////////////////////////////////////
   // name check_join_table_and_field
-  private function check_table_and_field($fields) {
-    foreach ($fields as $field => $value) {
-      if (strpos($field, '.') !== false) {
+
+  // select, where, group, order by
+
+  private function check_fields_of_table_list($fields) {
+    foreach ($fields as $index => $field) {
+      if (strpos($field, '.') !== false) { // found TABLE
         list($request_table, $request_field) = array_map('trim', explode('.', $field));
 
-        self::check_tablename($request_table);
+        if (!in_array($request_table, $this->_table))
+          throw new TableNotFoundException("Sorgulama işleminde böyle bir tablo mevcut değil", $request_table);
+
         self::check_fieldname($request_field, $request_table);
+
       } else {
-        $fields[static::$name . '.' .  $field] = trim($value);
+        $fields[$index] = static::$name . '.' .  $field;
+      }
+    }
+    return $fields;
+  }
+  private function check_fields_of_table_hash($fields) {
+    foreach ($fields as $field => $value) {
+      if (strpos($field, '.') !== false) { // found TABLE
+        list($request_table, $request_field) = array_map('trim', explode('.', $field));
+
+        if (!in_array($request_table, $this->_table))
+          throw new TableNotFoundException("Sorgulama işleminde böyle bir tablo mevcut değil", $request_table);
+
+        self::check_fieldname($request_field, $request_table);
+
+      } else {
+        $fields[static::$name . '.' .  $field] = $value;
         unset($fields[$field]);
       }
     }

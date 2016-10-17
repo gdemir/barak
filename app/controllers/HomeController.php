@@ -8,51 +8,52 @@ class HomeController extends ApplicationController {
   ];
 
   public function index() {
-    echo "Merhaba home#index<br/>";
+  //   echo "Merhaba home#index<br/>";
 
 
-    // Model function tests
-    echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><br/>";
+  //   // Model function tests
+  //   echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><br/>";
 
-    print_r(User::find(593));
+  //   print_r(User::find(593));
 
-    echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><br/>";
-    $users = User::load()->where(["id" => 1])->select("first_name")->get();
-    print_r($users);
-    echo "<br/><b>### select kullanıldı!</b><br/>";
+  //   echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><br/>";
+  //   $users = User::load()->where(["id" => 1])->select("first_name")->get();
+  //   print_r($users);
+  //   echo "<br/><b>### select kullanıldı!</b><br/>";
 
-    print_r(User::load()->where(["last_name" => "ddd"])->where(["first_name" => "GökhanX"])->order("last_name", "desc")->get());
+  //   print_r(User::load()->where(["last_name" => "ddd"])->where(["first_name" => "GökhanX"])->order("last_name", "desc")->get());
 
-    $user1 = new User(["last_name" => "Demir"]);
-    print_r($user1);
-    echo "<br/><b>### yeni obje alındı</b><br/>";
-    $user1->first_name ="Gökhan";
-    $user1->save();
-    print_r($user1);
-    echo "<br/><b>### yeni kullanıcı oluşturuldu!</b><br/>";
+  //   $user1 = new User(["last_name" => "Demir"]);
+  //   print_r($user1);
+  //   echo "<br/><b>### yeni obje alındı</b><br/>";
+  //   $user1->first_name ="Gökhan";
+  //   $user1->save();
+  //   print_r($user1);
+  //   echo "<br/><b>### yeni kullanıcı oluşturuldu!</b><br/>";
 
-    echo "<br/>id ->" . $user1->id . "<br/>";
-    $user2 = User::find($user1->id);
-    print_r($user2);
-    echo "<br/><b>### eski obje okundu</b><br/>";
-    $user2->last_name = "Bakır";
-    $user2->save();
+  //   echo "<br/>id ->" . $user1->id . "<br/>";
+  //   $user2 = User::find($user1->id);
+  //   print_r($user2);
+  //   echo "<br/><b>### eski obje okundu</b><br/>";
+  //   $user2->last_name = "Bakır";
+  //   $user2->save();
 
-    print_r($user2);
-    echo "<br/><b>### eski kullanıcı güncellendi!</b><br/>";
+  //   print_r($user2);
+  //   echo "<br/><b>### eski kullanıcı güncellendi!</b><br/>";
 
-    $user3 = User::load()->where(["first_name" => $user1->first_name, "last_name" => "Bakır"])->select("first_name")->get();
-    print_r($user3);
-    echo "<br/><b>### select kullanıldı!</b><br/>";
+  //   $user3 = User::load()->where(["first_name" => $user1->first_name, "last_name" => "Bakır"])->select("first_name")->get();
+  //   print_r($user3);
+  //   echo "<br/><b>### select kullanıldı!</b><br/>";
 
-  // // //   User::update(123342, array("first_name" => "hmm3", "last_name" => "hmm4"));
-  // // //   echo "<br/>";
-  // // //   echo "<br/>s";
-  // // //   //print_r(User::where("first_name = 'GökhanX'"));
-  // // //   echo "s<br/>";
+  //   User::update(645, array("first_name" => "hmm3", "last_name" => "hmm4"));
+  // // // //   echo "<br/>";
+  // // // //   echo "<br/>s";
+  //   print_r(User::load()->where(["first_name" => "Gökhan"])->get());
+  //   echo "<br/><b>### where kullanıldı!</b><br/>";
+
   // //   // echo "<br/>";
 
-  // // //   print_r(User::first());
+    //print_r(User::load()->first()->get());
   // // //   print_r(User::last());
   // // //   echo "<br/>";
 
@@ -62,8 +63,42 @@ class HomeController extends ApplicationController {
     //$this->users = User::load()->joins(["Comment"])->where(["User.last_name" => "Demir"])->get();
     // print_r($this->users);
     // echo "<br/>### join kullanıldı!<br/>";
+    $user = User::find(3);
 
-  //   $this->users = User::load()->joins(["Comment"])->where(["User.last_name" => "Demir"])->select("User.first_name, Comment.name")->get();
+    foreach ($user->comment as $comment) {
+      echo $comment->name;
+      echo "<br/>";
+    }
+
+    //print_r($user);
+    echo "<br/>";   echo "<br/>";
+    echo "<br/>";   echo "<br/>";
+
+    $this->users = User::load()->joins(["Comment"])->where(["User.id" => "3"])->select("User.first_name, Comment.name")->get();
+    print_r($this->users);
+    echo "<br/>";   echo "<br/>";
+    foreach ($this->users as $user) {
+    	echo "Ad:" . $user->first_name;
+    	echo "İçerik:" . $user->name;
+    	echo "<br/>";
+    }
+
+    echo "<br/>";   echo "<br/>";
+
+    echo "<br/>";   echo "<br/>";
+
+    foreach ($this->users as $user) {
+      echo $user->first_name . $user->id;
+      echo "<br/>";
+      foreach ($user->comment as $comment) {
+        echo $comment->name;
+        echo "<br/>";
+      }
+      echo "<br/>";
+      echo "<br/>";
+    }
+
+    echo "<br/><b>### joins kullanıldı!</b><br/>";
   //   print_r($this->users);
   //   echo "<br/>### join+select kullanıldı!<br/>";
 

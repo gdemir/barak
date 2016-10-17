@@ -28,7 +28,12 @@ $database = parse_ini_file(CONFIGFILE);
 
 // Database connection and model create of tables
 
-$GLOBALS['db'] = new BARAK("mysql:host={$database['host']};dbname={$database['name']}", $database["user"], $database["pass"]);
+$GLOBALS['db'] = new BARAK(
+	"mysql:host={$database['host']};dbname={$database['name']}",
+	$database["user"],
+	$database["pass"]
+	//array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
+	);
 
 
 foreach ($GLOBALS['db']->tablenames() as $table_name) {

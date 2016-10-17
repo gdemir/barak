@@ -3,8 +3,9 @@ s<?php
 class ApplicationModel {
 
   private $_select = []; // list
-  private $_table  = []; // list
+  private $_table  = ""; // string
   private $_where  = []; // hash
+  private $_join  =  []; // hash
   private $_group  = []; // list
   private $_limit;
   private $_order  = []; // list
@@ -58,28 +59,19 @@ class ApplicationModel {
 
   public static function load() {
     $object = new static::$name();
-    $object->_table = [static::$name];
+    $object->_table = static::$name;
     return $object;
   }
 
   // ok
   public function get() {
 
-    $records = ApplicationSql::query(
-      $this->_select,
-      $this->_table,
-      $this->_where,
-      $this->_order,
-      $this->_group,
-      $this->_limit
-      );
-    echo "KAYIT VAR?";
-    echo $records ? "evet" : "hayir";
+    $records = ApplicationSql::query($this->_select, $this->_table, $this->_join, $this->_where, $this->_order, $this->_group, $this->_limit);
 
     if ($records) {
       foreach ($records as $record) {
-        $object = static::$name::find((int)$record["id"]);
-        $object->_select = $this->_select;
+        $object = $this->_table::find((int)$record["id"]);
+        $object->_fields = $record;
         $objects[] = $object;
       }
       return isset($objects) ? $objects : null;
@@ -87,11 +79,38 @@ class ApplicationModel {
     return null;
   }
 
+
   public function __get($field) {
-    if (isset($this->_fields[$field]))
+    if (isset($this->_fields[$field])) {
       return $this->_fields[$field];
-    else
+    } else if (in_array(ucfirst($field), ApplicationSql::tablenames())) {
+
+      $belong_table = ucfirst($field);
+      $owner_key = strtolower($this->_table) . "_id";
+
+      if (!in_array($owner_key, self::table_belongs($belong_table)))
+        throw new BelongNotFoundException("Tabloya ait olan böyle bir tablo yok", $field);
+
+      $this->_where = [$owner_key => $this->_fields["id"]];
+      $this->_table = $belong_table;
+
+      $records = ApplicationSql::query($this->_select, $this->_table, $this->_join, $this->_where, $this->_order, $this->_group, $this->_limit);
+
+      if ($records) {
+
+        foreach ($records as $record) {
+          $object = $this->_table::find((int)$record["id"]);
+          $objects[] = $object;
+        }
+
+        return isset($objects) ? $objects : null;
+      }
+
+      return null;
+
+    } else {
       throw new FieldNotFoundException("Tabloda böyle bir anahtar mevcut değil", $field);
+    }
   }
 
   public function __set($field, $value) {
@@ -130,15 +149,12 @@ class ApplicationModel {
       $this->_new_record_state = false;
 
       // id'si olan kaydın alan değerlerini yeni kayıtta güncelle, (ör.: id otomatik olarak alması için)
-      echo "kayit";
-      echo $primary_key;
-      echo is_string($primary_key) ? "evet":"hayir";
-      print_r(static::$name::find($primary_key));
       $this->_fields = static::$name::find($primary_key)->_fields;
     }
   }
 
   // $users = User::load()->select("first_name, last_name")->get();
+  // ["User.firs_name, User.last_name"]
 
   // ok
   public function select($fields) {
@@ -159,11 +175,17 @@ class ApplicationModel {
   public function where($fields = null) {
     $fields = self::check_fields_of_table_hash($fields);
 
-    // all value change to string like $value -> "$value"
-//    array_walk($fields, function(&$value, $key) { $value = '"' . $value . '"'; });
-
     $this->_where = ($this->_where) ? array_merge($this->_where, $fields) : $fields;
     return $this;
+  }
+
+  private function belongs_of_fieldnames($table_fieldnames) {
+    return preg_grep("/(.*)_id/", $table_fieldnames);
+  }
+
+
+  private function table_belongs($table) {
+    return self::belongs_of_fieldnames(ApplicationSql::fieldnames($table));
   }
 
   // ok
@@ -172,25 +194,25 @@ class ApplicationModel {
     $table_belong_array = [];
     foreach ($tables as $table) {
       $table_fieldnames = ApplicationSql::fieldnames($table);
-      $table_belongs = preg_grep("/(.*)_id/", $table_fieldnames);
+      $table_belongs = self::belongs_of_fieldnames($table_fieldnames);
 
       // join işlemi için User.id = Comment.user_id gibi where'ye eklemeler yap
-      foreach ($table_belongs as $table_belong)
-        $this->_where[$table . "." . $table_belong] = ucfirst(str_replace("_", ".", $table_belong));
-
-      // join işleminde select çakışması önlenmesi için User.first_name, User.last_name gibi ekleme yap
-      foreach ($table_fieldnames as $fieldname) {
-        $table_and_fieldname = $table . "." . $fieldname;
-        $this->_select[$table_and_fieldname] = $table_and_fieldname;
+      foreach ($table_belongs as $table_belong) {
+        $this->_join[$table] = $table . "." . $table_belong . "=" . ucfirst(str_replace("_", ".", $table_belong));
+        //$this->_where[$table . "." . $table_belong] = ucfirst(str_replace("_", ".", $table_belong));
       }
 
+      // join işleminde select çakışması önlenmesi için User.first_name, User.last_name gibi ekleme yap
+      foreach ($table_fieldnames as $fieldname)
+        $this->_select[] = $table . "." . $fieldname;
+
       // join işleminde tüm tabloları listeye ekle
-      array_push($this->_table, $table);
+      //array_push($this->_table, $table);
     }
 
     // tablonun kendi select için eklemeler yap
     foreach (ApplicationSql::fieldnames(static::$name) as $fieldname) {
-      $this->_select[static::$name . "." . $fieldname] = static::$name . "." . $fieldname;
+      $this->_select[] = static::$name . "." . $fieldname;
     }
 
     return $this;
@@ -219,8 +241,9 @@ class ApplicationModel {
   }
 
   // ok
-  public function first($limit = 1) {
-    $this->_order[] = "id asc limit " . $limit;
+  public static function first($limit = 1) {
+    $this->_order[] = "id asc";
+    $this->_limit = [$limit];
     return $this;
   }
 
@@ -252,11 +275,6 @@ class ApplicationModel {
     return ApplicationSql::primary_keyname(static::$name);
   }
 
-  // TODO
-  public static function create($fields) {
-
-  }
-
   // query primary_key
   //
   // $user = User::find(1); // return User objects
@@ -268,9 +286,11 @@ class ApplicationModel {
 
     if ($record = ApplicationSql::read(static::$name, ["id" => $primary_key])) {
       $object = static::$name::load();
+
       foreach ($record as $fieldname => $value) {
         $object->$fieldname = $value;
       }
+
       $object->_new_record_state = false;
       return $object;
     }
@@ -289,6 +309,7 @@ class ApplicationModel {
     foreach ($primary_keys as $primary_key)
       $objects[] = static::$name::find($primary_key);
     return isset($objects) ? $objects : null;
+
   }
 
   // ok
@@ -319,12 +340,13 @@ class ApplicationModel {
 
   // select, where, group, order by
 
+
   private function check_fields_of_table_list($fields) {
     foreach ($fields as $index => $field) {
       if (strpos($field, '.') !== false) { // found TABLE
         list($request_table, $request_field) = array_map('trim', explode('.', $field));
 
-        if (!in_array($request_table, $this->_table))
+        if ($request_table != $this->_table and ($this->_join and !array_key_exists($request_table, $this->_join)))
           throw new TableNotFoundException("Sorgulama işleminde böyle bir tablo mevcut değil", $request_table);
 
         self::check_fieldname($request_field, $request_table);
@@ -335,13 +357,14 @@ class ApplicationModel {
     }
     return $fields;
   }
+
   private function check_fields_of_table_hash($fields) {
     foreach ($fields as $field => $value) {
       if (strpos($field, '.') !== false) { // found TABLE
         list($request_table, $request_field) = array_map('trim', explode('.', $field));
 
-        if (!in_array($request_table, $this->_table))
-          throw new TableNotFoundException("Sorgulama işleminde böyle bir tablo mevcut değil", $request_table);
+        if ($request_table != $this->_table and ($this->_join and !array_key_exists($request_table, $this->_join)))
+          throw new TableNotFoundException("WHERE işleminde böyle bir tablo mevcut değil", $request_table);
 
         self::check_fieldname($request_field, $request_table);
 

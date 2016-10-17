@@ -2,8 +2,6 @@
 // CRUD
 // DRAFT #TODO or builder : https://github.com/ryangurn/PHP-MVC/blob/master/libraries/activerecord/lib/SQLBuilder.php
 
-// #TODO http://php.net/manual/en/pdo.prepare.php for php real_escape_string()
-
 // SQL injection protection http://stackoverflow.com/questions/60174/how-can-i-prevent-sql-injection-in-php
 
 class ApplicationSql {
@@ -46,10 +44,6 @@ class ApplicationSql {
 
     $query = $GLOBALS['db']->prepare("INSERT INTO $_table SET $field_key_and_symbols");
 
-    echo "##############<br/>";echo "##############<br/>";
-    echo "INSERT INTO $_table SET $field_key_and_symbols";
-    echo "##############<br/>";echo "##############<br/>";
-
     if (!$query->execute($field_symbol_and_values))
       throw new SQLException("Tabloya veri kaydında sorun oluştu", $_table);
 
@@ -61,11 +55,6 @@ class ApplicationSql {
     list($field_key_and_symbols, $field_symbol_and_values) = self::hash_to_symbols($_fields, "and");
 
     $query = $GLOBALS['db']->prepare("SELECT * FROM $_table WHERE $field_key_and_symbols");
-
-    echo "##############<br/>";echo "##############<br/>";
-    echo "SELECT * FROM $_table WHERE $field_key_and_symbols";
-    echo "##############<br/>";echo "##############<br/>";
-
 
     if (!$query->execute($field_symbol_and_values))
       throw new SQLException("Tabloya veri kaydında sorun oluştu", $_table);
@@ -95,53 +84,78 @@ class ApplicationSql {
       throw new SQLException("Tabloya veri kaydında sorun oluştu", $_table);
   }
 
-  public static function query($_select, $_table, $_where, $_order, $_group, $_limit) {
-    //$execute = ["SELECT" => $_select]
+  public static function query($_select, $_table, $_join, $_where, $_order, $_group, $_limit) {
+
     $_select = $_select ?: ["id"];
     $_limit = $_limit ?: [];
 
     $_select = implode(",", $_select);
-    $_table = implode(",", $_table);
 
-    echo "<br/>";
-    echo "<br/>";
-    echo "select: "; print_r($_select);  echo "<br/>";
-    echo "table:  "; print_r($_table);   echo "<br/>";
-    echo "fields: "; print_r($_where);   echo "<br/>";
-    echo "order: ";  print_r($_order);   echo "<br/>";
-    echo "group: ";  print_r($_group);   echo "<br/>";
-    echo "limit: ";  print_r($_limit);   echo "<br/>";
-    echo "#####################################<br/>";
+    if ($_join) {
+      $_joins = "";
+      foreach ($_join as $table => $condition) {
+        $_joins .= ($_joins ? " " : "") . "INNER JOIN $table ON $condition";;
+      }
+    } else {
+      $_joins = "";
+    }
 
     list($where_key_and_symbols, $where_symbol_and_values) = self::hash_to_symbols($_where, "and", "WHERE");
 
     list($order_symbols, $order_symbol_and_values) = self::list_to_symbols($_order, "ORDER BY");
-    echo $order_symbols; echo"<br/>"; print_r($order_symbol_and_values); echo " order<br/>";
 
     list($group_symbols, $group_symbol_and_values) = self::list_to_symbols($_group, "GROUP BY");
-    echo $group_symbols; echo"<br/>"; print_r($group_symbol_and_values); echo " group<br/>";
 
     list($limit_symbols, $limit_symbol_and_values) = self::list_to_symbols($_limit, "LIMIT");
-    echo $limit_symbols; echo"<br/>"; print_r($limit_symbol_and_values); echo " limit<br/>";
 
-    //$sql = "SELECT $_select FROM $_table $where_key_and_symbols $order_symbols $group_symbols $limit_symbols";
-    $query = $GLOBALS['db']->prepare("SELECT $_select FROM $_table $where_key_and_symbols $order_symbols $group_symbols $limit_symbols");
+    $sql = "SELECT $_select FROM $_table $_joins $where_key_and_symbols $order_symbols $group_symbols $limit_symbols";
 
-    echo "<br/> queryyy>>>>>>>>>>> <br/>";
+    // echo "çalış-><br/><br/>";
+    // echo $sql;
+    // echo "<br/><br/>çalıştı<br/><br/>";
 
-    print_r($query);
-    print_r($where_symbol_and_values);
+    //$sql = "SELECT User.first_name, User.id FROM  User INNER JOIN Comment ON Comment.user_id=User.id";
+    $query = $GLOBALS['db']->prepare($sql);
+    // print_r($query);
+    // echo "<br/>";
+    // print_r($where_symbol_and_values);
+    // $a = $query->fetchAll(PDO::FETCH_ASSOC);
+    // echo "<br/>";
+    // print_r($a);
+    // return $a;
+    //$query = $GLOBALS['db']->prepare("SELECT $_select FROM $_table $where_key_and_symbols $order_symbols $group_symbols $limit_symbols");
 
+   // print_r($query->queryString);
+    // $sql = $query->queryString;
+    // foreach ($where_symbol_and_values as $symbol => $value) {
+    //   $sql = str_replace($symbol, $value, $sql);
+    // }
+    // echo "<br/>";echo "<br/>";echo "<br/>";
+    // print_r($sql);
+    // echo "<br/>";echo "<br/>";echo "<br/>";
 
-    $a = array_merge(
+    // $b = $GLOBALS['db']->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    // print_r($b);
+    // print_r($where_symbol_and_values);
+
+    // if (array_key_exists(":WHERE_User_id", $where_symbol_and_values))
+    //   $where_symbol_and_values[":WHERE_User_id"] = 3;
+    // if (array_key_exists(":WHERE_Comment_user_id", $where_symbol_and_values))
+    //   $where_symbol_and_values[":WHERE_Comment_user_id"] = "User.id";
+
+    if (!$query->execute(array_merge(
       $where_symbol_and_values,
       $order_symbol_and_values,
       $group_symbol_and_values,
       $limit_symbol_and_values
-      );
-
-    if (!$query->execute($a))
+      )))
       throw new SQLException("Tabloya veri getirmede sorun oluştu", $_table);
+
+    // echo "<br/>";echo "<br/>";echo "<br/>";
+    // print_r($query);
+    // echo "<br/>";echo "<br/>";echo "<br/>";
+
+    //print_r($query->fetchAll(PDO::FETCH_ASSOC));
 
     return $query->fetchAll(PDO::FETCH_ASSOC);
   }

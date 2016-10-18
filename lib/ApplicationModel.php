@@ -44,12 +44,12 @@ class ApplicationModel {
     foreach (ApplicationSql::fieldnames(static::$name) as $fieldname) {
       if ($fields) {
 
-          // simple load for create
+        // simple load for create
         $this->_fields[$fieldname] = in_array($fieldname, array_keys($fields)) ? $fields[$fieldname] : "";
 
       } else {
 
-          // create draft fieldnames
+        // create draft fieldnames
         $this->_fields[$fieldname] = "";
 
       }
@@ -63,11 +63,7 @@ class ApplicationModel {
     return $object;
   }
 
-  // Alma :1
-  
-  // $user = User::find(1);
-  // echo $user->_first_name;
-
+  // ok
   public function get() {
 
     $records = ApplicationSql::query($this->_select, $this->_table, $this->_join, $this->_where, $this->_order, $this->_group, $this->_limit);
@@ -83,34 +79,27 @@ class ApplicationModel {
     return null;
   }
 
+  // Alma :1
+  
+  // $user = User::find(1);
+  // echo $user->_first_name;
+  
+  
+  // $comment = Comment::find(1); // ["id", "name", "content", "user_id"]
+  // echo $comment->user->first_name;
 
   public function __get($field) {
     if (isset($this->_fields[$field])) {
       return $this->_fields[$field];
     } else if (in_array(ucfirst($field), ApplicationSql::tablenames())) {
 
-      $belong_table = ucfirst($field);
-      $owner_key = strtolower($this->_table) . "_id";
+      $belong_table = ucfirst($field); // User
+      $foreign_key = strtolower($field) . "_id"; //user_id
 
-      if (!in_array($owner_key, self::table_belongs($belong_table)))
-        throw new BelongNotFoundException("Tabloya ait olan böyle bir tablo yok", $field);
+      if (!in_array($foreign_key, ApplicationSql::fieldnames($belong_table)))
+        throw new BelongNotFoundException("Tabloya ait olan böyle foreign key yok", $foreign_key);
 
-      $this->_where = [$owner_key => $this->_fields["id"]];
-      $this->_table = $belong_table;
-
-      $records = ApplicationSql::query($this->_select, $this->_table, $this->_join, $this->_where, $this->_order, $this->_group, $this->_limit);
-
-      if ($records) {
-
-        foreach ($records as $record) {
-          $object = $this->_table::find((int)$record["id"]);
-          $objects[] = $object;
-        }
-
-        return isset($objects) ? $objects : null;
-      }
-
-      return null;
+      return $belong_table::find($this->_fields[$foreign_key]);
 
     } else {
       throw new FieldNotFoundException("Tabloda böyle bir anahtar mevcut değil", $field);

@@ -54,7 +54,6 @@ class ApplicationModel {
 
       }
     }
-
   }
 
   public static function load() {
@@ -79,11 +78,12 @@ class ApplicationModel {
     return null;
   }
 
-  // Alma :1
+  // Alma 1:
   
   // $user = User::find(1);
   // echo $user->_first_name;
   
+  // Alma 2:
   
   // $comment = Comment::find(1); // ["id", "name", "content", "user_id"]
   // echo $comment->user->first_name;
@@ -160,7 +160,6 @@ class ApplicationModel {
       array_push($fields, $table_and_primary_key);
 
     $this->_select = $fields; // ["User.first_name", "User.last_name", "Comment.name"]
-
     return $this;
   }
 
@@ -190,23 +189,17 @@ class ApplicationModel {
       $table_belongs = self::belongs_of_fieldnames($table_fieldnames);
 
       // join işlemi için User.id = Comment.user_id gibi where'ye eklemeler yap
-      foreach ($table_belongs as $table_belong) {
+      foreach ($table_belongs as $table_belong)
         $this->_join[$table] = $table . "." . $table_belong . "=" . ucfirst(str_replace("_", ".", $table_belong));
-        //$this->_where[$table . "." . $table_belong] = ucfirst(str_replace("_", ".", $table_belong));
-      }
 
       // join işleminde select çakışması önlenmesi için User.first_name, User.last_name gibi ekleme yap
       foreach ($table_fieldnames as $fieldname)
         $this->_select[] = $table . "." . $fieldname;
-
-      // join işleminde tüm tabloları listeye ekle
-      //array_push($this->_table, $table);
     }
 
     // tablonun kendi select için eklemeler yap
-    foreach (ApplicationSql::fieldnames(static::$name) as $fieldname) {
+    foreach (ApplicationSql::fieldnames(static::$name) as $fieldname)
       $this->_select[] = static::$name . "." . $fieldname;
-    }
 
     return $this;
   }
@@ -280,9 +273,8 @@ class ApplicationModel {
     if ($record = ApplicationSql::read(static::$name, ["id" => $primary_key])) {
       $object = static::$name::load();
 
-      foreach ($record as $fieldname => $value) {
+      foreach ($record as $fieldname => $value)
         $object->$fieldname = $value;
-      }
 
       $object->_new_record_state = false;
       return $object;
@@ -301,8 +293,8 @@ class ApplicationModel {
 
     foreach ($primary_keys as $primary_key)
       $objects[] = static::$name::find($primary_key);
-    return isset($objects) ? $objects : null;
 
+    return isset($objects) ? $objects : null;
   }
 
   // ok

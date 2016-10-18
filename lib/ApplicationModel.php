@@ -5,7 +5,7 @@ class ApplicationModel {
   private $_select = []; // list
   private $_table  = ""; // string
   private $_where  = []; // hash
-  private $_join  =  []; // hash
+  private $_join   = []; // hash
   private $_group  = []; // list
   private $_limit;
   private $_order  = []; // list
@@ -63,7 +63,11 @@ class ApplicationModel {
     return $object;
   }
 
-  // ok
+  // Alma :1
+  
+  // $user = User::find(1);
+  // echo $user->_first_name;
+
   public function get() {
 
     $records = ApplicationSql::query($this->_select, $this->_table, $this->_join, $this->_where, $this->_order, $this->_group, $this->_limit);

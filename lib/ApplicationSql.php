@@ -86,7 +86,6 @@ class ApplicationSql {
 
   public static function query($_select, $_table, $_join, $_where, $_order, $_group, $_limit) {
 
-    $_select = $_select ?: ["id"];
     $_limit = $_limit ?: [];
 
     $_select = implode(",", $_select);
@@ -110,9 +109,9 @@ class ApplicationSql {
 
     $sql = "SELECT $_select FROM $_table $_joins $where_key_and_symbols $order_symbols $group_symbols $limit_symbols";
 
-    // echo "çalış-><br/><br/>";
-    // echo $sql;
-    // echo "<br/><br/>çalıştı<br/><br/>";
+    echo "çalış-><br/><br/>";
+    echo $sql;
+    echo "<br/><br/>çalıştı<br/><br/>";
 
     //$sql = "SELECT User.first_name, User.id FROM  User INNER JOIN Comment ON Comment.user_id=User.id";
     $query = $GLOBALS['db']->prepare($sql);

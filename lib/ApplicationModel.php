@@ -57,15 +57,19 @@ class ApplicationModel {
   }
 
   public function __destruct() {
-    return self::get();
+    return self::take();
   }
   
-  public static function load() {
-    $object = new static::$name();
-    $object->_table = static::$name;
-    return $object;
+/* TODO
+  public function __call($method,$arguments) {
+    if (method_exists($this, $method)) {
+      
+      call_user_func_array(array($this,$method),$arguments);
+      return $this;
+    }
   }
-
+*/
+  
   // Alma 1:
 
   // $user = User::find(1);
@@ -104,9 +108,17 @@ class ApplicationModel {
   //////////////////////////////////////////////////
   // Public Functions
   //////////////////////////////////////////////////
-
+  
+  
+  public static function load() {
+    $object = new static::$name();
+    $object->_table = static::$name;
+    return $object;
+  }
+  
+  
   // ok
-  public function get() {
+  public function take() {
 
     $records = ApplicationSql::query($this->_select, $this->_table, $this->_join, $this->_where, $this->_order, $this->_group, $this->_limit);
 
@@ -228,16 +240,18 @@ class ApplicationModel {
 
   // ok
   public static function first($limit = 1) {
-    $this->_order[] = "id asc";
-    $this->_limit = $limit;
-    return $this;
+    if ($limit == 1) {
+      // TODO
+    }
+    return static::$name::load()->order("id asc")->limit($limit);
   }
 
   // ok
   public function last($limit = 1) {
-    $this->_order[] = "id desc";
-    $this->_limit = $limit;
-    return $this;
+    if ($limit == 1) {
+      // TODO
+    }
+    return static::$name::load()->order("id desc")->limit($limit);
   }
 
   // this function DRAFT
@@ -300,7 +314,8 @@ class ApplicationModel {
 
   // ok
   public static function all() {
-    return static::$name::load()->get();
+    return static::$name::load();
+    //return static::$name::load()->take();
   }
 
   public static function exists($primary_key) {

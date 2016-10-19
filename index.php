@@ -40,8 +40,8 @@ foreach ($GLOBALS['db']->tablenames() as $table_name) {
   eval("
     class $table_name extends ApplicationModel {
       protected static \$name = '$table_name';
-      public function __construct(\$primary_key = false) {
-        parent::__construct(\$primary_key);
+      public function __construct(\$fields = false) {
+        parent::__construct(\$fields);
       }
     }
     ");

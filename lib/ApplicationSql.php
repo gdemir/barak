@@ -36,17 +36,16 @@ class ApplicationSql {
     return array($symbols ? "$command $symbols" : "", $symbol_and_values);
   }
 
-  private function var_to_symbol($_var, $command = "") { // ["first_name", "last_name"]
+  private function var_to_symbol($_var, $command = "") {
 
-      if ($_var) {
-        $symbol = ":" . $_var;
-        $symbol_and_value = [$symbol => $field];
-        return array("$command $symbol", $symbol_and_value);
-      } else {
-        return array("", []);
-      }
+    if ($_var) {
+      $symbol = ":" . $command . "_" . $_var;
+      return array($symbol, "$command $symbol", [$symbol => $_var]);
+    } else {
+      return array("", "", []);
+    }
   }
-  
+
   public static function create($_table, $_fields) {
 
     if (array_key_exists("id", $_fields)) unset($_fields["id"]);
@@ -96,31 +95,37 @@ class ApplicationSql {
   }
 
   public static function query($_select, $_table, $_join, $_where, $_order, $_group, $_limit) {
-    
+
     $_select = $_select ?: ["*"];
-    $_limit = $_limit ?: [];
+//    $_limit = $_limit ?: [];
 
     $_select = implode(",", $_select);
 
     if ($_join) {
-      $_joins = "";
+      $_join_commands = "";
       foreach ($_join as $table => $condition) {
-        $_joins .= ($_joins ? " " : "") . "INNER JOIN $table ON $condition";;
+        $_join_commands .= ($_join_commands ? " " : "") . "INNER JOIN $table ON $condition";;
       }
     } else {
-      $_joins = "";
+      $_join_commands = "";
     }
 
-    list($where_key_and_symbols, $where_symbol_and_values) = self::hash_to_symbols($_where, "and", "WHERE");
+    list($where_command_key_and_symbols, $where_symbol_and_values) = self::hash_to_symbols($_where, "and", "WHERE");
 
-    list($order_symbols, $order_symbol_and_values) = self::list_to_symbols($_order, "ORDER BY");
+    list($order_command_symbols, $order_symbol_and_values) = self::list_to_symbols($_order, "ORDER BY");
 
-    list($group_symbols, $group_symbol_and_values) = self::list_to_symbols($_group, "GROUP BY");
+    list($group_command_symbols, $group_symbol_and_values) = self::list_to_symbols($_group, "GROUP BY");
 
-    list($limit_symbols, $limit_symbol_and_values) = self::list_to_symbols($_limit, "LIMIT");
-    //list($limit_symbols, $limit_symbol_and_values) = self::var_to_symbol($_limit, "LIMIT");
+    list($limit_symbol, $limit_command_symbol, $limit_symbol_and_value) = self::var_to_symbol($_limit, "LIMIT");
 
-    $sql = "SELECT $_select FROM $_table $_joins $where_key_and_symbols $order_symbols $group_symbols $limit_symbols";
+    $sql = "
+    SELECT $_select
+    FROM $_table
+    $_join_commands
+    $where_command_key_and_symbols
+    $order_command_symbols
+    $group_command_symbols
+    $limit_command_symbol";
 
     echo "çalış-><br/><br/>";
     echo $sql;
@@ -129,13 +134,6 @@ class ApplicationSql {
     // $sql = "SELECT User.first_name, User.id FROM  User INNER JOIN Comment ON Comment.user_id=User.id";
     $query = $GLOBALS['db']->prepare($sql);
     // print_r($query);
-    // echo "<br/>";
-    // print_r($where_symbol_and_values);
-    // $a = $query->fetchAll(PDO::FETCH_ASSOC);
-    // echo "<br/>";
-    // print_r($a);
-    // return $a;
-    // $query = $GLOBALS['db']->prepare("SELECT $_select FROM $_table $where_key_and_symbols $order_symbols $group_symbols $limit_symbols");
 
     // print_r($query->queryString);
     // echo "<br/>";echo "<br/>";echo "<br/>";
@@ -146,19 +144,27 @@ class ApplicationSql {
     // print_r($b);
     // print_r($where_symbol_and_values);
 
-    if (!$query->execute(array_merge(
+    if ($_limit) {
+      $query->bindParam($limit_symbol, $limit_symbol_and_value[$limit_symbol], PDO::PARAM_INT);
+    }
+
+    $symbol_and_values = array_merge(
       $where_symbol_and_values,
       $order_symbol_and_values,
-      $group_symbol_and_values,
-      $limit_symbol_and_values
-      )))
+      $group_symbol_and_values
+      );
+
+    foreach ($symbol_and_values as $symbol => $value) {
+      $query->bindParam($symbol, $value);
+    }
+    print_r($symbol_and_values);
+
+    if (!$query->execute())
       throw new SQLException("Tabloya veri getirmede sorun oluştu", $_table);
 
-    // echo "<br/>";echo "<br/>";echo "<br/>";
-    // print_r($query);
-    // echo "<br/>";echo "<br/>";echo "<br/>";
-
-    //print_r($query->fetchAll(PDO::FETCH_ASSOC));
+    // // echo "<br/>";echo "<br/>";echo "<br/>";
+    // // print_r($query);
+    // // echo "<br/>";echo "<br/>";echo "<br/>";
 
     return $query->fetchAll(PDO::FETCH_ASSOC);
   }

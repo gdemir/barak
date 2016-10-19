@@ -8,6 +8,7 @@ class ApplicationModel {
   private $_join   = [];    // hash
   private $_group  = [];    // list
   private $_limit;
+//  private $_offset;
   private $_order  = [];    // list
 
   private $_fields;
@@ -56,20 +57,24 @@ class ApplicationModel {
     }
   }
 
-  public function __destruct() {
-    return self::take();
+/* TODO
+   public function __destruct() {
+
+     return $this->take();
   }
-  
+*/
+
+
 /* TODO
   public function __call($method,$arguments) {
     if (method_exists($this, $method)) {
-      
+
       call_user_func_array(array($this,$method),$arguments);
       return $this;
     }
   }
 */
-  
+
   // Alma 1:
 
   // $user = User::find(1);
@@ -108,15 +113,15 @@ class ApplicationModel {
   //////////////////////////////////////////////////
   // Public Functions
   //////////////////////////////////////////////////
-  
-  
+
+
   public static function load() {
     $object = new static::$name();
     $object->_table = static::$name;
     return $object;
   }
-  
-  
+
+
   // ok
   public function take() {
 
@@ -314,8 +319,7 @@ class ApplicationModel {
 
   // ok
   public static function all() {
-    return static::$name::load();
-    //return static::$name::load()->take();
+    return static::$name::load()->take();
   }
 
   public static function exists($primary_key) {
@@ -345,11 +349,11 @@ class ApplicationModel {
   private function table_belongs($table) {
     return self::belongs_of_fieldnames(ApplicationSql::fieldnames($table));
   }
-  
+
   // name check_join_table_and_field
 
   // select, where, group, order by
-  
+
   private function check_fields_of_table_list($fields) {
     foreach ($fields as $index => $field) {
       if (strpos($field, '.') !== false) { // found TABLE

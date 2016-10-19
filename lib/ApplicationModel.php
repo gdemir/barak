@@ -2,7 +2,7 @@
 //
 class ApplicationModel {
 
-  private $_select = ["*"]; // list
+  private $_select = []; // list
   private $_table  = "";    // string
   private $_where  = [];    // hash
   private $_join   = [];    // hash
@@ -56,6 +56,10 @@ class ApplicationModel {
     }
   }
 
+  public function __destruct() {
+    return self::get();
+  }
+  
   public static function load() {
     $object = new static::$name();
     $object->_table = static::$name;
@@ -208,8 +212,8 @@ class ApplicationModel {
   }
 
   // ok
-  public function limit($count = null) {
-    $this->_limit = [$count];
+  public function limit($limit = null) {
+    $this->_limit = $limit;
     return $this;
   }
 
@@ -225,13 +229,14 @@ class ApplicationModel {
   // ok
   public static function first($limit = 1) {
     $this->_order[] = "id asc";
-    $this->_limit = [$limit];
+    $this->_limit = $limit;
     return $this;
   }
 
   // ok
   public function last($limit = 1) {
-    $this->_order[] = "id desc limit " . $limit;
+    $this->_order[] = "id desc";
+    $this->_limit = $limit;
     return $this;
   }
 
@@ -242,7 +247,7 @@ class ApplicationModel {
 
     //$sets = self::implode_key_and_value($fields, "and");
     //ApplicationSql::delete(static::$name, $sets);
-    $fields = $this->where ? $this->where : "";
+    $fields = $this->where ? $this->where : [];
     ApplicationSql::delete(static::$name, $fields);
   }
 
@@ -318,19 +323,18 @@ class ApplicationModel {
   // Private Functions
   //////////////////////////////////////////////////
 
-  // name check_join_table_and_field
-
-  // select, where, group, order by
-
   private function belongs_of_fieldnames($table_fieldnames) {
     return preg_grep("/(.*)_id/", $table_fieldnames);
   }
 
-
   private function table_belongs($table) {
     return self::belongs_of_fieldnames(ApplicationSql::fieldnames($table));
   }
+  
+  // name check_join_table_and_field
 
+  // select, where, group, order by
+  
   private function check_fields_of_table_list($fields) {
     foreach ($fields as $index => $field) {
       if (strpos($field, '.') !== false) { // found TABLE

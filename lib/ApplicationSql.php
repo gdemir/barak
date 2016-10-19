@@ -36,6 +36,17 @@ class ApplicationSql {
     return array($symbols ? "$command $symbols" : "", $symbol_and_values);
   }
 
+  private function var_to_symbol($_var, $command = "") { // ["first_name", "last_name"]
+
+      if ($_var) {
+        $symbol = ":" . $_var;
+        $symbol_and_value = [$symbol => $field];
+        return array("$command $symbol", $symbol_and_value);
+      } else {
+        return array("", []);
+      }
+  }
+  
   public static function create($_table, $_fields) {
 
     if (array_key_exists("id", $_fields)) unset($_fields["id"]);
@@ -85,7 +96,8 @@ class ApplicationSql {
   }
 
   public static function query($_select, $_table, $_join, $_where, $_order, $_group, $_limit) {
-
+    
+    $_select = $_select ?: ["*"];
     $_limit = $_limit ?: [];
 
     $_select = implode(",", $_select);
@@ -106,6 +118,7 @@ class ApplicationSql {
     list($group_symbols, $group_symbol_and_values) = self::list_to_symbols($_group, "GROUP BY");
 
     list($limit_symbols, $limit_symbol_and_values) = self::list_to_symbols($_limit, "LIMIT");
+    //list($limit_symbols, $limit_symbol_and_values) = self::var_to_symbol($_limit, "LIMIT");
 
     $sql = "SELECT $_select FROM $_table $_joins $where_key_and_symbols $order_symbols $group_symbols $limit_symbols";
 
@@ -113,7 +126,7 @@ class ApplicationSql {
     echo $sql;
     echo "<br/><br/>çalıştı<br/><br/>";
 
-    //$sql = "SELECT User.first_name, User.id FROM  User INNER JOIN Comment ON Comment.user_id=User.id";
+    // $sql = "SELECT User.first_name, User.id FROM  User INNER JOIN Comment ON Comment.user_id=User.id";
     $query = $GLOBALS['db']->prepare($sql);
     // print_r($query);
     // echo "<br/>";
@@ -122,13 +135,9 @@ class ApplicationSql {
     // echo "<br/>";
     // print_r($a);
     // return $a;
-    //$query = $GLOBALS['db']->prepare("SELECT $_select FROM $_table $where_key_and_symbols $order_symbols $group_symbols $limit_symbols");
+    // $query = $GLOBALS['db']->prepare("SELECT $_select FROM $_table $where_key_and_symbols $order_symbols $group_symbols $limit_symbols");
 
-   // print_r($query->queryString);
-    // $sql = $query->queryString;
-    // foreach ($where_symbol_and_values as $symbol => $value) {
-    //   $sql = str_replace($symbol, $value, $sql);
-    // }
+    // print_r($query->queryString);
     // echo "<br/>";echo "<br/>";echo "<br/>";
     // print_r($sql);
     // echo "<br/>";echo "<br/>";echo "<br/>";
@@ -136,11 +145,6 @@ class ApplicationSql {
     // $b = $GLOBALS['db']->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     // print_r($b);
     // print_r($where_symbol_and_values);
-
-    // if (array_key_exists(":WHERE_User_id", $where_symbol_and_values))
-    //   $where_symbol_and_values[":WHERE_User_id"] = 3;
-    // if (array_key_exists(":WHERE_Comment_user_id", $where_symbol_and_values))
-    //   $where_symbol_and_values[":WHERE_Comment_user_id"] = "User.id";
 
     if (!$query->execute(array_merge(
       $where_symbol_and_values,

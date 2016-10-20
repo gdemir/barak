@@ -332,7 +332,7 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
   print_r($user);
 ```
 
-#### READ ( `load`, `select`, `where`, `order`, `group`, `limit`, `take`, `joins`, `find`, `find_all`, `all` )
+#### READ ( `load`, `select`, `where`, `order`, `group`, `limit`, `take`, `joins`, `find`, `find_all`, `all`, `first`, `last` )
 
 > `load`
 
@@ -393,6 +393,35 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
     echo $user->first_name;
 ```
 
+> `first`
+
+```php
+  // Ör. 1:
+  
+  $user = User::first();
+  echo $user->first_name;
+  
+  // Ör. 2:
+  $users = User::first(10);
+  foreach ($users as $user)
+    echo $user->first_name;
+```
+
+> `last`
+
+```php
+  // Ör. 1:
+  
+  $user = User::last();
+  echo $user->first_name;
+  
+  // Ör. 2:
+
+  $users = User::last(10);
+  foreach ($users as $user)
+    echo $user->first_name;
+```
+
 #### UPDATE ( `save`, `update` )
 
 > `save`
@@ -406,20 +435,21 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
   $user->first_name = "Gökhan";
   $user->save()
   print_r($user);
-  
+
   // Ör. 2:
-  
+
+  $users = User::find_all([1, 2, 3]);
   $users = User::load()->take();
   $users = User::all();
-  $users = User::find_all([1, 2, 3]);
   $users = User::load()
              ->where(["first_name" = "Gökhan"])
              ->select("first_name")
              ->order("id")
              ->limit("10")
              ->take();
+  $users = User::first(10);
   foreach ($users as $user) {
-    $user->first_name = "Gökhan";
+    $user->first_name = "Göktuğ";
     $user->save();
   }
 ```
@@ -432,10 +462,10 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
   User::update(1, array("first_name" => "Gökhan", "last_name" => "Demir"));
   
   // Ör. 2:
-  
+ 
+  $users = User::find_all([1, 2, 3]);
   $users = User::load()->take();
   $users = User::all();
-  $users = User::find_all([1, 2, 3]);
   $users = User::load()
              ->where(["first_name" = "Gökhan"])
              ->select("first_name")
@@ -443,10 +473,10 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
              ->limit("10")
              ->take();
   foreach ($users as $user)
-    User::update($user->id, array("first_name" => "Gökhan", "last_name" => "Demir"));
+    User::update($user->id, array("first_name" => "Göktuğ", "last_name" => "Demir"));
 ```
 
-#### DELETE ()
+#### DELETE ( `destroy`, `delete`, `delete_all` )
 
 `#TODO`
 

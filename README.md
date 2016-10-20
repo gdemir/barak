@@ -296,6 +296,43 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
 ### Model
 ---
 
+- Public Access Functions
+
+>`new`, `save`, `destroy`, `select`, `where`, `joins`, `order`, `group`, `limit`, `take`
+
+- Static Access Functions
+
+> `load`, `first`, `last`, `create`, `find`, `find_all`, `all`, `exists`, `delete`, `update`
+
+
+#### CREATE
+
+
+> `new`
+
+```php
+  // Ör. 1:
+
+  $user = new User();
+  $user->first_name = "Gökhan";
+  $user->save();
+  print_r($user);
+  
+  // Ör. 2:
+  
+  $user = new User(["first_name" => "Gökhan"]);
+  $user->save();
+  print_r($user);
+```
+
+> `create`
+
+``` php
+
+  $user = User::create(["first_name" => "Gökhan"]);
+  print_r($user);
+```
+
 `#TODO`
 
 ## Trailer

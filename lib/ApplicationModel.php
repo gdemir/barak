@@ -167,6 +167,11 @@ class ApplicationModel {
     }
   }
 
+  // ?
+  public function destroy() {
+    ApplicationSql::delete($this->_table, ["id" => $this->_fields["id"]]);
+  }
+  
   // $users = User::load()->select("first_name, last_name")->get();
   // ["User.firs_name, User.last_name"]
 

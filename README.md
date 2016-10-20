@@ -305,7 +305,7 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
 > `load`, `first`, `last`, `create`, `find`, `find_all`, `all`, `exists`, `delete`, `update`
 
 
-#### CREATE
+#### CREATE ( `new`, `create` )
 
 
 > `new`
@@ -316,22 +316,137 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
   $user = new User();
   $user->first_name = "Gökhan";
   $user->save();
-  print_r($user);
+  print_r($user); // otomatik id alır
   
   // Ör. 2:
   
   $user = new User(["first_name" => "Gökhan"]);
   $user->save();
-  print_r($user);
+  print_r($user); // otomatik id alır
 ```
 
 > `create`
 
 ``` php
-
   $user = User::create(["first_name" => "Gökhan"]);
   print_r($user);
 ```
+
+#### READ ( `load`, `select`, `where`, `order`, `group`, `limit`, `take`, `joins`, `find`, `find_all`, `all` )
+
+> `load`
+
+
+```php
+  $users = User::load()->take();
+  foreach ($user as $user)
+    echo $user->first_name;
+```
+
+> `select`, `where`, `order`, `group`, `limit`, `take`
+
+```php
+  $users = User::load()
+             ->where(["first_name" = "Gökhan"])
+             ->select("first_name")
+             ->order("id")
+             ->limit("10")
+             ->take();
+             
+  foreach ($user as $user)
+    echo $user->first_name;
+```
+
+> `joins`
+
+```php
+  // Department ["id", "name"], User ["id", "department_id", "first_name"], "Address" ["id", "user_id", "content"]
+
+  $department = Department::load()
+                  ->joins(["User", "Address"])
+                  ->where(["User.id" => "1"])
+                  ->select("User.first_name, Department.name, Address.content")
+                  ->limit(1)->take();
+  print_r($department);
+```
+
+> `find`
+
+```php
+  $user = User::find(1);
+  echo $user->first_name;
+```
+
+> `find_all`
+
+```php
+  $users = User::find_all([1, 2, 3]);
+  foreach ($users as $user)
+    echo $user->first_name;
+```
+
+> `all`
+
+```php
+  $users = User::all();
+  foreach ($users as $user)
+    echo $user->first_name;
+```
+
+#### UPDATE ( `save`, `update` )
+
+> `save`
+
+```php
+  // Ör. 1:
+
+  $user = User::find(1);
+  $user = User::first();
+  $user = User::last();
+  $user->first_name = "Gökhan";
+  $user->save()
+  print_r($user);
+  
+  // Ör. 2:
+  
+  $users = User::load()->take();
+  $users = User::all();
+  $users = User::find_all([1, 2, 3]);
+  $users = User::load()
+             ->where(["first_name" = "Gökhan"])
+             ->select("first_name")
+             ->order("id")
+             ->limit("10")
+             ->take();
+  foreach ($users as $user) {
+    $user->first_name = "Gökhan";
+    $user->save();
+  }
+```
+
+> `update`
+
+```php
+  // Ör. 1:
+
+  User::update(1, array("first_name" => "Gökhan", "last_name" => "Demir"));
+  
+  // Ör. 2:
+  
+  $users = User::load()->take();
+  $users = User::all();
+  $users = User::find_all([1, 2, 3]);
+  $users = User::load()
+             ->where(["first_name" = "Gökhan"])
+             ->select("first_name")
+             ->order("id")
+             ->limit("10")
+             ->take();
+  foreach ($users as $user)
+    User::update($user->id, array("first_name" => "Gökhan", "last_name" => "Demir"));
+```
+
+#### DELETE ()
 
 `#TODO`
 

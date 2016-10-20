@@ -331,6 +331,13 @@ class ApplicationModel {
     return isset($objects) ? $objects : null;
   }
 
+  // $users = User::all(); // return User objects array
+  //
+  // foreach ($users as $user) {
+  //   $user->first_name = "Gökhan";
+  //   $user->save();
+  // }
+  
   // ok
   public static function all() {
     return static::$name::load()->take();

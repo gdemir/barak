@@ -273,6 +273,7 @@ class ApplicationModel {
   public static function create($fields) {
     $object = new static::$name($fields);
     $object->save();
+    return $object;
   }
   
   // User::first();

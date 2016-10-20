@@ -243,21 +243,7 @@ class ApplicationModel {
     return $this;
   }
 
-  // ok
-  public static function first($limit = 1) {
-    if ($limit == 1) {
-      // TODO
-    }
-    return static::$name::load()->order("id asc")->limit($limit);
-  }
 
-  // ok
-  public function last($limit = 1) {
-    if ($limit == 1) {
-      // TODO
-    }
-    return static::$name::load()->order("id desc")->limit($limit);
-  }
 
   // this function DRAFT
   public function delete_all() {
@@ -281,6 +267,20 @@ class ApplicationModel {
     return ApplicationSql::primary_keyname(static::$name);
   }
 
+  // public static function create($fields) {}
+  
+  // ok
+  public static function first($limit = 1) {
+    $records = static::$name::load()->order("id asc")->limit($limit)->take();
+    return ($limit == 1) ? $records[0] : $records;
+  }
+
+  // ok
+  public static function last($limit = 1) {
+    $records = static::$name::load()->order("id desc")->limit($limit)->take();
+    return ($limit == 1) ? $records[0] : $records;
+  }
+  
   // query primary_key
   //
   // $user = User::find(1); // return User objects

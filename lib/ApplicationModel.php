@@ -267,7 +267,15 @@ class ApplicationModel {
     return ApplicationSql::primary_keyname(static::$name);
   }
 
-  // public static function create($fields) {}
+  // User::create(["first_name" => "Gökhan"]);
+  
+  // ok
+  public static function create($fields) {
+    $object = new static::$name($fields);
+    $object->save();
+  }
+  
+  // User::first();
   
   // ok
   public static function first($limit = 1) {
@@ -275,14 +283,14 @@ class ApplicationModel {
     return ($limit == 1) ? $records[0] : $records;
   }
 
+  // User::last();
+  
   // ok
   public static function last($limit = 1) {
     $records = static::$name::load()->order("id desc")->limit($limit)->take();
     return ($limit == 1) ? $records[0] : $records;
   }
   
-  // query primary_key
-  //
   // $user = User::find(1); // return User objects
   // $user->first_name = 'foo';
   // $user->save();
@@ -322,6 +330,7 @@ class ApplicationModel {
     return static::$name::load()->take();
   }
 
+  // ok
   public static function exists($primary_key) {
     return static::$name::find($primary_key) ? true : false;
   }

@@ -35,13 +35,11 @@ class HomeController extends ApplicationController {
 }
 ```
 
-> `app/view/home/index.html`
+> `app/view/home/index.php`
 
-```html
-
-  Home#Index
-  <?php echo $message; ?>
-
+```php
+  echo "<h1>Home#Index</h1>";
+  echo $message;
 ```
 
 > `app/views/layouts/home_layout.php`
@@ -84,13 +82,11 @@ class HomeController extends ApplicationController {
   );
 ```
 
-> `app/view/home/index.html`
+> `app/view/home/index.php`
 
-```html
-  Home#Index
-  <?php
-    echo "id" . $params["id"];
-  ?>
+```php
+  echo "<h1>Home#Index</h1>";
+  echo "id" . $params["id"];
 ```
 
 #### POST
@@ -245,7 +241,7 @@ After Action (`protected $after_actions`) özelliği, `app/controller/*.php` dos
 > `app/views/admin/home.php`
 
 ```php
-    Admin#Home
+    echo "Admin#Home";
 ```
 
 > `app/views/layouts/admin_layout.php`
@@ -360,13 +356,15 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
 
 ```php
   // Ör. 1:
-  $a = User::load()->pluck("id");
+  $user_ids = User::load()->pluck("id");
+  print_r($user_ids);
   // [1, 2, 3, 4, 66, 677, 678]
 
 
   // Ör. 2:
 
-  $a = User::load()->pluck("first_name");
+  $user_firstnames = User::load()->pluck("first_name");
+  print_r($user_firstnames);
   // ["Gökhan", "Göktuğ", "Gökçe", "Gökay", "Atilla", "Altay", "Tarkan", "Başbuğ", "Ülkü"]
 ```
 
@@ -536,6 +534,30 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
   User::load()->where(["first_name" => "Gökhan"])->delete_all();
   User::load()->where(["first_name" => "Gökhan"])->limit(10)->delete_all();
   User::load()->limit(10)->delete_all();
+```
+
+### Config and Database
+---
+
+> `config/database.ini` (database configuration file)
+
+```ini
+[database_configuration]
+host  = localhost
+user  = root
+pass  = barak
+name  = BARAK
+```
+
+> `db/seeds.php` (database seeds file)
+
+```php
+  if (User::load()->count() == 0) {
+	User::create(["first_name" => "Gökhan", "last_name" => "Demir", "username" => "gdemir",  "password" => "123456"]);
+	User::create(["first_name" => "Gökçe",  "last_name" => "Demir", "username" => "gcdemir", "password" => "123456"]);
+	User::create(["first_name" => "Göktuğ", "last_name" => "Demir", "username" => "gtdemir", "password" => "123456"]);
+	User::create(["first_name" => "Atilla", "last_name" => "Demir", "username" => "ademir",  "password" => "123456"]);
+  }
 ```
 
 ## Trailer

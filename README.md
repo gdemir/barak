@@ -15,7 +15,7 @@
 ### Simple Usage
 ---
 
-> `config/routes.php`
+>! `config/routes.php`
 
 ```php
     ApplicationRoutes::draw(

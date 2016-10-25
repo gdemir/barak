@@ -15,7 +15,7 @@
 ### Simple Usage
 ---
 
->! `config/routes.php`
+> `config/routes.php`
 
 ```php
     ApplicationRoutes::draw(
@@ -536,7 +536,7 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
   User::load()->limit(10)->delete_all();
 ```
 
-### Config and Database
+### Config and Database (`config/database.ini`, `db/seeds.php`)
 ---
 
 > `config/database.ini` (database configuration file)

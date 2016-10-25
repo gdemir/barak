@@ -15,6 +15,7 @@ foreach ($directories as $directory) {
 }
 
 define("CONFIGFILE", "config/database.ini"); // configuration file
+define("SEEDSFILE", "db/seeds.php"); // seeds file
 
 ini_set("display_errors", 1); // for message of ApplicationException on html page
 date_default_timezone_set('Europe/Istanbul');
@@ -32,11 +33,7 @@ $GLOBALS['db'] = new BARAK(
 	"mysql:host={$database['host']};dbname={$database['name']}",
 	$database["user"],
 	$database["pass"]
-	//array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
 	);
-// $GLOBALS['db']->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-// $GLOBALS['db']->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-
 
 foreach ($GLOBALS['db']->tablenames() as $table_name) {
   eval("
@@ -49,6 +46,8 @@ foreach ($GLOBALS['db']->tablenames() as $table_name) {
     ");
 }
 
+if (file_exists(SEEDSFILE))
+  include SEEDSFILE;
 
 // configuration routes load and route action dispatch
 include 'config/routes.php';

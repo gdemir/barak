@@ -27,7 +27,7 @@
 
 ```php
 class HomeController extends ApplicationController {
- 
+
   public function index() {
     $this->message = "Hello World";
   }
@@ -41,7 +41,7 @@ class HomeController extends ApplicationController {
 
   Home#Index
   <?php echo $message; ?>
-  
+
 ```
 
 > `app/views/layouts/home_layout.php`
@@ -64,7 +64,7 @@ class HomeController extends ApplicationController {
 ### Router (`config/routes.php`)
 ---
 
-#### GET 
+#### GET
 
 - Simple
 
@@ -135,11 +135,11 @@ Her `config/routes.php` içerisinde tanımlanan `get` işlemi için `app/control
 Before Action (`protected $before_actions`) özelliği, `app/controller/*.php` dosyası içerisinde her çalışacak get/post fonksiyonları için önceden çalışacak fonksiyonları belirtmeye yarayan özelliktir. Özelliğin etkisini ayarlamak için aşağıdaki 3 şekilde kullanılabilir:
 
 1. `except` anahtarı ile nerelerde çalışmayacağını
- 
+
 2. `only` anahtarı ile nerelerde çalışacağını
- 
+
 3. Anahtar yok ise her yerde çalışacağını
- 
+
 ```php
 class HomeController extends ApplicationController {
 
@@ -148,19 +148,19 @@ class HomeController extends ApplicationController {
                                ["notice_clear", "only" => ["index"]],
                                ["every_time"]
                              ];
-  
+
   public function index() {
     echo "HomeIndex : Anasayfa (bu işlem için login fonksiyonu çalışmaz, notice_clear ve every_time çalışır)";
   }
-  
+
   public function login() {
     echo "Home#Login : Her işlem öncesi login oluyoruz. (get/post için /home/login, /home/index hariç)";
   }
-  
+
   public function notice_clear() {
     echo "Home#NoticeClear : Duyular silindi. (get/post için sadece /home/index'de çalışır)";
   }
-  
+
   public function every_time() {
     echo "Home#EveryTime : Her zaman get/post öncesi çalışırım.";
   }
@@ -171,9 +171,9 @@ class HomeController extends ApplicationController {
 After Action (`protected $after_actions`) özelliği, `app/controller/*.php` dosyası içerisinde her çalışacak get/post fonksiyonları için sonradan çalışacak fonksiyonları belirtmeye yarayan özelliktir. Özelliğin etkisini ayarlamak için aşağıdaki 3 şekilde kullanılabilir:
 
 1. `except` anahtarı ile nerelerde çalışmayacağını
- 
+
 2. `only` anahtarı ile nerelerde çalışacağını
- 
+
 3. Anahtar yok ise her yerde çalışacağını
 
 `#TODO`
@@ -197,7 +197,7 @@ After Action (`protected $after_actions`) özelliği, `app/controller/*.php` dos
       protected $before_actions = [
                                       ["require_login", "except" => ["login"]]
                                   ];
-                                  
+
       public function login() {
         if (isset($_SESSION['admin']))
           return $this->redirect_to("/admin/home");
@@ -216,7 +216,7 @@ After Action (`protected $after_actions`) özelliği, `app/controller/*.php` dos
         }
         echo "otomatik render, login paneli gelmeli";
       }
-      
+
       public function require_login() {
         echo "Her işlem öncesi login oluyoruz<br/>";
         if (!isset($_SESSION['admin']))
@@ -268,7 +268,7 @@ After Action (`protected $after_actions`) özelliği, `app/controller/*.php` dos
 ### Views (`app/views/DIRECTORY/*.php`)
 ---
 
-Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `action` adlarını alarak, `app/views/CONTROLLER/ACTION.php` html sayfası `app/views/layouts/CONTROLLER_layout.php` içerisine `{yield}` değişken kısmına gömülür ve görüntülenir. 
+Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `action` adlarını alarak, `app/views/CONTROLLER/ACTION.php` html sayfası `app/views/layouts/CONTROLLER_layout.php` içerisine `{yield}` değişken kısmına gömülür ve görüntülenir.
 
 > `app/views/DIRECTORY/*.php`
 
@@ -298,7 +298,7 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
 
 - Public Access Functions
 
->`new`, `save`, `destroy`, `select`, `where`, `joins`, `order`, `group`, `limit`, `take`
+> `new`, `save`, `destroy`, `delete_all`, `select`, `where`, `joins`, `order`, `group`, `limit`, `take`, `pluck`, `count`
 
 - Static Access Functions
 
@@ -317,9 +317,9 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
   $user->first_name = "Gökhan";
   $user->save();
   print_r($user); // otomatik id alır
-  
+
   // Ör. 2:
-  
+
   $user = new User(["first_name" => "Gökhan"]);
   $user->save();
   print_r($user); // otomatik id alır
@@ -332,7 +332,7 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
   print_r($user);
 ```
 
-#### READ ( `load`, `select`, `where`, `order`, `group`, `limit`, `take`, `joins`, `find`, `find_all`, `all`, `first`, `last` )
+#### READ ( `load`, `select`, `where`, `order`, `group`, `limit`, `take`, `pluck`, `count`, `joins`, `find`, `find_all`, `all`, `first`, `last` )
 
 > `load`
 
@@ -352,10 +352,39 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
              ->order("id")
              ->limit("10")
              ->take();
-             
+
   foreach ($user as $user)
     echo $user->first_name;
 ```
+
+> `pluck`
+
+```php
+  // Ör. 1:
+  $a = User::load()->pluck("id");
+  // [1, 2, 3, 4, 66, 677, 678]
+
+
+  // Ör. 2:
+
+  $a = User::load()->pluck("first_name");
+  // ["Gökhan", "Göktuğ", "Gökçe", "Gökay", "Atilla", "Altay", "Tarkan", "Başbuğ", "Ülkü"]
+```
+
+> `count`
+
+```php
+  // Ör. 1:
+  echo User::load()->count();
+  // 12
+
+
+  // Ör. 2:
+
+  echo User::load()->where(["first_name" => "Gökhan"])->count();
+  // 5
+```
+
 
 > `joins`
 
@@ -397,10 +426,10 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
 
 ```php
   // Ör. 1:
-  
+
   $user = User::first();
   echo $user->first_name;
-  
+
   // Ör. 2:
   $users = User::first(10);
   foreach ($users as $user)
@@ -411,10 +440,10 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
 
 ```php
   // Ör. 1:
-  
+
   $user = User::last();
   echo $user->first_name;
-  
+
   // Ör. 2:
 
   $users = User::last(10);
@@ -460,9 +489,9 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
   // Ör. 1:
 
   User::update(1, array("first_name" => "Gökhan", "last_name" => "Demir"));
-  
+
   // Ör. 2:
- 
+
   $users = User::find_all([1, 2, 3]);
   $users = User::load()->take();
   $users = User::all();
@@ -478,7 +507,31 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
 
 #### DELETE ( `destroy`, `delete`, `delete_all` )
 
-`#TODO`
+> `destroy`
+
+```php
+
+  $user = User::find(1);
+  $user = User::first();
+  $user = User::last();
+  $user->destroy();
+
+```
+
+> `delete`
+
+```php
+  User::delete(1);
+```
+
+> `delete_all`
+
+```php
+  User::load()->delete_all();
+  User::load()->where(["first_name" => "Gökhan"])->delete_all();
+  User::load()->where(["first_name" => "Gökhan"])->limit(10)->delete_all();
+  User::load()->limit(10)->delete_all();
+```
 
 ## Trailer
 

@@ -15,7 +15,7 @@ class ApplicationSql {
       $keys .= ($keys ? " $delimiter " : "") . $key;
       $key_symbol = ":$command" . "_" . str_replace(".", "_", $key);
       $symbols .= ($symbols ? " $delimiter " : "") . $key_symbol;
-      $symbol_and_values[$key_symbol] =  '"' . $value . '"';
+      $symbol_and_values[$key_symbol] = $value;
 
     }
 
@@ -76,43 +76,50 @@ class ApplicationSql {
     $query = $GLOBALS['db']->prepare("INSERT INTO $_table ( $field_keys ) VALUES ( $field_symbols )");
 
     if (!$query->execute($field_symbol_and_values))
-      throw new SQLException("Tabloya veri kaydında sorun oluştu", $_table);
+      throw new SQLException("Tabloya kayıt yazmada sorun oluştu", $_table);
 
     return intval($GLOBALS["db"]->lastInsertId());
   }
 
-  public static function read($_table, $_fields) {
+  public static function read($_table, $_select, $_where) {
 
-    list($field_key_and_symbols, $field_symbol_and_values) = self::hash_to_keysymbol_symbolvalue($_fields, "and");
+    $_select = $_select ?: ["*"];
+    $_select = implode(",", $_select);
 
-    $query = $GLOBALS['db']->prepare("SELECT * FROM $_table WHERE $field_key_and_symbols");
+    list($where_key_and_symbols, $where_symbol_and_values) = self::hash_to_keysymbol_symbolvalue($_where, "and", "WHERE");
 
-    if (!$query->execute($field_symbol_and_values))
-      throw new SQLException("Tabloya veri kaydında sorun oluştu", $_table);
+    $query = $GLOBALS['db']->prepare("SELECT $_select FROM $_table $where_key_and_symbols");
+
+    if (!$query->execute($where_symbol_and_values))
+      throw new SQLException("Tablodan veri okumasında sorun oluştu", $_table);
 
     return $query->fetch(PDO::FETCH_ASSOC);
   }
 
-  public static function update($_table, $_sets, $_fields) {
+  public static function update($_table, $_sets, $_where) {
 
     list($set_key_and_symbols, $set_symbol_and_values) = self::hash_to_keysymbol_symbolvalue($_sets);
 
-    list($field_key_and_symbols, $field_symbol_and_values) = self::hash_to_keysymbol_symbolvalue($_fields, ",");
+    list($where_key_and_symbols, $where_symbol_and_values) = self::hash_to_keysymbol_symbolvalue($_where, ",");
 
-    $query = $GLOBALS['db']->prepare("UPDATE `$_table` SET $set_key_and_symbols WHERE $field_key_and_symbols");
+    $query = $GLOBALS['db']->prepare("UPDATE `$_table` SET $set_key_and_symbols WHERE $where_key_and_symbols");
 
-    if (!$query->execute(array_merge($field_symbol_and_values, $set_symbol_and_values)))
-      throw new SQLException("Tabloya veri kaydında sorun oluştu", $_table);
+    if (!$query->execute(array_merge($where_symbol_and_values, $set_symbol_and_values)))
+      throw new SQLException("Tabloda kayıt güncellemesinde sorun oluştu", $_table);
   }
 
-  public static function delete($_table, $_fields) {
+  public static function delete($_table, $_fields, $_limit) {
 
-    list($field_key_and_symbols, $field_symbol_and_values) = self::hash_to_keysymbol_symbolvalue($_fields);
+    list($where_key_and_symbols, $where_symbol_and_values) = self::hash_to_keysymbol_symbolvalue($_fields, "and", "WHERE");
+    list($limit_symbol, $limit_command_symbol, $limit_symbol_and_value) = self::var_to_symbol($_limit, "LIMIT");
 
-    $query = $GLOBALS['db']->prepare("DELETE FROM `$_table` WHERE $field_key_and_symbols");
+    $query = $GLOBALS['db']->prepare("DELETE FROM `$_table` $where_key_and_symbols $limit_command_symbol");
 
-    if (!$query->execute($field_symbol_and_values))
-      throw new SQLException("Tabloya veri kaydında sorun oluştu", $_table);
+    if ($_limit)
+      $query->bindParam($limit_symbol, $limit_symbol_and_value[$limit_symbol], PDO::PARAM_INT);
+
+    if (!$query->execute($where_symbol_and_values))
+      throw new SQLException("Tablodan veri silmesinde sorun oluştu", $_table);
   }
 
   public static function query($_select, $_table, $_join, $_where, $_order, $_group, $_limit) {
@@ -130,11 +137,8 @@ class ApplicationSql {
     }
 
     list($where_command_key_and_symbols, $where_symbol_and_values) = self::hash_to_keysymbol_symbolvalue($_where, "and", "WHERE");
-
     list($order_command_symbols, $order_symbol_and_values) = self::list_to_symbol_symbolvalue($_order, "ORDER BY");
-
     list($group_command_symbols, $group_symbol_and_values) = self::list_to_symbol_symbolvalue($_group, "GROUP BY");
-
     list($limit_symbol, $limit_command_symbol, $limit_symbol_and_value) = self::var_to_symbol($_limit, "LIMIT");
 
     $sql = "
@@ -163,7 +167,7 @@ class ApplicationSql {
     }
 
     if (!$query->execute())
-      throw new SQLException("Tabloya veri getirmede sorun oluştu", $_table);
+      throw new SQLException("Tablodan kayıtların okunmasında sorun oluştu", $_table);
 
     return $query->fetchAll(PDO::FETCH_ASSOC);
   }

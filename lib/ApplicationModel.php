@@ -122,10 +122,12 @@ class ApplicationModel {
   }
 
 
+  // FETCH Functions Start
+
   // ok
   public function take() {
 
-    $records = ApplicationSql::query($this->_select, $this->_table, $this->_join, $this->_where, $this->_order, $this->_group, $this->_limit);
+    $records = self::query();
 
     if ($records) {
       foreach ($records as $record) {
@@ -133,7 +135,7 @@ class ApplicationModel {
         $object->_fields = $record;
         $objects[] = $object;
       }
-      return isset($objects) ? $objects : null;
+      return $objects;
     }
     return null;
   }
@@ -144,17 +146,27 @@ class ApplicationModel {
     self::check_fieldname($fieldname);
 
     $this->_select = [$fieldname];
-
-    $records = ApplicationSql::query($this->_select, $this->_table, $this->_join, $this->_where, $this->_order, $this->_group, $this->_limit);
+    $records = self::query();
 
     if ($records) {
-      foreach ($records as $record) {
+      foreach ($records as $record)
         $values[] = $record[$fieldname];
-      }
-      return isset($values) ? $values : null;
+
+      return $values;
     }
     return null;
   }
+
+  // ok
+  public function count() {
+    $this->_select = ["count(*)"];
+
+    $record = ApplicationSql::read($this->_table, $this->_select, $this->_where);
+
+    return $record["count(*)"] ?: null;
+  }
+
+  // FETCH Functions End
 
   // $user = new User();
   // $user->first_name ="Gökhan";
@@ -167,8 +179,6 @@ class ApplicationModel {
   public function save() {
 
     if (!$this->_new_record_state) {
-
-      //self::check_id();
 
       ApplicationSql::update($this->_table, $this->_fields, ["id" => $this->_fields["id"]]);
 
@@ -185,9 +195,9 @@ class ApplicationModel {
     }
   }
 
-  // ?
+  // ok
   public function destroy() {
-    ApplicationSql::delete($this->_table, ["id" => $this->_fields["id"]]);
+    ApplicationSql::delete($this->_table, ["id" => $this->_fields["id"]], null);
   }
 
   // $users = User::load()->select("first_name, last_name")->get();
@@ -275,8 +285,7 @@ class ApplicationModel {
 
     //$sets = self::implode_key_and_value($fields, "and");
     //ApplicationSql::delete(static::$name, $sets);
-    $fields = $this->where ? $this->where : [];
-    ApplicationSql::delete($this->_table, $fields);
+    ApplicationSql::delete($this->_table, $this->_where, null);
   }
 
   //////////////////////////////////////////////////
@@ -294,9 +303,7 @@ class ApplicationModel {
 
   // ok
   public static function create($fields) {
-
     $object = static::$name::load($fields);
-    print_r($object);
     $object->save();
     return $object;
   }
@@ -324,7 +331,7 @@ class ApplicationModel {
   // ok
   public static function find(int $primary_key) {
 
-    if ($record = ApplicationSql::read(static::$name, ["id" => $primary_key])) {
+    if ($record = ApplicationSql::read(static::$name, null, ["id" => $primary_key])) {
       $object = static::$name::load();
 
       foreach ($record as $fieldname => $value)
@@ -377,19 +384,23 @@ class ApplicationModel {
 
   // ok
   public static function delete($primary_key = null) {
-    ApplicationSql::delete(static::$name, ["id" => $primary_key]);
+    ApplicationSql::delete(static::$name, ["id" => $primary_key], null);
   }
 
   //////////////////////////////////////////////////
   // Private Functions
   //////////////////////////////////////////////////
 
-  private function belongs_of_fieldnames($table_fieldnames) {
-    return preg_grep("/(.*)_id/", $table_fieldnames);
-  }
+  // private function belongs_of_fieldnames($table_fieldnames) {
+  //   return preg_grep("/(.*)_id/", $table_fieldnames);
+  // }
 
-  private function table_belongs($table) {
-    return self::belongs_of_fieldnames(ApplicationSql::fieldnames($table));
+  // private function table_belongs($table) {
+  //   return self::belongs_of_fieldnames(ApplicationSql::fieldnames($table));
+  // }
+
+  private function query() {
+    return ApplicationSql::query($this->_select, $this->_table, $this->_join, $this->_where, $this->_order, $this->_group, $this->_limit);
   }
 
   // name check_join_table_and_field

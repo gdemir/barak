@@ -2,14 +2,14 @@
 //
 class ApplicationModel {
 
-  private $_select = []; // list
-  private $_table  = "";    // string
-  private $_where  = [];    // hash
-  private $_join   = [];    // hash
-  private $_group  = [];    // list
+  private $_select = [];  // list
+  private $_table  = "";  // string
+  private $_where  = [];  // hash
+  private $_join   = [];  // hash
+  private $_group  = [];  // list
   private $_limit;
 //  private $_offset;
-  private $_order  = [];    // list
+  private $_order  = [];  // list
 
   private $_fields;
   private $_new_record_state;
@@ -46,12 +46,12 @@ class ApplicationModel {
       if ($fields) {
 
         // simple load for create
-        $this->_fields[$fieldname] = in_array($fieldname, array_keys($fields)) ? $fields[$fieldname] : "";
+        $this->_fields[$fieldname] = in_array($fieldname, array_keys($fields)) ? $fields[$fieldname] : null;
 
       } else {
 
         // create draft fieldnames
-        $this->_fields[$fieldname] = "";
+        $this->_fields[$fieldname] = null;
 
       }
     }
@@ -115,8 +115,8 @@ class ApplicationModel {
   //////////////////////////////////////////////////
 
 
-  public static function load() {
-    $object = new static::$name();
+  public static function load($fields = null) {
+    $object = new static::$name($fields);
     $object->_table = static::$name;
     return $object;
   }
@@ -138,6 +138,24 @@ class ApplicationModel {
     return null;
   }
 
+  // ok
+  public function pluck($fieldname) {
+
+    self::check_fieldname($fieldname);
+
+    if (!in_array($fieldname, $this->_select)) $this->_select[] = $fieldname;
+
+    $records = ApplicationSql::query($this->_select, $this->_table, $this->_join, $this->_where, $this->_order, $this->_group, $this->_limit);
+
+    if ($records) {
+      foreach ($records as $record) {
+        $values[] = $record[$fieldname];
+      }
+      return isset($values) ? $values : null;
+    }
+    return null;
+  }
+
   // $user = new User();
   // $user->first_name ="Gökhan";
   // $user->save(); // kayıt ettikten sonra otomatik id değeri alır.
@@ -150,20 +168,20 @@ class ApplicationModel {
 
     if (!$this->_new_record_state) {
 
-      self::check_id();
+      //self::check_id();
 
-      ApplicationSql::update(static::$name, $this->_fields, ["id" => $this->_fields["id"]]);
+      ApplicationSql::update($this->_table, $this->_fields, ["id" => $this->_fields["id"]]);
 
     } else {
 
       // kayıt tamamlandıktan sonra en son id döndür
-      $primary_key = ApplicationSql::create(static::$name, $this->_fields);
+      $primary_key = ApplicationSql::create($this->_table, $this->_fields);
 
       // artık yeni kayıt değil
       $this->_new_record_state = false;
 
       // id'si olan kaydın alan değerlerini yeni kayıtta güncelle, (ör.: id otomatik olarak alması için)
-      $this->_fields = static::$name::find($primary_key)->_fields;
+      $this->_fields = $this->_table::find($primary_key)->_fields;
     }
   }
 
@@ -171,7 +189,7 @@ class ApplicationModel {
   public function destroy() {
     ApplicationSql::delete($this->_table, ["id" => $this->_fields["id"]]);
   }
-  
+
   // $users = User::load()->select("first_name, last_name")->get();
   // ["User.firs_name, User.last_name"]
 
@@ -181,7 +199,7 @@ class ApplicationModel {
     $fields = self::check_fields_of_table_list(array_map('trim', explode(',', $fields)));
 
     // varsayılan olarak ekle, objeler yüklenirken her zaman id olmalıdır.
-    $table_and_primary_key = static::$name . ".id";
+    $table_and_primary_key = $this->_table . ".id";
     if (!in_array($table_and_primary_key, $fields))
       array_push($fields, $table_and_primary_key);
 
@@ -258,7 +276,7 @@ class ApplicationModel {
     //$sets = self::implode_key_and_value($fields, "and");
     //ApplicationSql::delete(static::$name, $sets);
     $fields = $this->where ? $this->where : [];
-    ApplicationSql::delete(static::$name, $fields);
+    ApplicationSql::delete($this->_table, $fields);
   }
 
   //////////////////////////////////////////////////
@@ -273,16 +291,18 @@ class ApplicationModel {
   }
 
   // User::create(["first_name" => "Gökhan"]);
-  
+
   // ok
   public static function create($fields) {
-    $object = new static::$name($fields);
+
+    $object = static::$name::load($fields);
+    print_r($object);
     $object->save();
     return $object;
   }
-  
+
   // User::first();
-  
+
   // ok
   public static function first($limit = 1) {
     $records = static::$name::load()->order("id asc")->limit($limit)->take();
@@ -290,13 +310,13 @@ class ApplicationModel {
   }
 
   // User::last();
-  
+
   // ok
   public static function last($limit = 1) {
     $records = static::$name::load()->order("id desc")->limit($limit)->take();
     return ($limit == 1) ? $records[0] : $records;
   }
-  
+
   // $user = User::find(1); // return User objects
   // $user->first_name = 'foo';
   // $user->save();
@@ -337,7 +357,7 @@ class ApplicationModel {
   //   $user->first_name = "Gökhan";
   //   $user->save();
   // }
-  
+
   // ok
   public static function all() {
     return static::$name::load()->take();

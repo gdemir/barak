@@ -1,13 +1,13 @@
 <?php
 class HomeController extends ApplicationController {
 
-  protected $before_actions = [
-  ["login", "except" => ["login", "index"]],
-  ["notice_clear", "only" => ["index"]],
-  ["every_time"]
-  ];
+	protected $before_actions = [
+	["login", "except" => ["login", "index"]],
+	["notice_clear", "only" => ["index"]],
+	["every_time"]
+	];
 
-  public function index() {
+	public function index() {
   //   echo "Merhaba home#index<br/>";
 
 
@@ -15,8 +15,18 @@ class HomeController extends ApplicationController {
   //   echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><br/>";
 //$user = new User();
 //$user->where(["id"=>1]);
+  // 	$a = ApplicationSql::describe("User")->fetchAll(PDO::FETCH_ASSOC);;
+  // 	print_r($a);
+  // 	echo "<br/>";
+  // 	echo "<br/>";
 
-     echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><br/>";
+		$a = User::load()->pluck("id");
+
+		$user = User::create(["first_name" => "Gökhan","last_name"=>"a","username"=>"b","password"=>"asd"]);
+
+
+		print_r($user);
+		echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><br/>";
     // $users = User::load()->where(["id" => 1])->select("first_name")->take();
     // print_r($users);
     // echo "<br/><b>### select kullanıldı!</b><br/>";
@@ -72,21 +82,21 @@ class HomeController extends ApplicationController {
     // }
     // echo "<br/>";   echo "<br/>";
 
-    $department = Department::load()->joins(["User", "Address"])->where(["User.id" => "1"])->select("User.first_name, Department.name, Address.phone")->limit(1)->take();
-    print_r($department);
-    echo "<br/>";   echo "<br/>";
+		$department = Department::load()->joins(["User", "Address"])->where(["User.id" => "1"])->select("User.first_name, Department.name, Address.phone")->limit(1)->take();
+		print_r($department);
+		echo "<br/>";   echo "<br/>";
 
 
-    $departments = Department::all();
-    foreach ($departments as $department) {
-      echo $department->name . "<br/>";
-      $users = User::load()->where(["department_id" => $department->id]);
-      foreach ($users as $user) {
-        echo $user->first_name . "<br/>";
-      }
-    }
+		$departments = Department::all();
+		foreach ($departments as $department) {
+			echo $department->name . "<br/>";
+			$users = User::load()->where(["department_id" => $department->id]);
+			foreach ($users as $user) {
+				echo $user->first_name . "<br/>";
+			}
+		}
 
-    echo "<br/><b>### joins kullanıldı!</b><br/>";
+		echo "<br/><b>### joins kullanıldı!</b><br/>";
   //   print_r($this->users);
   //   echo "<br/>### join+select kullanıldı!<br/>";
 
@@ -113,21 +123,21 @@ class HomeController extends ApplicationController {
     //return $this->render(["layout" => false]);
     // $this->render(["action" => "show"]);
     // $this->render(["layout" => "admin", "action" => "show"]);
-  }
-  public function login() {
-    echo "Her işlem öncesi login oluyoruz<br/>";
-  }
-  public function every_time() {
-    echo "Home#every_time : her zaman çalışırım<br/>";
-  }
-  public function notice_clear() {
-    echo "Home#notice_clear : duyular silindi<br/>";
-  }
-  public function close() {
-    echo "Home#close : dükkan kapandı<br/>";
-  }
-  public function dashboard() {
-    echo "dashboard öncesi olaylar olaylar<br/>";
-  }
+	}
+	public function login() {
+		echo "Her işlem öncesi login oluyoruz<br/>";
+	}
+	public function every_time() {
+		echo "Home#every_time : her zaman çalışırım<br/>";
+	}
+	public function notice_clear() {
+		echo "Home#notice_clear : duyular silindi<br/>";
+	}
+	public function close() {
+		echo "Home#close : dükkan kapandı<br/>";
+	}
+	public function dashboard() {
+		echo "dashboard öncesi olaylar olaylar<br/>";
+	}
 }
 ?>

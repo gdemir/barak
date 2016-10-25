@@ -143,7 +143,7 @@ class ApplicationModel {
 
     self::check_fieldname($fieldname);
 
-    if (!in_array($fieldname, $this->_select)) $this->_select[] = $fieldname;
+    $this->_select = [$fieldname];
 
     $records = ApplicationSql::query($this->_select, $this->_table, $this->_join, $this->_where, $this->_order, $this->_group, $this->_limit);
 

@@ -302,8 +302,7 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
 
 - Static Access Functions
 
-> `load`, `first`, `last`, `create`, `find`, `find_all`, `all`, `exists`, `delete`, `update`
-
+> `load`, `create`, `find`, `find_all`, `all`, `first`, `last`, `exists`, `delete`, `update`
 
 #### CREATE ( `new`, `create` )
 
@@ -449,6 +448,12 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
   $users = User::last(10);
   foreach ($users as $user)
     echo $user->first_name;
+```
+
+> `exists`
+
+```php
+  echo User::exists(1) ? "kayit var" : "kayit yok";
 ```
 
 #### UPDATE ( `save`, `update` )

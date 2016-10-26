@@ -22,12 +22,12 @@ class HomeController extends ApplicationController {
 
 
 
-  	$user = User::find(818);
-  	print_r($user);
+  	// $user = User::find(818);
+  	// print_r($user);
 
-    $a = User::load()->pluck("first_name");
+   //  $a = User::load()->pluck("first_name");
 
-    echo User::load()->where(["first_name" => "Gökhan"])->count();
+   //  echo User::load()->where(["first_name" => "Gökhan"])->count();
 
 
     // print_r($user);
@@ -87,19 +87,19 @@ class HomeController extends ApplicationController {
     // }
     // echo "<br/>";   echo "<br/>";
 
-    $department = Department::load()->joins(["User", "Address"])->where(["User.id" => "1"])->select("User.first_name, Department.name, Address.phone")->limit(1)->take();
-    print_r($department);
-    echo "<br/>";   echo "<br/>";
+    // $department = Department::load()->joins(["User", "Address"])->where(["User.id" => "1"])->select("User.first_name, Department.name, Address.phone")->limit(1)->take();
+    // print_r($department);
+    // echo "<br/>";   echo "<br/>";
 
 
-    $departments = Department::all();
-    foreach ($departments as $department) {
-      echo $department->name . "<br/>";
-      $users = User::load()->where(["department_id" => $department->id]);
-      foreach ($users as $user) {
-        echo $user->first_name . "<br/>";
-      }
-    }
+    // $departments = Department::all();
+    // foreach ($departments as $department) {
+    //   echo $department->name . "<br/>";
+    //   $users = User::load()->where(["department_id" => $department->id]);
+    //   foreach ($users as $user) {
+    //     echo $user->first_name . "<br/>";
+    //   }
+    // }
 
     echo "<br/><b>### joins kullanıldı!</b><br/>";
   //   print_r($this->users);

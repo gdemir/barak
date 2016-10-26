@@ -294,11 +294,11 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
 
 - Public Access Functions
 
-> `new`, `save`, `destroy`, `delete_all`, `select`, `where`, `joins`, `order`, `group`, `limit`, `take`, `pluck`, `count`
+> `save`, `destroy`, `delete_all`, `select`, `where`, `joins`, `order`, `group`, `limit`, `take`, `pluck`, `count`
 
 - Static Access Functions
 
-> `load`, `create`, `find`, `find_all`, `all`, `first`, `last`, `exists`, `delete`, `update`
+> `new`, `load`, `create`, `find`, `find_all`, `all`, `first`, `last`, `exists`, `delete`, `update`
 
 #### CREATE ( `new`, `create` )
 
@@ -308,15 +308,14 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
 ```php
   // Ör. 1:
 
-  $user = new User();
+  $user = User::new();
   $user->first_name = "Gökhan";
   $user->save();
   print_r($user); // otomatik id alır
 
   // Ör. 2:
 
-  $user = new User(["first_name" => "Gökhan"]);
-  $user->save();
+  $user = User::new(["first_name" => "Gökhan"])->save();
   print_r($user); // otomatik id alır
 ```
 

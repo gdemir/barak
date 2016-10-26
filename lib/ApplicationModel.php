@@ -20,26 +20,30 @@ class ApplicationModel {
 
   // Ekleme ör.: 1
 
-  // $user = new User();
+  // $user = User::new();
   // $user->first_name ="Gökhan";
   // $user->last_name ="Demir";
   // $user->save(); // yeni kayıt eklendi
 
   // Ekleme ör.: 2
 
-  // $user = new User(["last_name" => "Demir"]);
+  // $user = User::new(["last_name" => "Demir"]);
   // $user->first_name ="Gökhan";
   // $user->save(); // yeni kayıt eklendi
+
+  // Ekleme ör.: 3
+
+  // $user = User::new(["last_name" => "Demir"])->save();
 
   // Günceleme ör.: 1
 
   // $this->users = User::all(); // tüm users içinde id olduğu için kayıtları güncelleme özelliği oluyor.
-  // foreach ($this->users as user) {
-  //   user.first_name = "Gökhan";
-  //   user.save();
+  // foreach ($this->users as $user) {
+  //   $user->first_name = "Gökhan";
+  //   $user->save();
   // }
 
-  public function __construct($fields = null) {
+  private function __construct($fields = null) {
     $this->_new_record_state = true;
 
     foreach (ApplicationSql::fieldnames(static::$name) as $fieldname) {
@@ -56,24 +60,6 @@ class ApplicationModel {
       }
     }
   }
-
-/* TODO
-   public function __destruct() {
-
-     return $this->take();
-  }
-*/
-
-
-/* TODO
-  public function __call($method,$arguments) {
-    if (method_exists($this, $method)) {
-
-      call_user_func_array(array($this,$method),$arguments);
-      return $this;
-    }
-  }
-*/
 
   // Alma 1:
 
@@ -113,14 +99,6 @@ class ApplicationModel {
   //////////////////////////////////////////////////
   // Public Functions
   //////////////////////////////////////////////////
-
-
-  public static function load($fields = null) {
-    $object = new static::$name($fields);
-    $object->_table = static::$name;
-    return $object;
-  }
-
 
   // FETCH Functions Start
 
@@ -299,11 +277,32 @@ class ApplicationModel {
     return ApplicationSql::primary_keyname(static::$name);
   }
 
+  // Ör. 1:
+
+  // $user = User::new();
+  // $user->first_name = "Gökhan";
+  // $user->save();
+  // print_r($user); // otomatik id alır
+
+  // Ör. 2:
+
+  // $user = User::new(["first_name" => "Gökhan"])->save();
+
+  public static function new($fields = null) {
+    $object = new static::$name($fields);
+    $object->_table = static::$name;
+    return $object;
+  }
+
+  public static function load() {
+    return self::new(null);
+  }
+
   // User::create(["first_name" => "Gökhan"]);
 
   // ok
   public static function create($fields) {
-    $object = static::$name::load($fields);
+    $object = static::$name::new($fields);
     $object->save();
     return $object;
   }

@@ -39,9 +39,6 @@ foreach ($GLOBALS['db']->tablenames() as $table_name) {
   eval("
     class $table_name extends ApplicationModel {
       protected static \$name = '$table_name';
-      public function __construct(\$fields = false) {
-        parent::__construct(\$fields);
-      }
     }
     ");
 }

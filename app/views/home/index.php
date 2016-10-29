@@ -1,17 +1,3 @@
-<?php
-	echo "merhabaaaaaaaa<br/><br/>";
-
-	// foreach ($users as $user) {
-	// 	echo $user->first_name. "<br/>";
-	// }
-	echo "<br/>";
-	echo "<br/>";
-	echo "<br/>";
-	echo "<br/>";
-	echo "<br/>";
-	echo "<br/>";
-	echo "<br/>";
-	echo "<br/>";
-	echo "ssssssssssssssssssss";
-
-?>
+<?php foreach ($users as $user) { ?>
+<h5><?= $user->first_name; ?></h5>
+<?php } ?>

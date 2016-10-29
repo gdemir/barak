@@ -8,8 +8,8 @@ class ApplicationSql {
 
   // ["first_name" => "Gökhan", "last_name" => "Demir"]
   private function hash_to_key_symbol_symbolvalue($_hash, $delimiter = ",", $command = "") {
-    $symbols = "";            // ["first_name" => ":first_name", "last_name" => ":last_name"]
-    $symbol_and_values = [];  // [":first_name" => "Gökhan", ":last_name" => "Demir"]
+    $symbols = "";                             // ["first_name" => ":first_name", "last_name" => ":last_name"]
+    $symbol_and_values = [];                   // [":first_name" => "Gökhan", ":last_name" => "Demir"]
     $keys = "";
     foreach ($_hash as $key => $value) {
       $keys .= ($keys ? " $delimiter " : "") . $key;
@@ -24,8 +24,8 @@ class ApplicationSql {
 
   // ["first_name" => "Gökhan", "last_name" => "Demir"]
   private function hash_to_keysymbol_symbolvalue($_hash, $delimiter = ",", $command = "") {
-    $key_and_symbols = "";    // ["first_name" => ":first_name", "last_name" => ":last_name"]
-    $symbol_and_values = [];  // [":first_name" => "Gökhan", ":last_name" => "Demir"]
+    $key_and_symbols = "";                     // ["first_name" => ":first_name", "last_name" => ":last_name"]
+    $symbol_and_values = [];                   // [":first_name" => "Gökhan", ":last_name" => "Demir"]
 
     foreach ($_hash as $key => $value) {
 
@@ -40,8 +40,8 @@ class ApplicationSql {
 
   // ["first_name", "last_name"]
   private function list_to_symbol_symbolvalue($_list, $command = "") {
-    $symbols = "";            // ":first_name , :last_name"
-    $symbol_and_values = [];  // [":first_name" => "first_name", ":last_name" => "last_name"]
+    $symbols = "";                             // ":first_name , :last_name"
+    $symbol_and_values = [];                   // [":first_name" => "first_name", ":last_name" => "last_name"]
     $command = str_replace(" ", "", $command); // ORDER BY => ORDERBY, GROUP BY => GROUPBY
 
     foreach ($_list as $field) {
@@ -172,20 +172,16 @@ class ApplicationSql {
     return $query->fetchAll(PDO::FETCH_ASSOC);
   }
 
-  public static function describe($table) {
-    return $GLOBALS['db']->query("describe " . $table);
-  }
-
   public static function tablenames() {
     return $GLOBALS['db']->tablenames();
   }
 
   public static function fieldnames($table) {
-    return self::describe($table)->fetchAll(PDO::FETCH_COLUMN);
+    return $GLOBALS['db']->query("DESCRIBE $table")->fetchAll(PDO::FETCH_COLUMN);
   }
 
   public static function primary_keyname($table) {
-    return $GLOBALS['db']->query("show index from " . $table . " where Key_name = 'PRIMARY'")->fetch(PDO::FETCH_ASSOC)["Column_name"];
+    return $GLOBALS['db']->query("SHOW INDEX FROM $table WHERE Key_name = 'PRIMARY'")->fetch(PDO::FETCH_ASSOC)["Column_name"];
   }
 }
 ?>

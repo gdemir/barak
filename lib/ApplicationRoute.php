@@ -72,33 +72,59 @@ class ApplicationRoute {
 
     $class->run($this->_action);
 
-    // for render page
-
+    // controller var fetch
     $vars = get_object_vars($class);
 
+    // controllerın renderi
+    // vars["_render"]
+
+    // render controller choice
     $render = $vars["_render"];
 
+    if (is_array(($vars["_render"]))) {
+      if (array_key_exists("layout", $vars["_render"]))
+        $render["layout"] .= "_layout";
+    } elseif (is_string($vars["_render"])) {
+      $url = explode("/", trim($vars["_render"], "/"));
+
+      if (isset($url[1])) {
+        $render["action"] = $url[1];
+        $render["view"] = $url[0];
+      } else {
+        $render["action"] = $url[0];
+        $render["view"] = null;
+      }
+
+      $render["layout"] = null;
+    }
+
+    // default assignment on route of congfig/routes.php
     $render["layout"] = $render["layout"] ?? $this->_layout;
     $render["action"] = $render["action"] ?? $this->_action;
-    $render["view"] = $render["view"] ?? $this->_view;
+    $render["view"]   = $render["view"]   ?? $this->_view;
+    //print_r($render);
 
+    // LAYOUT
     $layout_path = "app/views/layouts/" . $render["layout"] . ".php";
-    $view_path = "app/views/" . $render["view"] . "/" . $render["action"] . ".php";
 
     if (file_exists($layout_path)) {
       $layout_content = file_get_contents($layout_path);
+    } else {
+      throw new FileNotFoundException("Layout path mevcut değil", $layout_path);
     }
 
+    // VIEW
+    $view_path = "app/views/" . $render["view"] . "/" . $render["action"] . ".php";
     if (file_exists($view_path)) {
       $view_content = file_get_contents($view_path);
     } else {
       throw new FileNotFoundException("View path mevcut değil", $view_path);
     }
 
-    // merge layout with view content
+    // merge LAYOUT content
     $page_content = (isset($layout_content)) ? str_replace("{yield}", $view_content, $layout_content) : $view_content;
 
-    // controller'in paramsları
+    // controllerin paramsları
     // $vars["_params"]
 
     // router'in paramslarını(sayfadan :id, çekmek için), controller'dan gelen paramslara yükle

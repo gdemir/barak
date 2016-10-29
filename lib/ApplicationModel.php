@@ -254,15 +254,8 @@ class ApplicationModel {
     return $this;
   }
 
-
-
-  // this function DRAFT
+  // ok
   public function delete_all() {
-  //public static function delete_all($fields) {
-    //self::check_fieldnames(array_keys($fields));
-
-    //$sets = self::implode_key_and_value($fields, "and");
-    //ApplicationSql::delete(static::$name, $sets);
     ApplicationSql::delete($this->_table, $this->_where, null);
   }
 
@@ -302,9 +295,7 @@ class ApplicationModel {
 
   // ok
   public static function create($fields) {
-    $object = static::$name::new($fields);
-    $object->save();
-    return $object;
+    return static::$name::new($fields)->save();
   }
 
   // User::first();
@@ -390,14 +381,6 @@ class ApplicationModel {
   // Private Functions
   //////////////////////////////////////////////////
 
-  // private function belongs_of_fieldnames($table_fieldnames) {
-  //   return preg_grep("/(.*)_id/", $table_fieldnames);
-  // }
-
-  // private function table_belongs($table) {
-  //   return self::belongs_of_fieldnames(ApplicationSql::fieldnames($table));
-  // }
-
   private function query() {
     return ApplicationSql::query($this->_select, $this->_table, $this->_join, $this->_where, $this->_order, $this->_group, $this->_limit);
   }
@@ -477,11 +460,6 @@ class ApplicationModel {
 
   private function field_exists($field) {
     return in_array($field, ApplicationSql::fieldnames(static::$name)) ? true : false;
-  }
-
-  // ok
-  private function implode_key_and_value($fields, $delimiter = ",") {
-    return implode(" $delimiter ", array_map(function ($key, $value) { return $key . "=" . $value; }, array_keys($fields), $fields));
   }
 }
 ?>

@@ -139,12 +139,12 @@ public function index() {
   echo "HomeIndex sayfası öncesi çalışan fonksiyon";
 
   // DEFAULT LAYOUT: home_layout, VIEW: home, ACTION: index
-  $this->render("/home/index");
+  $this->render("/home/index"); // default render
 
-  // DEFAULT LAYOUT: home_layout, VIEW: home, ACTION: show
+  // LAYOUT: home_layout, VIEW: home, ACTION: show
   $this->render("/home/show");
 
-  // DEFAULT LAYOUT: home_layout, VIEW: admin, ACTION: show
+  // LAYOUT: home_layout, VIEW: admin, ACTION: show
   $this->render("/admin/show");
 
   // Default LAYOUT: home_layout, VIEW: home, ACTION: index

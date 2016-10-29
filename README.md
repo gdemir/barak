@@ -132,8 +132,7 @@ Her `config/routes.php` içerisinde tanımlanan `get` işlemi için `app/control
 
 > view : `app/views/VIEW/ACTION.php`
 
-Example
-
+```php
 class HomeController extends ApplicationController {
 
 public function index() {
@@ -163,8 +162,8 @@ public function index() {
   // LAYOUT: admin_layout, VIEW: home, ACTION: show
   $this->render(["layout" => "admin", "view" => "home", "action" => "show"]);
 
-
 }
+```
 
 - Redirect
 

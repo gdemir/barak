@@ -35,5 +35,6 @@ class FieldNotFoundException extends ApplicationException {};
 class TableNotFoundException extends ApplicationException {};
 class BelongNotFoundException extends ApplicationException {};
 class SQLException extends ApplicationException {};
+class ViewNotFoundException extends ApplicationException {};
 
 ?>

@@ -4,7 +4,7 @@
 
 - MySQL
 
-- Web server: apache2 or nginx (#TODO configuration file)
+- Web server: [apache2-settings](https://github.com/gdemir/barak/blob/master/.htaccess) or [nginx-settings](https://github.com/gdemir/barak/blob/master/nginx-settings)
 
 - Php Version : 7.0, - Php Database Access : [PDO](http://php.net/manual/tr/book.pdo.php)
 
@@ -132,19 +132,20 @@ Her `config/routes.php` içerisinde tanımlanan `get` işlemi için `app/control
 
 > view : `app/views/VIEW/ACTION.php`
 
-```php
+Example
+
 class HomeController extends ApplicationController {
 
 public function index() {
   echo "HomeIndex sayfası öncesi çalışan fonksiyon";
 
   // DEFAULT LAYOUT: home_layout, VIEW: home, ACTION: index
-  $this->render("/home/index"); // default render
+  $this->render("/home/index");
 
-  // LAYOUT: home_layout, VIEW: home, ACTION: show
+  // DEFAULT LAYOUT: home_layout, VIEW: home, ACTION: show
   $this->render("/home/show");
 
-  // LAYOUT: home_layout, VIEW: admin, ACTION: show
+  // DEFAULT LAYOUT: home_layout, VIEW: admin, ACTION: show
   $this->render("/admin/show");
 
   // Default LAYOUT: home_layout, VIEW: home, ACTION: index
@@ -163,7 +164,6 @@ public function index() {
   $this->render(["layout" => "admin", "view" => "home", "action" => "show"]);
 
 }
-```
 
 - Redirect
 

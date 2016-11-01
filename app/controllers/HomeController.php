@@ -125,9 +125,29 @@ class HomeController extends ApplicationController {
     //return $this->redirect_to("/home/about");
 
   $this->title = "Ana Sayfa/Index";
-  // return $this->render(["layout" => "home"]);
-  // $this->render(["action" => "show"]);
-  // $this->render(["layout" => "home", "action" => "index"]);
+  // DEFAULT LAYOUT: home_layout, VIEW: home, ACTION: index
+  // $this->render("/home/index"); // default render
+
+  // LAYOUT: home_layout, VIEW: home, ACTION: show
+  // $this->render("/home/show");
+
+  // LAYOUT: home_layout, VIEW: admin, ACTION: show
+  // $this->render("/admin/show");
+
+  // // Default LAYOUT: home_layout, VIEW: home, ACTION: index
+  // $this->render(["layout"=>"home", "view" => "home", "action" => "index"]); // default render
+
+  // LAYOUT: false, VIEW: home, ACTION: index
+  // $this->render(["layout" => false]);
+
+  // LAYOUT: home_layout, VIEW: admin, ACTION: index
+  // $this->render(["view" => "admin", "action" => "index"]);
+
+  // LAYOUT: home_layout, VIEW: admin, ACTION: index
+  // $this->render(["view" => "admin", "action" => "index"]);
+
+  // LAYOUT: admin_layout, VIEW: home, ACTION: show
+  // $this->render(["layout" => "admin", "view" => "home", "action" => "show"]);
   }
   public function login() {
     echo "Her işlem öncesi login oluyoruz<br/>";

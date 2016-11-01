@@ -28,9 +28,9 @@ ApplicationRoutes::draw(
 ```php
 class HomeController extends ApplicationController {
 
-public function index() {
-  $this->message = "Hello World";
-}
+  public function index() {
+    $this->message = "Hello World";
+  }
 
 }
 ```

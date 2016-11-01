@@ -19,7 +19,7 @@
 
 ```php
 ApplicationRoutes::draw(
-get("/", "home#index")
+  get("/", "home#index")
 );
 ```
 
@@ -29,7 +29,7 @@ get("/", "home#index")
 class HomeController extends ApplicationController {
 
 public function index() {
-$this->message = "Hello World";
+  $this->message = "Hello World";
 }
 
 }
@@ -38,8 +38,8 @@ $this->message = "Hello World";
 > `app/views/home/index.php`
 
 ```php
-echo "<h1>Home#Index</h1>";
-echo $message;
+<h1> Home#Index </h1>;
+<?= $message; ?>
 ```
 
 > `app/views/layouts/home_layout.php`
@@ -68,7 +68,7 @@ echo $message;
 
 ```php
 ApplicationRoutes::draw(
-get("/home/index")
+  get("/home/index")
 );
 ```
 
@@ -78,15 +78,15 @@ get("/home/index")
 
 ```php
 ApplicationRoutes::draw(
-get("/home/index/:id"),
+  get("/home/index/:id")
 );
 ```
 
 > `app/views/home/index.php`
 
 ```php
-echo "<h1>Home#Index</h1>";
-echo "id" . $params["id"];
+<h1> Home#Index </h1>;
+<?= "id" . $params["id"]; ?>
 ```
 
 #### POST
@@ -95,7 +95,7 @@ echo "id" . $params["id"];
 
 ```php
 ApplicationRoutes::draw(
-post("/admin/login")
+  post("/admin/login")
 );
 ```
 
@@ -103,7 +103,7 @@ post("/admin/login")
 
 ```php
 ApplicationRoutes::draw(
-resource("/user")
+  resource("/user")
 );
 ```
 
@@ -111,13 +111,13 @@ resource("/user")
 
 ```php
 ApplicationRoutes::draw(
-get("/user/index"),           // all record
-get("/user/new"),             // new record form
-post("user/create"),          // new record create
-get("user/show/:id"),         // display record
-get("user/edit/:id"),         // edit record
-post("user/update"),          // update record
-post("user/destroy")          // destroy record
+  get("/user/index"),           // all record
+  get("/user/new"),             // new record form
+  post("user/create"),          // new record create
+  get("user/show/:id"),         // display record
+  get("user/edit/:id"),         // edit record
+  post("user/update"),          // update record
+  post("user/destroy")          // destroy record
 );
 ```
 
@@ -136,33 +136,40 @@ Example
 
 class HomeController extends ApplicationController {
 
-public function index() {
-  echo "HomeIndex sayfası öncesi çalışan fonksiyon";
+  public function index() {
+    echo "HomeIndex sayfası öncesi çalışan fonksiyon";
 
-  // DEFAULT LAYOUT: home_layout, VIEW: home, ACTION: index
-  $this->render("/home/index");
+    // DEFAULT LAYOUT: home_layout, VIEW: home, ACTION: index
+    $this->render("/home/index"); // like $this->render(["template" => "/home/index"]);
 
-  // DEFAULT LAYOUT: home_layout, VIEW: home, ACTION: show
-  $this->render("/home/show");
+    // DEFAULT LAYOUT: home_layout, VIEW: home, ACTION: show
+    $this->render("/home/show"); // like $this->render(["template" => "/home/show"]);
 
-  // DEFAULT LAYOUT: home_layout, VIEW: admin, ACTION: show
-  $this->render("/admin/show");
+    // DEFAULT LAYOUT: home_layout, VIEW: admin, ACTION: show
+    $this->render("/admin/show"); // like $this->render(["template" => "/admin/show"]);
 
-  // Default LAYOUT: home_layout, VIEW: home, ACTION: index
-  $this->render(["layout"=>"home", "view" => "home", "action" => "index"]); // default render
+    // Default LAYOUT: home_layout, VIEW: home, ACTION: index
+    $this->render(["layout"=>"home", "view" => "home", "action" => "index"]); // default render
 
-  // LAYOUT: false, VIEW: home, ACTION: index
-  $this->render(["layout" => false]);
+    // LAYOUT: false, VIEW: home, ACTION: index
+    $this->render(["layout" => false]);
 
-  // LAYOUT: home_layout, VIEW: admin, ACTION: index
-  $this->render(["view" => "admin", "action" => "index"]);
+    // LAYOUT: home_layout, VIEW: admin, ACTION: index
+    $this->render(["view" => "admin", "action" => "index"]);
 
-  // LAYOUT: home_layout, VIEW: admin, ACTION: index
-  $this->render(["view" => "admin", "action" => "index"]);
+    // LAYOUT: home_layout, VIEW: admin, ACTION: index
+    $this->render(["view" => "admin", "action" => "index"]);
 
-  // LAYOUT: admin_layout, VIEW: home, ACTION: show
-  $this->render(["layout" => "admin", "view" => "home", "action" => "show"]);
+    // LAYOUT: admin_layout, VIEW: home, ACTION: show
+    $this->render(["layout" => "admin", "view" => "home", "action" => "show"]);
 
+    // LAYOUT: admin_layout, VIEW: home, ACTION: index
+    $this->render(["layout" => "admin", "template" => "home/index"]);
+
+    // LAYOUT: admin_layout, VIEW: home, ACTION: show
+    $this->render(["layout" => "admin", "template" => "home/show"]);
+
+  }
 }
 
 - Redirect
@@ -182,27 +189,27 @@ Before Action (`protected $before_actions`) özelliği, `app/controller/*.php` d
 ```php
 class HomeController extends ApplicationController {
 
-protected $before_actions = [
-["login", "except" => ["login", "index"]],
-["notice_clear", "only" => ["index"]],
-["every_time"]
-];
+  protected $before_actions = [
+    ["login", "except" => ["login", "index"]],
+    ["notice_clear", "only" => ["index"]],
+    ["every_time"]
+  ];
 
-public function index() {
-echo "HomeIndex : Anasayfa (bu işlem için login fonksiyonu çalışmaz, notice_clear ve every_time çalışır)";
-}
+  public function index() {
+    echo "HomeIndex : Anasayfa (bu işlem için login fonksiyonu çalışmaz, notice_clear ve every_time çalışır)";
+  }
 
-public function login() {
-echo "Home#Login : Her işlem öncesi login oluyoruz. (get/post için /home/login, /home/index hariç)";
-}
+  public function login() {
+    echo "Home#Login : Her işlem öncesi login oluyoruz. (get/post için /home/login, /home/index hariç)";
+  }
 
-public function notice_clear() {
-echo "Home#NoticeClear : Duyular silindi. (get/post için sadece /home/index'de çalışır)";
-}
+  public function notice_clear() {
+    echo "Home#NoticeClear : Duyular silindi. (get/post için sadece /home/index'de çalışır)";
+  }
 
-public function every_time() {
-echo "Home#EveryTime : Her zaman get/post öncesi çalışırım.";
-}
+  public function every_time() {
+    echo "Home#EveryTime : Her zaman get/post öncesi çalışırım.";
+  }
 ```
 
 - After Action
@@ -223,9 +230,9 @@ After Action (`protected $after_actions`) özelliği, `app/controller/*.php` dos
 
 ```php
 ApplicationRoutes::draw(
-get("/admin/home"),
-get("/admin/login"),
-post("/admin/login")
+  get("/admin/home"),
+  get("/admin/login"),
+  post("/admin/login")
 );
 ```
 
@@ -233,34 +240,46 @@ post("/admin/login")
 
 ```php
 class AdminController extends ApplicationController {
-protected $before_actions = [
-["require_login", "except" => ["login"]]
-];
 
-public function login() {
-if (isset($_SESSION['admin']))
-return $this->redirect_to("/admin/home");
-if (isset($_POST["username"]) and isset($_POST["password"])) {
-$user = User::where([
-"username" => $_POST["username"],
-"password" => $_POST["password"]
-]);
-if ($user) {
-echo "tebrikler";
-$_SESSION["admin"] = true;
-return $this->render("/admin/home");
-} else {
-echo "şifre veya parola hatalı";
-}
-}
-echo "otomatik render, login paneli gelmeli";
-}
+  protected $before_actions = [
+    ["require_login", "except" => ["login"]]
+  ];
 
-public function require_login() {
-echo "Her işlem öncesi login oluyoruz<br/>";
-if (!isset($_SESSION['admin']))
-return $this->redirect_to("/admin/login");
-}
+  public function login() {
+
+    if (isset($_SESSION['admin']))
+      return $this->redirect_to("/admin/home");
+
+    if (isset($_POST["username"]) and isset($_POST["password"])) {
+      $user = User::load()
+                ->where([
+                  "username" => $_POST["username"],
+                  "password" => $_POST["password"]
+                  ]);
+
+      if ($user) {
+        echo "tebrikler";
+        $_SESSION["admin"] = true;
+        return $this->render("/admin/home");
+      } else {
+        echo "şifre veya parola hatalı";
+      }
+    }
+    echo "otomatik render, login paneli gelmeli";
+    // $this->render("/admin/login");
+    // $this->render(["template" => "/admin/login"]);
+    // $this->render(["template" => "/admin/login", "layout" => "admin"]);
+    // $this->render(["view" => "admin", action => "login"]);
+    // $this->render(["view" => "admin", action => "login", "layout" => "admin"]);
+  }
+
+  public function require_login() {
+    echo "Her işlem öncesi login oluyoruz<br/>";
+
+    if (!isset($_SESSION['admin']))
+      return $this->redirect_to("/admin/login");
+  }
+
 }
 ```
 
@@ -284,7 +303,7 @@ return $this->redirect_to("/admin/login");
 > `app/views/admin/home.php`
 
 ```php
-echo "Admin#Home";
+<h1> Admin#Home </h1>
 ```
 
 > `app/views/layouts/admin_layout.php`
@@ -377,21 +396,21 @@ print_r($user);
 ```php
 $users = User::load()->take();
 foreach ($user as $user)
-echo $user->first_name;
+  echo $user->first_name;
 ```
 
 > `select`, `where`, `order`, `group`, `limit`, `take`
 
 ```php
 $users = User::load()
-->where(["first_name" = "Gökhan"])
-->select("first_name")
-->order("id")
-->limit("10")
-->take();
+           ->where(["first_name" = "Gökhan"])
+           ->select("first_name")
+           ->order("id")
+           ->limit("10")
+           ->take();
 
 foreach ($user as $user)
-echo $user->first_name;
+  echo $user->first_name;
 ```
 
 > `pluck`
@@ -431,10 +450,11 @@ echo User::load()->where(["first_name" => "Gökhan"])->count();
 // Department ["id", "name"], User ["id", "department_id", "first_name"], "Address" ["id", "user_id", "content"]
 
 $department = Department::load()
-->joins(["User", "Address"])
-->where(["User.id" => "1"])
-->select("User.first_name, Department.name, Address.content")
-->limit(1)->take();
+                ->joins(["User", "Address"])
+                ->where(["User.id" => "1"])
+                ->select("User.first_name, Department.name, Address.content")
+                ->limit(1)
+                ->take();
 print_r($department);
 ```
 
@@ -450,7 +470,7 @@ echo $user->first_name;
 ```php
 $users = User::find_all([1, 2, 3]);
 foreach ($users as $user)
-echo $user->first_name;
+  echo $user->first_name;
 ```
 
 > `all`
@@ -458,7 +478,7 @@ echo $user->first_name;
 ```php
 $users = User::all();
 foreach ($users as $user)
-echo $user->first_name;
+  echo $user->first_name;
 ```
 
 > `first`
@@ -472,7 +492,7 @@ echo $user->first_name;
 // Ör. 2:
 $users = User::first(10);
 foreach ($users as $user)
-echo $user->first_name;
+  echo $user->first_name;
 ```
 
 > `last`
@@ -487,7 +507,7 @@ echo $user->first_name;
 
 $users = User::last(10);
 foreach ($users as $user)
-echo $user->first_name;
+  echo $user->first_name;
 ```
 
 > `exists`
@@ -516,15 +536,15 @@ $users = User::find_all([1, 2, 3]);
 $users = User::load()->take();
 $users = User::all();
 $users = User::load()
-->where(["first_name" = "Gökhan"])
-->select("first_name")
-->order("id")
-->limit("10")
-->take();
+           ->where(["first_name" = "Gökhan"])
+           ->select("first_name")
+           ->order("id")
+           ->limit("10")
+           ->take();
 $users = User::first(10);
 foreach ($users as $user) {
-$user->first_name = "Göktuğ";
-$user->save();
+  $user->first_name = "Göktuğ";
+  $user->save();
 }
 ```
 
@@ -541,13 +561,13 @@ $users = User::find_all([1, 2, 3]);
 $users = User::load()->take();
 $users = User::all();
 $users = User::load()
-->where(["first_name" = "Gökhan"])
-->select("first_name")
-->order("id")
-->limit("10")
-->take();
+           ->where(["first_name" = "Gökhan"])
+           ->select("first_name")
+           ->order("id")
+           ->limit("10")
+           ->take();
 foreach ($users as $user)
-User::update($user->id, array("first_name" => "Göktuğ", "last_name" => "Demir"));
+  User::update($user->id, array("first_name" => "Göktuğ", "last_name" => "Demir"));
 ```
 
 #### DELETE ( `destroy`, `delete`, `delete_all` )
@@ -595,10 +615,10 @@ name  = BARAK
 
 ```php
 if (User::load()->count() == 0) {
-User::create(["first_name" => "Gökhan", "last_name" => "Demir", "username" => "gdemir",  "password" => "123456"]);
-User::create(["first_name" => "Gökçe",  "last_name" => "Demir", "username" => "gcdemir", "password" => "123456"]);
-User::create(["first_name" => "Göktuğ", "last_name" => "Demir", "username" => "gtdemir", "password" => "123456"]);
-User::create(["first_name" => "Atilla", "last_name" => "Demir", "username" => "ademir",  "password" => "123456"]);
+  User::create(["first_name" => "Gökhan", "last_name" => "Demir", "username" => "gdemir",  "password" => "123456"]);
+  User::create(["first_name" => "Gökçe",  "last_name" => "Demir", "username" => "gcdemir", "password" => "123456"]);
+  User::create(["first_name" => "Göktuğ", "last_name" => "Demir", "username" => "gtdemir", "password" => "123456"]);
+  User::create(["first_name" => "Atilla", "last_name" => "Demir", "username" => "ademir",  "password" => "123456"]);
 }
 ```
 

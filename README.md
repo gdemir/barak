@@ -134,6 +134,7 @@ Her `config/routes.php` içerisinde tanımlanan `get` işlemi için `app/control
 
 Example
 
+```php
 class HomeController extends ApplicationController {
 
   public function index() {
@@ -171,6 +172,7 @@ class HomeController extends ApplicationController {
 
   }
 }
+```
 
 - Redirect
 

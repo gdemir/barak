@@ -176,7 +176,18 @@ class HomeController extends ApplicationController {
 
 - Redirect
 
-#TODO
+Controller'a uğramadan ve hiçbir `params` değeri almadan direkt `html` sayfasına götüren fonksiyondur.
+
+```php
+class HomeController extends ApplicationController {
+
+  public function index() {
+    echo "HomeIndex sayfası öncesi çalışan fonksiyon";
+
+    $this->redirect_to("/admin/login");
+  }
+}
+```
 
 - Before Action
 

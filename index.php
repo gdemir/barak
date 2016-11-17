@@ -40,7 +40,7 @@ ApplicationHelper::extract();
 // I18n : locale get end edit url // OPTIONAL
 $GLOBALS['i18n'] = new ApplicationI18n($_SERVER["REQUEST_URI"], "tr");
 $_SERVER["REQUEST_URI"] = $GLOBALS['i18n']->uri;
-print_r($GLOBALS['i18n']);
+//print_r($GLOBALS['i18n']);
 
 // Route : run configration of route
 ApplicationConfig::route();

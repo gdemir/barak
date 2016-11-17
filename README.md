@@ -176,18 +176,7 @@ class HomeController extends ApplicationController {
 
 - Redirect
 
-Controller'a uğramadan ve hiçbir `params` değeri almadan direkt `html` sayfasına götüren fonksiyondur.
-
-```php
-class HomeController extends ApplicationController {
-
-  public function index() {
-    echo "HomeIndex sayfası öncesi çalışan fonksiyon";
-
-    $this->redirect_to("/admin/login");
-  }
-}
-```
+#TODO
 
 - Before Action
 
@@ -373,7 +362,7 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
 
 - Static Access Functions
 
-> `new`, `load`, `create`, `find`, `find_all`, `all`, `first`, `last`, `exists`, `delete`, `update`
+> `new`, `load`, `create`, `unique`, `find`, `find_all`, `all`, `first`, `last`, `exists`, `delete`, `update`
 
 #### CREATE ( `new`, `create` )
 
@@ -471,6 +460,13 @@ $department = Department::load()
 print_r($department);
 ```
 
+> `unique`
+
+```php
+$user = User::unique(["username" => "gdemir", "password" => "123456"]);
+echo $user->first_name;
+```
+
 > `find`
 
 ```php
@@ -536,6 +532,7 @@ echo User::exists(1) ? "kayit var" : "kayit yok";
 ```php
 // Ör. 1:
 
+$user = User::unique(["username" => "gdemir", "password" => "123456"]);
 $user = User::find(1);
 $user = User::first();
 $user = User::last();
@@ -589,6 +586,7 @@ foreach ($users as $user)
 
 ```php
 
+$user = User::unique(["username" => "gdemir", "password" => "123456"]);
 $user = User::find(1);
 $user = User::first();
 $user = User::last();

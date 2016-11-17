@@ -2,35 +2,41 @@
 class AdminController extends ApplicationController {
 
   protected $before_actions = [
-                                  ["require_login", "except" => ["login"]]
-                              ];
+  ["require_login", "except" => ["login", "logout"]]
+  ];
 
   public function login() {
-  	if (isset($_SESSION['admin']))
-			return $this->redirect_to("/admin/home");
+
+    if (isset($_SESSION["admin"]))
+      return $this->redirect_to("/admin/home");
 
     if (isset($_POST["username"]) and isset($_POST["password"])) {
-			$user = User::where([
-				"username" => $_POST["username"],
-				"password" => $_POST["password"]
-				]);
-			if ($user) {
-				echo "tebrikler";
-				$_SESSION["admin"] = true;
-				return $this->render("/admin/home");
-			} else
-				echo "şifre veya parola hatalı";
-		}
-		echo "otomatik render, login paneli gelmeli";
-		$this->render(["layout" => false]);
+
+      if ($user = User::unique(["username" => $_POST["username"], "password" => $_POST["password"]])) {
+
+        $GLOBALS["success"] = "Admin sayfasına hoş geldiniz";
+        $_SESSION['full_name'] = "$user->first_name $user->last_name";
+        $_SESSION["admin"] = true;
+        return $this->render("/admin/home");
+
+      } else {
+echo "evet";
+        $GLOBALS['danger'] = "şifre veya parola hatalı";
+        echo $GLOBALS['danger'];
+
+      }
+    }
+    return $this->render(["layout" => "default"]);
   }
 
-  // public function home() {
-  // 	session_destroy();
-  // }
+  public function home() { } // OPTIONAL
+
+  public function logout() {
+    if (isset($_SESSION["admin"])) session_destroy();
+    return $this->redirect_to("/admin/login");
+  }
 
   public function require_login() {
-    echo "Her işlem öncesi login oluyoruz<br/>";
     if (!isset($_SESSION['admin']))
       return $this->redirect_to("/admin/login");
   }

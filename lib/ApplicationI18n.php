@@ -35,7 +35,6 @@ class ApplicationI18n {
 
     $this->_words = include $localefile;
     return $this;
-
   }
 
   public function __get($word) {

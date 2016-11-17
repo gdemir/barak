@@ -34,8 +34,6 @@ class ApplicationController {
     if (isset($this->after_actions)) $this->_filter($action, $this->after_actions);
   }
 
-
-
   public function render($option) {
     $this->_render = $option;
   }

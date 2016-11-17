@@ -17,6 +17,8 @@ class ApplicationConfig {
     if ($this->time_zone)      date_default_timezone_set($this->time_zone);
     // for message of ApplicationException on html page
     if ($this->display_errors) ini_set("display_errors", $this->display_errors);
+    // for $_SESSION hash
+    if (!strlen(session_id())) session_start();
   }
 
   public static function database() {

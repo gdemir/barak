@@ -19,7 +19,7 @@ if (User::load()->count() == 0) {
 
 User::new(["first_name" => 2, "phone" => "123", "last_name" => "Demir", "username" => "tdemir", "password" => "123456", "department_id" => 3])->save();
 
-echo User::exists(1) ? "kayit var" : "kayit yok";
+// echo User::exists(1) ? "kayit var" : "kayit yok";
 
 // User::load()->delete_all();
 // Department::load()->delete_all();

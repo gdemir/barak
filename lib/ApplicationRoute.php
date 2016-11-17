@@ -52,6 +52,8 @@ class ApplicationRoute {
   }
   public function run() {
 
+    // unset($GLOBALS["success"]); unset($GLOBALS["danger"]); // TODO
+
     // run controller class and before_filter functions
     $controller_class = ucwords($this->_controller) . 'Controller';
     if (!class_exists($controller_class))

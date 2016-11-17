@@ -1,5 +1,1 @@
-<?php
-
-echo "admin#home";
-
-?>
+<h2>Admin#Home</h2>

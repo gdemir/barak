@@ -263,6 +263,19 @@ class ApplicationModel {
   // Public Static Functions
   //////////////////////////////////////////////////
 
+  public static function unique($fields = null) {
+    if ($record = ApplicationSql::read(static::$name, null, $fields)) {
+      $object = static::$name::load();
+
+      foreach ($record as $fieldname => $value)
+        $object->$fieldname = $value;
+
+      $object->_new_record_state = false;
+      return $object;
+    }
+    return null;
+  }
+
   // echo User::primary_keyname();
 
   // ok
@@ -320,17 +333,7 @@ class ApplicationModel {
 
   // ok
   public static function find(int $primary_key) {
-
-    if ($record = ApplicationSql::read(static::$name, null, ["id" => $primary_key])) {
-      $object = static::$name::load();
-
-      foreach ($record as $fieldname => $value)
-        $object->$fieldname = $value;
-
-      $object->_new_record_state = false;
-      return $object;
-    }
-    return null;
+    return static::$name::unique(["id" => $primary_key]);
   }
 
   // $users = User::find_all([1, 2, 3]); // return User objects array

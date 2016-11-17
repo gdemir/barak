@@ -18,21 +18,105 @@
   <script src="http://code.jquery.com/jquery.js"></script>
   <script src="/app/assets/js/bootstrap.min.js"></script>
 </head>
-<body style='background-color:red;'>
+<body>
 
-  <div class="container" style="width:500px; min-height:200px; margin-top: 8%; ">
+<?php include (getcwd(). "/app/views/layouts/admin_navbar.html"); ?>
 
-    <div class="panel panel-default" style="box-shadow: 0 3px 12px rgba(0, 0, 0, 0.3);">
-      <div class="panel-heading">
-        <h4 class="panel-title">Kullanıcı Girişi</h4>
+<div class="well well-sm" style="padding:0em">
+  <ul class="nav nav-pills well well-sm" style="margin-bottom:0px">
+    <li role="presentation">
+      <a href="/admin/home" class="fa fa-home">
+        Anasayfa
+      </a>
+    </li>
+    <li role="presentation">
+      <a class="fa fa-bars" id="side-menu-close"></a>
+      <a class="fa fa-bars" id="side-menu-open"></a>
+    </li>
+  </ul>
+</div>
+<div class="row">
+  <div class="well well-sm col-xs-2 col-md-2" id="side-menu">
+    <ul class="nav nav-pills nav-stacked" role="ablist" id="accordion1">
+      <hr>
+
+      <span class="label label-info">Evrak</span>
+      <hr>
+
+      <div id="data-menu">
+
+        <div class="panel list-group">
+          <a class="list-group-item" data-toggle="collapse" data-target="#datas" data-parent="#data-menu">
+            <span class="hidden-xs hidden-sm hidden-md">
+              <i class="fa fa-download"></i> Evraklar
+              <span class="label label-warning">BETA</span>
+            </span>
+            <i class="fa fa-download fa-2x visible-xs visible-sm visible-md"></i>
+          </a>
+
+          <ul class="nav nav-pills nav-stacked collapse" role="ablist" id="datas">
+            <li role="presentation">
+              <a href="/admin/index.php?yield=datas/index">
+                <span class="hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-chevron-right"></i> Listele</span>
+                <i class="fa fa-list fa-1x visible-xs visible-sm visible-md" title="Listele"></i>
+              </a>
+            </li>
+            <li role="presentation">
+              <a href="/admin/index.php?yield=datas/new">
+                <span class="hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-chevron-right"></i> Ekle</span>
+                <i class="fa fa-plus fa-1x visible-xs visible-sm visible-md" title="Ekle"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+
       </div>
-      <div class="panel-body">
-        {yield}
-      </div>
-      <div class="panel-footer">BARAK Copyright &copy; <?php echo date("Y"); ?></div>
+
+      <hr>
+
+    </ul>
+  </div>
+  <div class="col-xs-10 col-md-10" id="main-menu">
+    <div class="well well-sm">
+      <ol class="breadcrumb text-right">
+        <li>
+          <a href="/admin" class="btn btn-default btn-sm">
+            <i class="fa fa-home "> Home</i>
+          </a>
+        </li>
+      </ol>
+
+      <!-- bildirimleri göster ve temizle -->
+
+      <?php include (getcwd(). "/app/views/layouts/notice.html"); ?>
+
+
+     {yield}
+
     </div>
 
   </div>
+  <script>
+  $(document).ready(function(){
 
+    $('#side-menu-close').hide();
+    $('#side-menu-open').click(function() {
+      $('#side-menu-close').show();
+      $('#side-menu-open').hide();
+
+      $('#side-menu').fadeOut("slide");
+      $("#main-menu").removeClass();
+      $("#main-menu").addClass("col-xs-12 col-md-12");
+    });
+    $('#side-menu-close').click(function() {
+      $('#side-menu-open').show();
+      $('#side-menu-close').hide();
+
+      $('#side-menu').fadeIn("slide");
+      $("#main-menu").addClass("col-xs-10 col-md-10");
+    });
+
+  });
+  </script>
 </body>
 </html>

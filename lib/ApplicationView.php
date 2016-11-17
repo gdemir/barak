@@ -63,6 +63,7 @@ class ApplicationView {
       if ($this->_layout) { // is not false?
 
         $this->_layout .= "_layout";
+
         $this->_content = self::page_content();
 
       } else { // is false ?
@@ -73,7 +74,8 @@ class ApplicationView {
 
     } else { // not set ?
 
-      $this->_layout = (file_exists("app/views/layouts/" . $this->_view . "_layout.php")) ? $this->_view . "_layout" : "default_layout";      
+      $this->_layout = $this->_view . "_layout";
+
       $this->_content = self::page_content();
     }
 

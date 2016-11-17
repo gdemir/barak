@@ -4,6 +4,7 @@ class ApplicationRoutes {
   private $_routes = [ "GET" => [], "POST" => [] ]; // http put, delete is not support
 
   public static function draw() {
+
     $request_route = new ApplicationRoute($_SERVER["REQUEST_METHOD"], $_SERVER['REQUEST_URI'], false);
 
     $r = new ApplicationRoutes();
@@ -29,7 +30,7 @@ class ApplicationRoutes {
     //   echo "<br/>";
 
     //   foreach ($routes as $route) {
-    //   	echo "<br/>";
+    //    echo "<br/>";
     //     print_r($route);
     //     echo "<br/>";
     //   }
@@ -61,7 +62,7 @@ class ApplicationRoutes {
                   $match = false;
                   break;
                 }
-             }
+              }
               if ($match) {
                 $permit_match_rule = explode("/", trim($_route->_match_rule, "/"));
                 preg_match_all('@:([\w]+)@', $_route->_match_rule, $segments, PREG_PATTERN_ORDER);

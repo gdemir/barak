@@ -1,5 +1,3 @@
-<?php
+<h1>HAKKINDA</h1>
 
-echo "hakkında";
-
-?>
+<?= t("hi"); ?>

@@ -3,49 +3,45 @@
 // lib/*.php files load
 // app/controllers/*.php  files load
 
+// system class files and controller class files
+$directories = ['lib/', 'app/controllers/'];
 
-$directories = [
-            'lib/',              // system class files
-            'app/controllers/',  // controller class files
-];
 foreach ($directories as $directory) {
-    foreach(glob($directory . "*.php") as $class) {
-        include_once $class;
-    }
+  foreach(glob($directory . "*.php") as $class) {
+    include_once $class;
+  }
 }
 
-define("CONFIGFILE", "config/database.ini"); // configuration file
-define("SEEDSFILE", "db/seeds.php"); // seeds file
+// Configuration : sets /TODO : must on config/*
+$config = new ApplicationConfig();
+$config->display_errors = true;
+$config->time_zone      = 'Europe/Istanbul';
+$config->set();
 
-ini_set("display_errors", 1); // for message of ApplicationException on html page
-date_default_timezone_set('Europe/Istanbul');
+// Database : connect and global share
+$db = ApplicationConfig::database();
+$GLOBALS['db'] = new ApplicationDatabase($db["host"], $db["name"], $db["user"], $db["pass"]);
 
-// /config/database.ini : configuration file load
-
-if (!file_exists(CONFIGFILE))
-  throw new FileNotFoundException("Yapılandırma dosyası mevcut değil", CONFIGFILE);
-
-$database = parse_ini_file(CONFIGFILE);
-
-// Database connection and model create of tables
-
-$GLOBALS['db'] = new BARAK(
-	"mysql:host={$database['host']};dbname={$database['name']}",
-	$database["user"],
-	$database["pass"]
-	);
-
-foreach ($GLOBALS['db']->tablenames() as $table_name) {
+// model create auto
+foreach (ApplicationSql::tablenames() as $tablename) {
   eval("
-    class $table_name extends ApplicationModel {
-      protected static \$name = '$table_name';
+    class $tablename extends ApplicationModel {
+      protected static \$name = '$tablename';
     }
     ");
 }
 
-if (file_exists(SEEDSFILE))
-  include SEEDSFILE;
+// Database : seed // OPTIONAL
+ApplicationDatabase::seed();
 
-// configuration routes load and route action dispatch
-include 'config/routes.php';
+// Helper : get global functions // OPTIONAL
+ApplicationHelper::extract();
+
+// I18n : locale get end edit url // OPTIONAL
+$GLOBALS['i18n'] = new ApplicationI18n($_SERVER["REQUEST_URI"], "tr");
+$_SERVER["REQUEST_URI"] = $GLOBALS['i18n']->uri;
+print_r($GLOBALS['i18n']);
+
+// Route : run configration of route
+ApplicationConfig::route();
 ?>

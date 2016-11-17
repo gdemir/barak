@@ -173,7 +173,10 @@ class ApplicationSql {
   }
 
   public static function tablenames() {
-    return $GLOBALS['db']->tablenames();
+    $name = $GLOBALS['db']->query("select database()")->fetchColumn();
+    $result = $GLOBALS['db']->query("show tables");
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) $tablenames[] = $row["Tables_in_" . $name];
+    return $tablenames;
   }
 
   public static function fieldnames($table) {

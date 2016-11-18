@@ -5,6 +5,9 @@ ApplicationRoutes::draw(
 
   //get("/:controller/:action"),
 
+  get("/lang/en"),
+  get("/lang/tr"),
+
   get("/", "home#index"),
   get("/home/about"),
   get("/home/show"),

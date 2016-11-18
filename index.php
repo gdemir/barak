@@ -37,10 +37,9 @@ ApplicationDatabase::seed();
 // Helper : get global functions // OPTIONAL
 ApplicationHelper::extract();
 
-// I18n : locale get end edit url // OPTIONAL
-$GLOBALS['i18n'] = new ApplicationI18n($_SERVER["REQUEST_URI"], "tr");
-$_SERVER["REQUEST_URI"] = $GLOBALS['i18n']->uri;
-//print_r($GLOBALS['i18n']);
+// I18n : locale get // OPTINAL
+if (!isset($_SESSION['i18n']))
+  $_SESSION['i18n'] = new ApplicationI18n("tr");
 
 // Route : run configration of route
 ApplicationConfig::route();

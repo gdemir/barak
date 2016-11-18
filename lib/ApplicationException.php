@@ -8,12 +8,12 @@ class ApplicationException extends Exception {
       <p style = '
       text-align: center;
       padding: 3px;
-      color: #3072b3;
+      color: #E0EBD6;
       padding: 8px;
       border: 6px solid #ddd;
       border-radius: 5px;
       box-shadow: 0px 0px 5px #ddd;
-      background: #e5fcfd;
+      background: #F07746;
       '>
 
       <b style = 'color:rgba(201, 2, 92, 0.5);'> %s </b> → %s [<i style = 'color:rgba(201, 2, 92, 0.5);'> %s </i>]

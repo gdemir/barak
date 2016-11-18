@@ -41,6 +41,7 @@ class ApplicationRoute {
     } else
     throw new ConfigurationException("/config/routes.php içinde beklenmedik kurallar", $rule);
   }
+
   public function set($method, $match, $match_rule, $rule, $controller, $action) {
     $this->_method = strtoupper($method);
     $this->_match = $match;
@@ -50,6 +51,7 @@ class ApplicationRoute {
     $this->_controller = $controller;
     $this->_action = $action;
   }
+
   public function run() {
 
     // unset($GLOBALS["success"]); unset($GLOBALS["danger"]); // TODO
@@ -58,6 +60,9 @@ class ApplicationRoute {
     $controller_class = ucwords($this->_controller) . 'Controller';
     if (!class_exists($controller_class))
       throw new FileNotFoundException("Controller sınıfı/dosyası yüklenemedi", $controller_class);
+
+    // translate for i18n
+    if (isset($_SESSION["i18n"])) $_SESSION["i18n"]->run();
 
     $c = new $controller_class();
     $c->run($this->_action);
@@ -79,7 +84,7 @@ class ApplicationRoute {
     // $vars["_params"];
 
     // router'in paramslarını(sayfadan :id, çekmek için), controller'dan gelen paramslara yükle
-    $vars["_params"]["params"] = $this->_params;
+    // $vars["_params"]["params"] = $this->_params;
 
     $v->run($vars["_params"]);
   }

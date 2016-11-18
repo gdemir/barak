@@ -31,7 +31,7 @@ class ApplicationHelper {
     // LOCALES
 
     function t($word) {
-      return $GLOBALS["i18n"]->$word;
+      return $_SESSION["i18n"]->$word;
     }
 
     // LAYOUT and TEMPLATE

@@ -20,7 +20,7 @@ class AdminController extends ApplicationController {
         return $this->render("/admin/home");
 
       } else {
-echo "evet";
+
         $GLOBALS['danger'] = "şifre veya parola hatalı";
         echo $GLOBALS['danger'];
 

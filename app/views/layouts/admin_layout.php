@@ -20,7 +20,7 @@
 </head>
 <body>
 
-<?php include (getcwd(). "/app/views/layouts/admin_navbar.html"); ?>
+<?php render("admin_navbar"); ?>
 
 <div class="well well-sm" style="padding:0em">
   <ul class="nav nav-pills well well-sm" style="margin-bottom:0px">
@@ -88,7 +88,7 @@
 
       <!-- bildirimleri göster ve temizle -->
 
-      <?php include (getcwd(). "/app/views/layouts/notice.html"); ?>
+      <?php render("notice", "layouts"); ?>
 
 
      {yield}

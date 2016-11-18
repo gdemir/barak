@@ -20,8 +20,6 @@ class HomeController extends ApplicationController {
   //  echo "<br/>";
   //  echo "<br/>";
 
-
-
   	// $user = User::find(818);
   	// print_r($user);
 
@@ -87,21 +85,21 @@ class HomeController extends ApplicationController {
     // }
     // echo "<br/>";   echo "<br/>";
 
-    $department = Department::load()->joins(["User", "Address"])->where(["User.id" => "1"])->select("User.first_name, Department.name, Address.phone")->limit(1)->take();
-    print_r($department);
-    echo "<br/>";   echo "<br/>";
+    // $department = Department::load()->joins(["User", "Address"])->where(["User.id" => "1"])->select("User.first_name, Department.name, Address.phone")->limit(1)->take();
+    // print_r($department);
+    // echo "<br/>";   echo "<br/>";
 
 
-    $departments = Department::all();
-    foreach ($departments as $department) {
-      echo $department->name . "<br/>";
-      $users = User::load()->where(["department_id" => $department->id]);
-      foreach ($users as $user) {
-        echo $user->first_name . "<br/>";
-      }
-    }
+    // $departments = Department::all();
+    // foreach ($departments as $department) {
+    //   echo $department->name . "<br/>";
+    //   $users = User::load()->where(["department_id" => $department->id]);
+    //   foreach ($users as $user) {
+    //     echo $user->first_name . "<br/>";
+    //   }
+    // }
 
-    echo "<br/><b>### joins kullanıldı!</b><br/>";
+    // echo "<br/><b>### joins kullanıldı!</b><br/>";
   //   print_r($this->users);
   //   echo "<br/>### join+select kullanıldı!<br/>";
 
@@ -150,19 +148,19 @@ class HomeController extends ApplicationController {
   // $this->render(["layout" => "admin", "view" => "home", "action" => "show"]);
   }
   public function login() {
-    echo "Her işlem öncesi login oluyoruz<br/>";
+    // echo "Her işlem öncesi login oluyoruz<br/>";
   }
   public function every_time() {
-    echo "Home#every_time : her zaman çalışırım<br/>";
+    // echo "Home#every_time : her zaman çalışırım<br/>";
   }
   public function notice_clear() {
-    echo "Home#notice_clear : duyular silindi<br/>";
+    // echo "Home#notice_clear : duyular silindi<br/>";
   }
   public function close() {
-    echo "Home#close : dükkan kapandı<br/>";
+    // echo "Home#close : dükkan kapandı<br/>";
   }
   public function dashboard() {
-    echo "dashboard öncesi olaylar olaylar<br/>";
+    // echo "dashboard öncesi olaylar olaylar<br/>";
   }
 }
 ?>

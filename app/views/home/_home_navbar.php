@@ -8,30 +8,25 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/home/index">
-        BARAK System
+      <a class="navbar-brand"href="/home/index" style="padding:0em;margin-left:0px;">
+        <img alt="Brand" src="/app/assets/img/default-side.svg.png" width="120" class="img-responsive"/>
       </a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-left">
+        <li>
+          <!-- Button trigger modal -->
+          <p style="margin-top:14px;font-size:16px;font-weight:bold;color:#434344;letter-spacing:1px;">/ 12. BÖLGE MÜDÜRLÜĞÜ</p>
+          <!-- Button trigger modal end -->
+        </li>
+      </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#"></a></li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-            <?php if (isset($_SESSION['full_name'])) echo $_SESSION['full_name']; ?>
-            <span class="caret"></span>
-          </a>
-          <ul class="dropdown-menu" role="menu">
-            <li>
-              <a href="/admin/account_show">Kişisel Bilgileriniz</a>
-            </li>
-            <li>
-              <a href="/admin/account_password">Parola Değiştirme</a>
-            </li>
-            <li class="divider"></li>
-            <li><a href="/admin/logout">Çıkış</a></li>
-          </ul>
+        <li>
+          <!-- Button trigger modal -->
+          <a data-toggle="modal" data-target="<?php if (!isset($_SESSION['admin'])) echo '#myModal1'; ?>" href="<?php if (isset($_SESSION['admin'])) echo '../admin/index.php?yield=index'?>">Giriş Yap</a>
+          <!-- Button trigger modal end -->
         </li>
       </ul>
     </div><!-- /.navbar-collapse -->

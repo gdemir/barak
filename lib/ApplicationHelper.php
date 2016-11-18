@@ -17,7 +17,7 @@ class ApplicationHelper {
         new ApplicationRoute("get",  "$table/edit/:id", false, true),  // edit record
         new ApplicationRoute("post", "$table/update", false, false),   // update record
         new ApplicationRoute("post", "$table/destroy", false, false)   // destroy record
-        ];
+      ];
     }
 
     function post($rule, $target = false) {
@@ -36,6 +36,18 @@ class ApplicationHelper {
 
     // LAYOUT and TEMPLATE
     // for app/views/VIEW/ACTION.php and app/views/layouts/VIEW_layout.php
+
+    function render($filename, $dir = null) {
+    	if (is_null($dir)) {
+        $_request_uri_list = explode("/", $_SERVER["REQUEST_URI"]);
+        $dir = $_request_uri_list[1];
+      }
+      $file = getcwd(). "/app/views/$dir/_". "$filename.php";
+      if (!file_exists($file)) {
+        throw new FileNotFoundException("İçerik dosyası mevcut değil", $file);
+      }
+      include $file;
+    }
 
     function link_to($text, $link) {
       return "<a href='" . $link . "'>" . $text . "</a>";

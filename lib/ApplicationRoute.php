@@ -1,4 +1,5 @@
 <?php
+
 class ApplicationRoute {
 
   const dynamical_segment = "_dynamical_segment_"; // change name for :id/:action
@@ -89,4 +90,5 @@ class ApplicationRoute {
     $v->run($vars["_params"]);
   }
 }
+
 ?>

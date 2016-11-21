@@ -29,7 +29,7 @@ class HomeController extends ApplicationController {
 
 
     // print_r($user);
-    echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><br/>";
+    // echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><br/>";
     // $users = User::load()->where(["id" => 1])->select("first_name")->take();
     // print_r($users);
     // echo "<br/><b>### select kullanıldı!</b><br/>";
@@ -103,7 +103,8 @@ class HomeController extends ApplicationController {
   //   print_r($this->users);
   //   echo "<br/>### join+select kullanıldı!<br/>";
 
-    $this->users = User::load()->select("User.first_name")->take();
+    $this->users = User::load()->take();
+
     // echo ">>>><br/><br/><br/>";
 //    $this->users = User::all();
 

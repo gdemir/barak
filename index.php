@@ -4,7 +4,7 @@
 // app/controllers/*.php  files load
 
 // system class files and controller class files
-$directories = ['lib/', 'app/controllers/'];
+$directories = ['lib/', 'app/controllers/', 'app/models/'];
 
 foreach ($directories as $directory) {
   foreach(glob($directory . "*.php") as $class) {
@@ -12,30 +12,23 @@ foreach ($directories as $directory) {
   }
 }
 
-// Configuration : sets /TODO : must on config/*
-$config = new ApplicationConfig();
-$config->display_errors = true;
-$config->time_zone      = 'Europe/Istanbul';
-$config->set();
+// Configuration : sets
+ApplicationConfig::run();
 
 // Database : connect and global share
 $db = ApplicationConfig::database();
 $GLOBALS['db'] = new ApplicationDatabase($db["host"], $db["name"], $db["user"], $db["pass"]);
 
 // model create auto
-foreach (ApplicationSql::tablenames() as $tablename) {
-  eval("
-    class $tablename extends ApplicationModel {
-      protected static \$name = '$tablename';
-    }
-    ");
-}
+// foreach (ApplicationSql::tablenames() as $tablename) {
+//   eval("class $tablename extends ApplicationModel {}");
+// }
+
+// Helper : get global functions
+ApplicationHelper::extract();
 
 // Database : seed // OPTIONAL
 ApplicationDatabase::seed();
-
-// Helper : get global functions // OPTIONAL
-ApplicationHelper::extract();
 
 // I18n : locale get // OPTINAL
 if (!isset($_SESSION['i18n']))

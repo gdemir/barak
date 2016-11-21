@@ -83,7 +83,7 @@ class ApplicationSql {
 
   public static function read($_table, $_select, $_where) {
 
-    $_select = $_select ?: ["*"];
+    if (empty($_select)) $_select = ["*"];
     $_select = implode(",", $_select);
 
     list($where_key_and_symbols, $where_symbol_and_values) = self::hash_to_keysymbol_symbolvalue($_where, "and", "WHERE");
@@ -124,7 +124,7 @@ class ApplicationSql {
 
   public static function query($_select, $_table, $_join, $_where, $_order, $_group, $_limit) {
 
-    $_select = $_select ?: ["*"];
+    if (empty($_select)) $_select = ["*"];
     $_select = implode(",", $_select);
 
     if ($_join) {

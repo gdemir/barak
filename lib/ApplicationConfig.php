@@ -2,21 +2,29 @@
 
 class ApplicationConfig {
 
+  const APPFILE      = "config/application.ini";
   const DATABASEFILE = "config/database.ini";
   const ROUTEFILE    = "config/routes.php";
   const LOCALEDIR    = "config/locales/";
 
-  public $time_zone;
-  public $encoding;
-  public $seed;
-
   public function __construct() {}
 
-  public function set() {
+  public function run() {
 
-    if ($this->time_zone)      date_default_timezone_set($this->time_zone);
-    // for message of ApplicationException on html page
-    if ($this->display_errors) ini_set("display_errors", $this->display_errors);
+    if (!file_exists(self::APPFILE))
+      throw new FileNotFoundException("Yapılandırma ayar dosyası mevcut değil", self::APPFILE);
+
+    $app = parse_ini_file(self::APPFILE);
+
+    foreach ($app as $key => $value) {
+      switch ($key) {
+        case "time_zone":      date_default_timezone_set($value); break;
+        case "display_errors": ini_set("display_errors", $value); break;
+        default:
+        throw new ConfigurationException("Uygulamanın yapılandırma dosyasında bilinmeyen parametre", $key);
+      }
+    }
+
     // for $_SESSION hash
     if (!strlen(session_id())) session_start();
   }

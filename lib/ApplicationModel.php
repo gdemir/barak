@@ -46,7 +46,7 @@ class ApplicationModel {
   private function __construct($fields = null) {
     $this->_new_record_state = true;
 
-    foreach (ApplicationSql::fieldnames(static::$name) as $fieldname) {
+    foreach (ApplicationSql::fieldnames(get_called_class()) as $fieldname) {
       if ($fields) {
 
         // simple load for create
@@ -72,7 +72,7 @@ class ApplicationModel {
   // echo $comment->user->first_name;
 
   public function __get($field) {
-    if (isset($this->_fields[$field])) {
+    if (array_key_exists($field, $this->_fields)) {
       return $this->_fields[$field];
     } else if (in_array(ucfirst($field), ApplicationSql::tablenames())) { // Büyükten -> Küçüğe
 
@@ -90,7 +90,7 @@ class ApplicationModel {
   }
 
   public function __set($field, $value) {
-    if (in_array($field, array_keys($this->_fields)))
+    if (array_key_exists($field, $this->_fields))
       $this->_fields[$field] = $value;
     else
       throw new FieldNotFoundException("Tabloda böyle bir anahtar mevcut değil", $field);
@@ -264,8 +264,8 @@ class ApplicationModel {
   //////////////////////////////////////////////////
 
   public static function unique($fields = null) {
-    if ($record = ApplicationSql::read(static::$name, null, $fields)) {
-      $object = static::$name::load();
+    if ($record = ApplicationSql::read(get_called_class(), null, $fields)) {
+      $object = get_called_class()::load();
 
       foreach ($record as $fieldname => $value)
         $object->$fieldname = $value;
@@ -280,7 +280,7 @@ class ApplicationModel {
 
   // ok
   public static function primary_keyname() {
-    return ApplicationSql::primary_keyname(static::$name);
+    return ApplicationSql::primary_keyname(get_called_class());
   }
 
   // Ör. 1:
@@ -295,8 +295,9 @@ class ApplicationModel {
   // $user = User::new(["first_name" => "Gökhan"])->save();
 
   public static function new($fields = null) {
-    $object = new static::$name($fields);
-    $object->_table = static::$name;
+    $classname = get_called_class();
+    $object = new $classname($fields);
+    $object->_table = get_called_class();
     return $object;
   }
 
@@ -308,14 +309,14 @@ class ApplicationModel {
 
   // ok
   public static function create($fields) {
-    return static::$name::new($fields)->save();
+    return get_called_class()::new($fields)->save();
   }
 
   // User::first();
 
   // ok
   public static function first($limit = 1) {
-    $records = static::$name::load()->order("id asc")->limit($limit)->take();
+    $records = get_called_class()::load()->order("id asc")->limit($limit)->take();
     return ($limit == 1) ? $records[0] : $records;
   }
 
@@ -323,7 +324,7 @@ class ApplicationModel {
 
   // ok
   public static function last($limit = 1) {
-    $records = static::$name::load()->order("id desc")->limit($limit)->take();
+    $records = get_called_class()::load()->order("id desc")->limit($limit)->take();
     return ($limit == 1) ? $records[0] : $records;
   }
 
@@ -333,7 +334,7 @@ class ApplicationModel {
 
   // ok
   public static function find(int $primary_key) {
-    return static::$name::unique(["id" => $primary_key]);
+    return get_called_class()::unique(["id" => $primary_key]);
   }
 
   // $users = User::find_all([1, 2, 3]); // return User objects array
@@ -346,7 +347,7 @@ class ApplicationModel {
   public static function find_all($primary_keys) {
 
     foreach ($primary_keys as $primary_key)
-      $objects[] = static::$name::find($primary_key);
+      $objects[] = get_called_class()::find($primary_key);
 
     return isset($objects) ? $objects : null;
   }
@@ -360,24 +361,24 @@ class ApplicationModel {
 
   // ok
   public static function all() {
-    return static::$name::load()->take();
+    return get_called_class()::load()->take();
   }
 
   // ok
   public static function exists($primary_key) {
-    return static::$name::find($primary_key) ? true : false;
+    return get_called_class()::find($primary_key) ? true : false;
   }
 
   // ok
   public static function update($primary_key, $fields) {
     self::check_fieldnames(array_keys($fields));
 
-    ApplicationSql::update(static::$name, $fields, ["id" => $primary_key]);
+    ApplicationSql::update(get_called_class(), $fields, ["id" => $primary_key]);
   }
 
   // ok
   public static function delete($primary_key = null) {
-    ApplicationSql::delete(static::$name, ["id" => $primary_key], null);
+    ApplicationSql::delete(get_called_class(), ["id" => $primary_key], null);
   }
 
   //////////////////////////////////////////////////
@@ -403,7 +404,7 @@ class ApplicationModel {
         self::check_fieldname($request_field, $request_table);
 
       } else {
-        $fields[$index] = static::$name . '.' .  $field;
+        $fields[$index] = get_called_class() . '.' .  $field;
       }
     }
     return $fields;
@@ -420,7 +421,7 @@ class ApplicationModel {
         self::check_fieldname($request_field, $request_table);
 
       } else {
-        $fields[static::$name . '.' .  $field] = $value;
+        $fields[get_called_class() . '.' .  $field] = $value;
         unset($fields[$field]);
       }
     }
@@ -447,13 +448,13 @@ class ApplicationModel {
   }
 
   private function check_fieldname($field, $table = null) {
-    $table = $table ?? static::$name;
+    $table = $table ?? get_called_class();
     if (!in_array($field, ApplicationSql::fieldnames($table)))
       throw new FieldNotFoundException("Tabloda böyle bir anahtar mevcut değil", $table . "." . $field);
   }
 
   private function check_fieldnames($fields, $table = null) {
-    $table = $table ?? static::$name;
+    $table = $table ?? get_called_class();
     $table_fields = ApplicationSql::fieldnames($table);
     foreach ($fields as $field) {
       if (!in_array($field, $table_fields))
@@ -462,7 +463,7 @@ class ApplicationModel {
   }
 
   private function field_exists($field) {
-    return in_array($field, ApplicationSql::fieldnames(static::$name)) ? true : false;
+    return in_array($field, ApplicationSql::fieldnames(get_called_class())) ? true : false;
   }
 }
 ?>

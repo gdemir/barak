@@ -1,0 +1,1 @@
+<?= t("corporate.service_policy"); ?>

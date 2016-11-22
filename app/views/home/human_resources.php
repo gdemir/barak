@@ -1,0 +1,1 @@
+<?= t("corporate.human_resources"); ?>

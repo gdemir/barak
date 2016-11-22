@@ -2,6 +2,9 @@
 
 class ApplicationView {
 
+  const LAYOUTPATH = "app/views/layouts/";
+  const VIEWPATH   = "app/views/";
+
   private $_content;
 
   private $_layout;
@@ -21,15 +24,13 @@ class ApplicationView {
 
   public function __construct() {}
 
-  public function render($_render) {
+  public function set($_render) {
 
     if (is_array(($_render))) {
 
-      if (isset($_render["template"]) and (isset($_render["view"]) or isset($_render["action"])))
-        throw new ViewNotFoundException("Render fonksiyonun Template parametresi ile birlikte view, action parametreleri kullanılamaz", $this->_template);
-
       foreach ($_render as $key => $value) {
         switch ($key) {
+          //case "file":     $this->_file     = $value; break;
           case "layout":   $this->_layout   = $value; break;
           case "view":     $this->_view     = $value; break; // default kesin
           case "action":   $this->_action   = $value; break; // default kesin
@@ -39,23 +40,24 @@ class ApplicationView {
         }
       }
 
-      $this->_template = $this->_view . "/" . $this->_action; // default kesin
-
     } elseif (is_string($_render)) {
 
       $url = explode("/", trim($_render, "/"));
-
       $this->_template = (isset($url[1])) ? $_render : $this->_view . "/" . $url[0];
 
-      if (!file_exists("app/views/" . $this->_template . ".php"))
-        throw new FileNotFoundException("Template mevcut değil", $this->_template);
-
     } else {
-      throw new ViewNotFoundException("Render fonksiyonun bilinmeyen değişken tipi", $this->_template);
+      throw new ViewNotFoundException("Render fonksiyonun bilinmeyen değişken tipi", $this->_render);
     }
   }
 
-  public function run($params) {
+  public function run($params = null) {
+
+    if (isset($this->_file)) {
+      $this->content = self::template_content($this->_file);
+    }
+
+    if (!isset($this->_template))
+      $this->_template = $this->_view . "/" . $this->_action;
 
     // Where is the LAYOUT ?
     if (isset($this->_layout)) { // is set ?
@@ -86,26 +88,29 @@ class ApplicationView {
   }
 
   private function layout_content() {
-    $layout_path = "app/views/layouts/" . $this->_layout . ".php";
+    $layout_path = self::LAYOUTPATH . $this->_layout . ".php";
 
     if (!file_exists($layout_path))
       throw new FileNotFoundException("Layout dosyası mevcut değil", $layout_path);
+
     return file_get_contents($layout_path);
   }
 
-  private function template_content() {
-    $template_path = "app/views/" . $this->_template . ".php";
+  private function template_content($path = self::VIEWPATH) {
+    $template_path = $path . $this->_template . ".php";
 
     if (!file_exists($template_path))
       throw new FileNotFoundException("Template dosyası mevcut değil", $template_path);
     return file_get_contents($template_path);
   }
 
-  private function display($params) {
+  private function display($params = null) {
 
-    // controller'in paramslarını yükle
-    foreach ($params as $param => $value) {
-      $$param = $value;
+    if (!is_null($params)) {
+      // controller'in paramslarını yükle
+      foreach ($params as $param => $value) {
+        $$param = $value;
+      }
     }
 
     // http://stackoverflow.com/questions/1184628/php-equivalent-of-include-using-eval)

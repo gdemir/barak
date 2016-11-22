@@ -1,7 +1,9 @@
 <?php
+
 class ApplicationRoutes {
+
   // http://stackoverflow.com/questions/165779/are-the-put-delete-head-etc-methods-available-in-most-web-browsers
-  private $_routes = [ "GET" => [], "POST" => [] ]; // http put, delete is not support
+  public $_routes = [ "GET" => [], "POST" => [] ]; // http put, delete is not support
 
   public static function draw() {
 
@@ -23,7 +25,8 @@ class ApplicationRoutes {
     }
 
     // // // TEST $route list
-    // //print_r($r->_routes);
+    // print_r($r->_routes);
+
     // foreach ($r->_routes as $method => $routes) {
     //   echo "<br/>";
     //   print_r($method);
@@ -50,6 +53,7 @@ class ApplicationRoutes {
       } else { // search for match routes
 
         foreach ($this->_routes[$request_route->_method] as $_route) {
+
           if ($_route->_match) {
 
             $request_rule = explode("/", trim($request_route->_rule, "/"));
@@ -81,6 +85,10 @@ class ApplicationRoutes {
           }
         }
       }
+      // $v = new ApplicationView();
+      // $v->render(["file" => "public/404.php"]);
+      // $v->run();
+      // $v->render(["status" => 404, "file" => ]);
       throw new ConfigurationException("Böyle bir yönlendirme mevcut değil", $request_route->_rule);
     }
     throw new ConfigurationException("Uzay çağında bizim henüz desteklemediğimiz bir method", $request_route->_method);
@@ -92,4 +100,5 @@ class ApplicationRoutes {
     $this->_routes[$route->_method][$route->_rule] = $route;
   }
 }
+
 ?>

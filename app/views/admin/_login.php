@@ -1,7 +1,7 @@
 <div class="container" style="width:500px; min-height:200px; margin-top: 8%; ">
   <div class="panel panel-default" style="box-shadow: 0 3px 12px rgba(0, 0, 0, 0.3);">
     <div class="panel-heading">
-      <h4 class="panel-title"><?= t("login_title"); ?></h4>
+      <h4 class="panel-title"><?= t("login.title"); ?></h4>
     </div>
     <div class="panel-body">
       <div class="row">
@@ -10,9 +10,9 @@
         </div>
         <div class="col-xs-9">
           <form class="login-form" action="/admin/login" accept-charset="UTF-8" method="post">
-            <input type="text" placeholder="<?= t("login_username"); ?>" class="form-control" size="50" name="username" id="username" />
-            <input type="password" placeholder="<?= t("login_password"); ?>" class="form-control" size="50" name="password" id="password" />
-            <button type="submit" class="btn btn-primary" style="width:100%"><?= t("login_button"); ?></button>
+            <input type="text" placeholder="<?= t("login.username"); ?>" class="form-control" size="50" name="username" id="username" />
+            <input type="password" placeholder="<?= t("login.password"); ?>" class="form-control" size="50" name="password" id="password" />
+            <button type="submit" class="btn btn-primary" style="width:100%"><?= t("login.button"); ?></button>
           </form>
         </div>
       </div>

@@ -7,6 +7,7 @@ class ApplicationRoute {
   const default_action = "index";
 
   public $_params = [];
+  public $_path;
   public $_match;
   public $_match_rule;
   public $_method;
@@ -15,32 +16,42 @@ class ApplicationRoute {
   public $_controller;
   public $_action;
 
-  public function __construct($method, $rule, $target = false, $match = false) {
+  public function __construct($method, $rule, $target = false, $match = false, $path = null) {
+    $this->_path = ($path) ? "/$path" : "";
+
     if ($match) {
-      self::set(
-        $method, $match, $rule, preg_replace("|:[\w]+|", self::dynamical_segment, $rule),
-        self::default_controller, self::default_action
-        );
+
+      $option = explode("/", trim($rule, "/"));
+      self::set($method, $match, $this->_path . $rule, preg_replace("|:[\w]+|", self::dynamical_segment, $rule), $option[0], $option[1]);
+
     } elseif ($target) {
-      $target_option = explode("#", $target);
-      self::set(
-        $method, $match, "", $rule,
-        $target_option[0], $target_option[1]
-        );
+
+      $option = explode("#", $target);
+      self::set($method, $match, "", $this->_path . $rule, $option[0], $option[1]);
+
     } elseif (strpos($rule, "/") !== false) { // dizgi içerisinde konum(indexi) yok değilse (yani varsa)
-      $target_option = explode("/", trim($rule, "/"));
-      if (count($target_option) == 2)
-        self::set(
-          $method, $match, "", $rule,
-          $target_option[0], $target_option[1]
-          );
-      else
+
+      $option = explode("/", trim($rule, "/"));
+      if (count($option) == 2) {  // /home/index
+
+        self::set($method, $match, "", $this->_path . $rule, $option[0], $option[1]);
+
+      } elseif (count($option) == 3) { // scope parser
+
+        $this->_path = $option[0];
+        self::set($method, $match, "", "/$this->_path/" . $option[1] . "/". $option[2], $option[1], $option[2]);
+
+      } else {
+        $option = explode("/", trim($rule, "/"));// echo "php ya da web sunucu otomatik boş istek yolluyor TODO";
+
         self::set(
           $method, $match, "", $rule,
           self::default_controller, self::default_action
           );
-    } else
-    throw new ConfigurationException("/config/routes.php içinde beklenmedik kurallar", $rule);
+      }
+    } else {
+      throw new ConfigurationException("/config/routes.php içinde beklenmedik kurallar", $rule);
+    }
   }
 
   public function set($method, $match, $match_rule, $rule, $controller, $action) {
@@ -75,11 +86,15 @@ class ApplicationRoute {
     // vars["_render"];
 
     // render controller choice
-    $v = new ApplicationView();
-    $v->render(["view" => $this->_controller, "action" => $this->_action]);
+    $v = new ApplicationView($this->_controller);
+
+    if ($this->_path)
+      $v->set(["layout" => $this->_path]);
+
+    $v->set(["view" => (($this->_path) ? $this->_path . "/" : "") . $this->_controller, "action" => $this->_action]);
 
     if ($vars["_render"])
-      $v->render($vars["_render"]);
+      $v->set($vars["_render"]);
 
     // controllerin paramsları
     // $vars["_params"];

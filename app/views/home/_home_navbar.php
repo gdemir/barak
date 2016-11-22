@@ -25,7 +25,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
           <!-- Button trigger modal -->
-          <a data-toggle="modal" data-target="<?php if (!isset($_SESSION['admin'])) echo '#myModal1'; ?>" href="<?php if (isset($_SESSION['admin'])) echo '../admin/index.php?yield=index'?>">Giriş Yap</a>
+          <a data-toggle="modal" data-target="<?php if (!isset($_SESSION['admin'])) echo '#myModal1'; ?>" href="<?php if (isset($_SESSION['admin'])) echo '/admin/index'?>"><?= t("login.link"); ?></a>
           <!-- Button trigger modal end -->
         </li>
       </ul>

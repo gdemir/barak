@@ -25,7 +25,7 @@
 <div class="well well-sm" style="padding:0em">
   <ul class="nav nav-pills well well-sm" style="margin-bottom:0px">
     <li role="presentation">
-      <a href="/admin/home" class="fa fa-home">
+      <a href="/admin/index" class="fa fa-home">
         Anasayfa
       </a>
     </li>
@@ -48,7 +48,7 @@
         <div class="panel list-group">
           <a class="list-group-item" data-toggle="collapse" data-target="#datas" data-parent="#data-menu">
             <span class="hidden-xs hidden-sm hidden-md">
-              <i class="fa fa-download"></i> Evraklar
+              <i class="fa fa-download"></i> Kategoriler
               <span class="label label-warning">BETA</span>
             </span>
             <i class="fa fa-download fa-2x visible-xs visible-sm visible-md"></i>
@@ -56,13 +56,13 @@
 
           <ul class="nav nav-pills nav-stacked collapse" role="ablist" id="datas">
             <li role="presentation">
-              <a href="/admin/index.php?yield=datas/index">
+              <a href="/admin/category/index">
                 <span class="hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-chevron-right"></i> Listele</span>
                 <i class="fa fa-list fa-1x visible-xs visible-sm visible-md" title="Listele"></i>
               </a>
             </li>
             <li role="presentation">
-              <a href="/admin/index.php?yield=datas/new">
+              <a href="/admin/category/new">
                 <span class="hidden-xs hidden-sm hidden-md"><i class="glyphicon glyphicon-chevron-right"></i> Ekle</span>
                 <i class="fa fa-plus fa-1x visible-xs visible-sm visible-md" title="Ekle"></i>
               </a>
@@ -96,6 +96,15 @@
     </div>
 
   </div>
+
+    <?php render('nav-up-down', 'layouts'); ?>
+    <!-- dropdown hover start -->
+    <script src="/app/assets/js/bootstrap-hover-dropdown.min.js"></script>
+    <script type="text/javascript">
+    $('.dropdown-toggle').dropdownHover();
+    </script>
+    <!-- dropdown hover end -->
+
   <script>
   $(document).ready(function(){
 
@@ -108,6 +117,7 @@
       $("#main-menu").removeClass();
       $("#main-menu").addClass("col-xs-12 col-md-12");
     });
+
     $('#side-menu-close').click(function() {
       $('#side-menu-open').show();
       $('#side-menu-close').hide();

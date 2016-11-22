@@ -1,1 +1,1 @@
-<h1><?= t("site_about"); ?></h1>
+<h1><?= t("corporate.about"); ?></h1>

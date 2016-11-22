@@ -4,7 +4,7 @@
 // app/controllers/*.php  files load
 
 // system class files and controller class files
-$directories = ['lib/', 'app/controllers/', 'app/models/'];
+$directories = ['lib/', 'app/controllers/','app/controllers/*/', 'app/models/'];
 
 foreach ($directories as $directory) {
   foreach(glob($directory . "*.php") as $class) {

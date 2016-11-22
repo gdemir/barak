@@ -8,7 +8,7 @@ class AdminController extends ApplicationController {
   public function login() {
 
     if (isset($_SESSION["admin"]))
-      return $this->redirect_to("/admin/home");
+      return $this->redirect_to("/admin/index");
 
     if (isset($_POST["username"]) and isset($_POST["password"])) {
 
@@ -17,7 +17,7 @@ class AdminController extends ApplicationController {
         $GLOBALS["success"] = "Admin sayfasına hoş geldiniz";
         $_SESSION['full_name'] = "$user->first_name $user->last_name";
         $_SESSION["admin"] = true;
-        return $this->render("/admin/home");
+        return $this->render("/admin/index");
 
       } else {
 
@@ -29,7 +29,7 @@ class AdminController extends ApplicationController {
     return $this->render(["layout" => "default"]);
   }
 
-  public function home() { } // OPTIONAL
+  public function index() { } // OPTIONAL
 
   public function logout() {
     if (isset($_SESSION["admin"])) session_destroy();

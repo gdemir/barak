@@ -4,7 +4,7 @@ class ApplicationI18n {
 
   const LOCALESDIR = "config/locales/";
 
-  private $_words;
+  public $_words;
   public $default_locale;
   public $locale;
 

@@ -1,11 +1,36 @@
 <?php
 
 return [
-"site_about" => "Hakkında",
-"login_title" => "Kullanıcı Girişi",
-"login_username" => "Kullanıcı Adı",
-"login_password" => "Parola",
-"login_button" => "SİSTEME GİRİŞ",
+
+"login" => [
+"link" => "Login",
+"title" => "User Login",
+"username" => "Username",
+"password" => "Password",
+"button" => "LOGIN",
+],
+
+
+"homepage" => "Ana Sayfa",
+
+"corporate" => [
+"corporate" => "Kurumsal",
+"about" => "Hakkmızda",
+"service_policy" => "Hizmet Politikamız",
+"our_focus" => "Odak Noktamız",
+"human_resources" => "Kariyer"
+],
+
+"services" => [
+
+"services" => "Hizmetler"
+
+],
+
+"products" => "Ürünler",
+
+"contact" => "İletişim",
+
 ];
 
 ?>

@@ -114,8 +114,8 @@ ApplicationRoutes::draw(
   get("/user/index"),           // all record
   get("/user/new"),             // new record form
   post("user/create"),          // new record create
-  get("user/show/"),            // display record
-  get("user/edit/"),            // edit record
+  get("user/show"),             // display record
+  get("user/edit"),             // edit record
   post("user/update"),          // update record
   post("user/destroy")          // destroy record
 );

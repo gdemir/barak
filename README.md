@@ -103,7 +103,29 @@ ApplicationRoutes::draw(
 
 ```php
 ApplicationRoutes::draw(
-  resource("/user")
+  resources("/user")
+);
+```
+
+> *Aşağıdaki routes kümesini üretir:*
+
+```php
+ApplicationRoutes::draw(
+  get("/user/index"),           // all record
+  get("/user/new"),             // new record form
+  post("user/create"),          // new record create
+  get("user/show/"),            // display record
+  get("user/edit/"),            // edit record
+  post("user/update"),          // update record
+  post("user/destroy")          // destroy record
+);
+```
+
+#### RESOURCES
+
+```php
+ApplicationRoutes::draw(
+  resources("/user")
 );
 ```
 
@@ -120,6 +142,48 @@ ApplicationRoutes::draw(
   post("user/destroy")          // destroy record
 );
 ```
+
+#### SCOPE
+
+```php
+ApplicationRoutes::draw(
+
+  // Ör. 1:
+  resources("/category", "admin"),
+  resource("/product", "admin")
+  
+  // Ör. 2:
+  scope("admin",
+    resources("/category"),
+    resource("/product")
+  );
+  
+);
+```
+
+> *Aşağıdaki routes kümesini üretir:*
+
+```php
+ApplicationRoutes::draw(
+  get("/admin/category/index"),       // all record
+  get("/admin/category/new"),         // new record form
+  post("/admin/category/create"),     // new record create
+  get("/admin/category/show/:id"),    // display record
+  get("/admin/category/edit/:id"),    // edit record
+  post("/admin/category/update"),     // update record
+  post("/admin/category/destroy"),    // destroy record
+  
+  get("/admin/product/index"),        // all record
+  get("/admin/product/new"),          // new record form
+  post("/admin/product/create"),      // new record create
+  get("/admin/product/show"),         // display record
+  get("/admin/product/edit"),         // edit record
+  post("/admin/product/update"),      // update record
+  post("/admin/product/destroy")      // destroy record
+);
+```
+# TODO scope:  layout and view directory sets
+
 
 ### Controller (`app/controller/*.php`)
 ---
@@ -609,7 +673,7 @@ User::load()->where(["first_name" => "Gökhan"])->limit(10)->delete_all();
 User::load()->limit(10)->delete_all();
 ```
 
-### Config and Database (`config/database.ini`, `db/seeds.php`)
+### Config and Database (`config/database.ini`, `config/application.ini`, `db/seeds.php`)
 ---
 
 > `config/database.ini` (database configuration file)
@@ -620,6 +684,15 @@ host  = localhost
 user  = root
 pass  = barak
 name  = BARAK
+```
+
+
+> `config/application.ini` (database application file)
+
+```ini
+[app_configuration]
+display_errors = true
+time_zone      = Europe/Istanbul
 ```
 
 > `db/seeds.php` (database seeds file)

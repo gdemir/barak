@@ -687,7 +687,7 @@ name  = BARAK
 ```
 
 
-> `config/application.ini` (database application file)
+> `config/application.ini` (application configuration file)
 
 ```ini
 [app_configuration]

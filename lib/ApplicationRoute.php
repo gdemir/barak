@@ -77,6 +77,9 @@ class ApplicationRoute {
     if (isset($_SESSION["i18n"])) $_SESSION["i18n"]->run();
 
     $c = new $controller_class();
+
+    // router'in paramslarını(sayfadan :id, çekmek için), controller'dan gelen paramslara yükle
+    $c->_params = $this->_params;
     $c->run($this->_action);
 
     // controller var fetch
@@ -88,7 +91,7 @@ class ApplicationRoute {
     // render controller choice
     $v = new ApplicationView($this->_controller);
 
-    if ($this->_path)
+    if ($this->_path) // have scope or path of resouce/resouces
       $v->set(["layout" => $this->_path]);
 
     $v->set(["view" => (($this->_path) ? $this->_path . "/" : "") . $this->_controller, "action" => $this->_action]);
@@ -98,9 +101,6 @@ class ApplicationRoute {
 
     // controllerin paramsları
     // $vars["_params"];
-
-    // router'in paramslarını(sayfadan :id, çekmek için), controller'dan gelen paramslara yükle
-    // $vars["_params"]["params"] = $this->_params;
 
     $v->run($vars["_params"]);
   }

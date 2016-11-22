@@ -309,7 +309,9 @@ class ApplicationModel {
 
   // ok
   public static function create($fields) {
-    return get_called_class()::new($fields)->save();
+  	$object = get_called_class()::new($fields);
+  	$object->save();
+    return $object;
   }
 
   // User::first();
@@ -333,8 +335,8 @@ class ApplicationModel {
   // $user->save();
 
   // ok
-  public static function find(int $primary_key) {
-    return get_called_class()::unique(["id" => $primary_key]);
+  public static function find($primary_key) {
+    return get_called_class()::unique(["id" => intval($primary_key)]);
   }
 
   // $users = User::find_all([1, 2, 3]); // return User objects array
@@ -370,15 +372,15 @@ class ApplicationModel {
   }
 
   // ok
-  public static function update($primary_key, $fields) {
+  public static function update(int $primary_key, $fields) {
     self::check_fieldnames(array_keys($fields));
 
-    ApplicationSql::update(get_called_class(), $fields, ["id" => $primary_key]);
+    ApplicationSql::update(get_called_class(), $fields, ["id" => intval($primary_key)]);
   }
 
   // ok
-  public static function delete($primary_key = null) {
-    ApplicationSql::delete(get_called_class(), ["id" => $primary_key], null);
+  public static function delete(int $primary_key) {
+    ApplicationSql::delete(get_called_class(), ["id" => intval($primary_key)], null);
   }
 
   //////////////////////////////////////////////////

@@ -2,12 +2,14 @@
 
 ApplicationRoutes::draw(
 
-  get("/admin", "admin#home"),
+  // LANGUAGE
 
   get("/lang/en"),
   get("/lang/tr"),
 
-  get("/", "home#index"),
+
+  // HOME
+//  get("/", "home#index"),
   get("/home/index"),
   get("/home/about"),
   get("/home/service_policy"),
@@ -15,6 +17,11 @@ ApplicationRoutes::draw(
   get("/home/human_resources"),
   get("/home/contact"),
 
+  scope("home",
+    resources("/categorypage")
+    ),
+
+  // ADMIN
 
   get("/admin/login"),
   post("/admin/login"),
@@ -24,7 +31,10 @@ ApplicationRoutes::draw(
 
   //resources("/category", "admin"),
   scope("admin",
-    resources("/category")
+    resources("/category"),
+    resources("/producttype"),
+    resources("/product"),
+    resources("/description")
 
     )
 

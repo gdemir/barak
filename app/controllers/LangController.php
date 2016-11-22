@@ -3,7 +3,7 @@ class LangController extends ApplicationController {
 
   public function en() {
     $_SESSION["i18n"]->locale = "en";
-    $this->redirect_to("/home/index");
+    return $this->redirect_to("/home/index");
   }
 
   public function tr() {

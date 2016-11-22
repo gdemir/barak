@@ -16,7 +16,13 @@ class ApplicationHelper {
       $routes = [];
       foreach ($permitted_packages as $permitted_package) {
         foreach ($permitted_package as $permitted_route) {
+
           $permitted_route->_path = $path;
+
+          if ($permitted_route->_match) {
+          	$permitted_route->_match_rule = "/$path" . $permitted_route->_match_rule;
+          }
+
           $permitted_route->_rule = "/$path" . $permitted_route->_rule;
           $routes[] = $permitted_route;
         }

@@ -1,13 +1,6 @@
 <!-- Modal -->
 <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">Giriş Yap</h4>
-      </div>
-      <div class="modal-body">
-	    <?php render("login", "admin"); ?>
-      </div>
-    </div>
+    <?php render("login", "admin"); ?>
   </div>
 </div>

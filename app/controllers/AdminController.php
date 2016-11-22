@@ -29,7 +29,7 @@ class AdminController extends ApplicationController {
     return $this->render(["layout" => "default"]);
   }
 
-  public function index() { } // OPTIONAL
+  public function index() {} // OPTIONAL
 
   public function logout() {
     if (isset($_SESSION["admin"])) session_destroy();

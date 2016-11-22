@@ -4,9 +4,10 @@
 // app/controllers/*.php  files load
 
 // system class files and controller class files
-$directories = ['lib/', 'app/controllers/','app/controllers/*/', 'app/models/'];
+$directories = ['lib/', 'app/controllers/','app/controllers/*/', 'app/models/', 'app/helpers/'];
 
 foreach ($directories as $directory) {
+
   foreach(glob($directory . "*.php") as $class) {
     include_once $class;
   }

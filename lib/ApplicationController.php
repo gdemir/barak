@@ -39,7 +39,7 @@ class ApplicationController {
   }
 
   public function redirect_to($url) {
-    exit(header("Location : http://" . $_SERVER['SERVER_NAME'] . "/" . trim($url, "/"), false, 303));
+    exit(header("Location: http://" . $_SERVER['SERVER_NAME'] . "/" . trim($url, "/"), false, 303));
   }
 
   public function __get($param) {

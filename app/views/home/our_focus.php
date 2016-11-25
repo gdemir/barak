@@ -1,1 +1,0 @@
-<?= t("corporate.our_focus"); ?>

@@ -8,15 +8,23 @@
     </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-1 control-label" for="subject">Konu</label>
+    <label class="col-sm-1 control-label" for="name">Ad</label>
     <div class="col-sm-11">
-      <input type="text" value="<?= $producttype->name; ?>" class="form-control" name="subject" id="subject" disabled />
+      <input type="text" value="<?= $producttype->name; ?>" class="form-control" name="name" id="name" disabled />
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-1 control-label" for="content">İçerik</label>
     <div class="col-sm-11">
       <textarea class="form-control" rows="10" name="content" id="content" disabled><?= $producttype->content; ?></textarea>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-1 control-label" for="image">Resim</label>
+    <div class="col-sm-11">
+      <div class="thumbnail">
+        <img src="<?= $producttype->image; ?> " width="100" height="100" />
+      </div>
     </div>
   </div>
 </div>

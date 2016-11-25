@@ -7,7 +7,7 @@
     <div class="col-sm-11">
       <select class="form-control" id="category_id" name="category_id">
         <?php foreach ($categories as $category) { ?>
-        <option value="<?= $producttype->id; ?>"<?= ($producttype->id == $category->id) ? "selected" : ""; ?>>
+        <option value="<?= $category->id; ?>"<?= ($producttype->category_id == $category->id) ? "selected" : ""; ?>>
           <?= $category->name; ?>
         </option>
         <?php } ?>
@@ -24,6 +24,17 @@
     <label class="col-sm-1 control-label" for="content">İçerik</label>
     <div class="col-sm-11">
       <textarea class="form-control" rows="10" name="content" id="content"><?= $producttype->content; ?></textarea>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-1 control-label" for="image">Resim</label>
+    <div class="col-sm-11">
+      <div class="thumbnail">
+        <img src="<?= $producttype->image; ?>" width="100" height="100" />
+        <div class="caption">
+          <input type="file" id="image" name="image" class="form-control" />
+        </div>
+      </div>
     </div>
   </div>
   <div class="form-group">

@@ -1,0 +1,38 @@
+
+/* Page title */
+
+.page-title {
+  border-bottom: 1px solid #ddd;
+  color: #3072b3;
+  margin: 5px 0 15px;
+  padding: 0 5px 8px;
+}
+.page-title-sub {
+  border-bottom: 1px solid #ddd;
+  color: #3072b3;
+  margin: 20px 0 15px;
+  padding: 0 5px 8px;
+}
+
+/* Parallax */
+
+.parallax {
+  display: table;
+  position: relative;
+  width: 100%;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+.parallax-caption {
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+}
+.parallax-caption h1 {
+  font-size: 4.5em;
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
+}

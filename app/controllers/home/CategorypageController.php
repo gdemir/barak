@@ -8,9 +8,8 @@ class CategorypageController extends HomeController {
   }
 
   public function show() {
-
-    if (!$this->category = Category::find($this->id))
-      return $this->redirect_to("/home/index");
+    $this->category = Category::find($this->id);
+    $this->producttypes = Producttype::load()->where(["category_id" => $this->category->id])->take();
   }
 
 }

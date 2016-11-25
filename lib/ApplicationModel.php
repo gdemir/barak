@@ -309,9 +309,7 @@ class ApplicationModel {
 
   // ok
   public static function create($fields) {
-  	$object = get_called_class()::new($fields);
-  	$object->save();
-    return $object;
+    get_called_class()::new($fields)->save();
   }
 
   // User::first();

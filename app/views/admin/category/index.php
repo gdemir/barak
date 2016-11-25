@@ -12,6 +12,7 @@
     </tr>
   </thead>
   <tbody>
+    <?php if ($categories) { ?>
     <?php foreach ($categories as $category) { ?>
 
     <tr>
@@ -40,6 +41,9 @@
     </td>
   </tr>
 
+  <?php } ?>
+  <?php } else { ?>
+  <tr class="text-center"><td colspan="4">Henüz Kategori mevcut değil</td></tr>
   <?php } ?>
 </tbody>
 </table>

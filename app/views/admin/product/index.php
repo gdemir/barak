@@ -4,22 +4,25 @@
   <thead>
     <tr>
       <th>İd</th>
-      <th>name</th>
-      <th>İçerik</th>
+      <th>Kategori</th>
+      <th>Ürün Tipi</th>
+      <th>Ürün</th>
       <th>Oluştu</th>
       <th>Düzenlendi</th>
       <th></th>
     </tr>
   </thead>
   <tbody>
+    <?php if ($products) { ?>
     <?php foreach ($products as $product) { ?>
 
     <tr>
-      <td><?= $product->id ?></td>
-      <td><?= $product->name ?></td>
-      <td><?= $product->content ?></td>
-      <td><?= $product->created_at ?></td>
-      <td><?= $product->updated_at ?></td>
+      <td><?= $product->id; ?></td>
+      <td><?= $product->producttype->category->name; ?></td>
+      <td><?= $product->producttype->name; ?></td>
+      <td><?= $product->name; ?></td>
+      <td><?= $product->created_at; ?></td>
+      <td><?= $product->updated_at; ?></td>
 
       <td>
         <form action="/admin/product/destroy" method="post">
@@ -40,6 +43,9 @@
     </td>
   </tr>
 
+  <?php } ?>
+  <?php } else { ?>
+  <tr class="text-center"><td colspan="4">Henüz Ürün mevcut değil</td></tr>
   <?php } ?>
 </tbody>
 </table>

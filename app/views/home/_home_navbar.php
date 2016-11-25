@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-default animated fadeInDown">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
@@ -9,7 +9,7 @@
         <span class="icon-bar"></span>
       </button>
       <a class="navbar-brand"href="/home/index" style="padding:0em;margin-left:0px;">
-        <img alt="Brand" src="/app/assets/img/default-side.svg.png" width="120" class="img-responsive"/>
+        <img alt="Brand" src="/app/assets/img/default-side3.svg.png" width="120" class="img-responsive"/>
       </a>
     </div>
 
@@ -18,7 +18,7 @@
       <ul class="nav navbar-nav navbar-left">
         <li>
           <!-- Button trigger modal -->
-          <p style="margin-top:14px;font-size:16px;font-weight:bold;color:#434344;letter-spacing:1px;">/ 12. BÖLGE MÜDÜRLÜĞÜ</p>
+          <p style="margin-top:14px;font-size:16px;font-weight:bold;color:#434344;letter-spacing:1px;">/ Optik Line Telekomünikasyon</p>
           <!-- Button trigger modal end -->
         </li>
       </ul>

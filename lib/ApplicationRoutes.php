@@ -8,7 +8,7 @@ class ApplicationRoutes {
   public static function draw() {
 
     $request_route = new ApplicationRoute($_SERVER["REQUEST_METHOD"], $_SERVER['REQUEST_URI'], false);
-//print_r($request_route);
+    // print_r($request_route);
     $r = new ApplicationRoutes();
 
     // İzin verilmiş route'ları routes'a yükle
@@ -93,7 +93,7 @@ class ApplicationRoutes {
       // $v->render(["file" => "public/404.php"]);
       // $v->run();
       // $v->render(["status" => 404, "file" => ]);
-      throw new ConfigurationException("Böyle bir yönlendirme mevcut değil", $request_route->_rule);
+      throw new ConfigurationException("Böyle bir yönlendirme mevcut değil", $request_route->_method . ":" . $request_route->_rule);
     }
     throw new ConfigurationException("Uzay çağında bizim henüz desteklemediğimiz bir method", $request_route->_method);
   }

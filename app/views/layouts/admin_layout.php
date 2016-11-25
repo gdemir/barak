@@ -55,6 +55,10 @@
   <!-- Jquery Datatables Language end -->
   <!-- Jquery Datatables Responsive Bootstrap end -->
 
+  <!-- auto search start -->
+  <script src="/app/assets/js/typeahead.bundle.js"></script>
+  <!-- auto search end -->
+
   <!-- summernote start -->
   <!-- source: http://summernote.org/ -->
   <link rel="stylesheet" href="/app/assets/css/summernote.css" type="text/css"/>
@@ -69,11 +73,7 @@
 
   <div class="well well-sm" style="padding:0em">
     <ul class="nav nav-pills well well-sm" style="margin-bottom:0px">
-      <li role="presentation">
-        <a href="/admin/index" class="fa fa-home">
-          Anasayfa
-        </a>
-      </li>
+      <li role="presentation"><a href="/admin/index" class="fa fa-home">Anasayfa</a></li>
       <li role="presentation">
         <a class="fa fa-bars" id="side-menu-close"></a>
         <a class="fa fa-bars" id="side-menu-open"></a>
@@ -84,17 +84,12 @@
     <div class="well well-sm col-xs-2 col-md-2" id="side-menu">
 
       <?= render("service_menu"); ?>
+      <?= render("user_menu"); ?>
 
     </div>
     <div class="col-xs-10 col-md-10" id="main-menu">
       <div class="well well-sm">
-        <ol class="breadcrumb text-right">
-          <li>
-            <a href="/admin/index" class="btn btn-default btn-sm">
-              <i class="fa fa-home "> Home</i>
-            </a>
-          </li>
-        </ol>
+        <?= BootstrapHelper::breadcrumb_button(); ?>
 
         <!-- bildirimleri göster ve temizle -->
 

@@ -1,51 +1,49 @@
-<h4 class="page-title">Kategori Bilgileri</h4>
 
-<div class="form-horizontal">
-  <div class="form-group">
-    <label class="col-sm-1 control-label" for="name">Ad</label>
-    <div class="col-sm-11">
-      <input type="text" value="<?= $category->name; ?>" class="form-control" name="name" id="name" disabled />
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-1 control-label" for="content">İçerik</label>
-    <div class="col-sm-11">
-      <textarea class="form-control" rows="10" name="content" id="content" disabled><?= $category->content; ?></textarea>
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-1 control-label" for="image">Resim</label>
-    <div class="col-sm-11">
-      <div class="thumbnail">
-        <img src="<?= $category->image; ?> " width="100" height="100" />
-      </div>
-    </div>
+<!-- first section - Home -->
+<div class="parallax" style="background: url(<?= $category->image; ?>) no-repeat center fixed">
+  <div class="parallax-caption">
+    <h1><?= $category->name; ?></h1>
   </div>
 </div>
+<!-- /first section -->
 
-<form class="form-horizontal" action="/admin/category/destroy" method="post">
-  <input type="hidden" value="<?= $category->id; ?>" id="id" name="id" />
-  <div class="form-group">
-    <div class="col-sm-offset-1 col-sm-11">
-      <a class="btn btn-primary" href="/admin/category/edit/<?= $category->id; ?>">
-        Düzenle
-      </a>
-      <input type="submit" class="btn btn-danger" value="sil"
-      onClick="return confirm('Bu kaydı silmek istediğinizden emin misiniz?');" />
-    </div>
-  </div>
-</form>
+<div class="container">
 
-<script type="text/javascript">
-$(document).ready(function() {
-  $('#content').prop('disabled', true);
-  $('#content').summernote({
-    toolbar: [],
-    height: 200,
-    minHeight: null,
-    maxHeight: null,
-    focus: true,
-    lang: 'tr-TR'
-  });
-});
-</script>
+  <h4 class="page-title">Ürün Tipleri</h4>
+
+  <table id="example" class="table table-striped table-hover dt-responsive" cellspacing="0" width="100%">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Ad</th>
+        <th>İçerik</th>
+        <th>Çeşit</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php if ($producttypes) { ?>
+      <?php foreach ($producttypes as $producttype) { ?>
+      <tr>
+        <td><img src="<?= $producttype->category->image ?>" style="width:200px"></td>
+        <td><?= $producttype->name ?></td>
+        <td><?= $producttype->content ?></td>
+        <td><?= Product::load()->where(["producttype_id" => $producttype->id])->count(); ?></td>
+        <td>
+          <a href="/home/producttypepage/show/<?= $producttype->id; ?>"
+            class="btn btn-default" role="button" title="Göster"><i class="fa fa-search"></i>Göster
+          </a>
+
+        </form>
+      </td>
+    </tr>
+
+    <?php } ?>
+    <?php } else { ?>
+    <tr class="text-center"><td colspan="4">Henüz Ürün Tipi mevcut değil</td></tr>
+    <?php } ?>
+  </tbody>
+</table>
+
+
+</div>

@@ -11,23 +11,21 @@ return [
 ],
 
 
-"homepage" => "Home",
+"home" => "Home",
+"index" => "Index",
+"about" => "About",
 
-"corporate" => [
 "corporate" => "Corporate",
 "about" => "About",
 "service_policy" => "Service Policy",
 "our_focus" => "Our Focus",
-"human_resources" => "Human Resources"
-],
+"human_resources" => "Human Resources",
 
-"services" => [
-
-"services" => "Services"
-
-],
 
 "products" => "Products",
+"search" => "Search",
+
+"categories" => "Categories",
 
 "contact" => "Contact",
 

@@ -1,6 +1,6 @@
 <?php
 
-User::create(["first_name" => "first_name", "department_id" => "1"]);
+//User::create(["first_name" => "first_name", "department_id" => "1"]);
 
 // if (Department::load()->count() == 0) {
 //   Department::create(["name" => "Bilgisayar Mühendisliği"]);

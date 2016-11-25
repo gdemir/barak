@@ -4,7 +4,8 @@
   <thead>
     <tr>
       <th>İd</th>
-      <th>name</th>
+      <th>Kategori</th>
+      <th>Ad</th>
       <th>İçerik</th>
       <th>Oluştu</th>
       <th>Düzenlendi</th>
@@ -12,15 +13,16 @@
     </tr>
   </thead>
   <tbody>
+    <?php if ($producttypes) { ?>
     <?php foreach ($producttypes as $producttype) { ?>
 
     <tr>
-      <td><?= $producttype->id ?></td>
-      <td><?= $producttype->category->name ?></td>
-      <td><?= $producttype->name ?></td>
-      <td><?= $producttype->content ?></td>
-      <td><?= $producttype->created_at ?></td>
-      <td><?= $producttype->updated_at ?></td>
+      <td><?= $producttype->id; ?></td>
+      <td><?= $producttype->category->name; ?></td>
+      <td><?= $producttype->name; ?></td>
+      <td><?= $producttype->content; ?></td>
+      <td><?= $producttype->created_at; ?></td>
+      <td><?= $producttype->updated_at; ?></td>
 
       <td>
         <form action="/admin/producttype/destroy" method="post">
@@ -41,6 +43,9 @@
     </td>
   </tr>
 
+  <?php } ?>
+  <?php } else { ?>
+  <tr class="text-center"><td colspan="4">Henüz Ürün Tipi mevcut değil</td></tr>
   <?php } ?>
 </tbody>
 </table>

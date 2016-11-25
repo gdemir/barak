@@ -2,9 +2,21 @@
 
 <div class="form-horizontal">
   <div class="form-group">
-    <label class="col-sm-1 control-label" for="subject">Konu</label>
+    <label class="col-sm-1 control-label" for="category_name">Kategori</label>
     <div class="col-sm-11">
-      <input type="text" value="<?= $product->name; ?>" class="form-control" name="subject" id="subject" disabled />
+      <input type="text" value="<?= $product->producttype->category->name; ?>" class="form-control" name="category_name" id="category_name" disabled />
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-1 control-label" for="producttype_name">Ürün Tip</label>
+    <div class="col-sm-11">
+      <input type="text" value="<?= $product->producttype->name; ?>" class="form-control" name="producttype_name" id="producttype_name" disabled />
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-1 control-label" for="name">Ad</label>
+    <div class="col-sm-11">
+      <input type="text" value="<?= $product->name; ?>" class="form-control" name="name" id="name" disabled/>
     </div>
   </div>
   <div class="form-group">
@@ -18,6 +30,14 @@
     <div class="col-sm-11">
       <div class="thumbnail">
         <img src="<?= $product->image; ?> " width="100" height="100" />
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-1 control-label" for="file">Dosya</label>
+    <div class="col-sm-11">
+      <div class="thumbnail">
+        <img src="<?= $product->file; ?> " width="100" height="100" />
       </div>
     </div>
   </div>

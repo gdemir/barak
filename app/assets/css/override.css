@@ -5,8 +5,4 @@ a:hover { text-decoration: none; }
 .list-group { margin-bottom: 0px; }
 .navbar { margin-bottom: 0px; }
 ol, ul { list-style: true; }
-label {
-	color: #337ab7;
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
 #example tbody tr td { vertical-align: middle; }

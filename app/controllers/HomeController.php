@@ -10,7 +10,6 @@ class HomeController extends ApplicationController {
   ];
 
   public function index() {
-    $this->categories = Category::all();
   }
   public function login() {
     // echo "Her işlem öncesi login oluyoruz<br/>";

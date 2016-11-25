@@ -2,6 +2,11 @@
 
 ApplicationRoutes::draw(
 
+  // AJAX
+
+  post("/ajax/producttype"),
+  post("/ajax/product"),
+
   // LANGUAGE
 
   get("/lang/en"),
@@ -9,7 +14,8 @@ ApplicationRoutes::draw(
 
 
   // HOME
-//  get("/", "home#index"),
+  // get("/", "home#index"),
+
   get("/home/index"),
   get("/home/about"),
   get("/home/service_policy"),
@@ -18,7 +24,25 @@ ApplicationRoutes::draw(
   get("/home/contact"),
 
   scope("home",
-    resources("/categorypage")
+
+    [
+    get("/categorypage", "categorypage#index"),
+    get("/categorypage/show/:id")
+    ],
+
+    [
+    get("/productpage", "productpage#index"),
+    get("/productpage/search"),
+    get("/productpage/show/:id"),
+    post("/productpage/find")
+    ],
+
+    [
+    get("/producttypepage", "producttypepage#index"),
+    get("/producttypepage/show/:id"),
+    post("/producttypepage/find")
+    ]
+
     ),
 
   // ADMIN
@@ -27,15 +51,21 @@ ApplicationRoutes::draw(
   post("/admin/login"),
   get("/admin/logout"),
 
+  get("/admin", "admin#index"),
   get("/admin/index"),
 
+  // get("/category", "category#index", "admin"),
   //resources("/category", "admin"),
+
+//  post("/category/ajax", false, "admin"),
+
   scope("admin",
     resources("/category"),
     resources("/producttype"),
     resources("/product"),
-    resources("/description")
-
+    resources("/productfeature"),
+    resources("/usertype"),
+    resources("/user")
     )
 
   );

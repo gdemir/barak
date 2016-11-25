@@ -13,6 +13,9 @@ class ApplicationView {
   private $_view;
   private $_action;
 
+  private $_text;
+  private $_file;
+
   // "/home/index"
   // "/home/show"
   // "/admin/show"
@@ -30,7 +33,7 @@ class ApplicationView {
 
       foreach ($_render as $key => $value) {
         switch ($key) {
-          //case "file":     $this->_file     = $value; break;
+          case "text":     $this->_text     = $value; break;
           case "layout":   $this->_layout   = $value; break;
           case "view":     $this->_view     = $value; break; // default kesin
           case "action":   $this->_action   = $value; break; // default kesin
@@ -52,9 +55,13 @@ class ApplicationView {
 
   public function run($params = null) {
 
-    if (isset($this->_file)) {
-      $this->content = self::template_content($this->_file);
+    if (isset($this->_text)) {
+      return self::text_display();
     }
+
+    // if (isset($this->_file)) {
+    //   $this->content = self::template_content($this->_file);
+    // }
 
     if (!isset($this->_template))
       $this->_template = $this->_view . "/" . $this->_action;
@@ -79,7 +86,7 @@ class ApplicationView {
       $this->_content = self::page_content();
     }
 
-    self::display($params);
+    self::page_display($params);
   }
 
   // merge LAYOUT and TEMPLATE content
@@ -104,7 +111,7 @@ class ApplicationView {
     return file_get_contents($template_path);
   }
 
-  private function display($params = null) {
+  private function page_display($params = null) {
 
     if (!is_null($params)) {
       // controller'in paramslarını yükle
@@ -117,6 +124,10 @@ class ApplicationView {
     eval("?> " . $this->_content . "<?php");
 
     unset($this->_content);
+  }
+
+  private function text_display() {
+  	echo $this->_text;
   }
 }
 ?>

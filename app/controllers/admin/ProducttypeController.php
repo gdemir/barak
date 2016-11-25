@@ -11,35 +11,50 @@ class ProducttypeController extends AdminController {
   }
 
   public function create() {
+    $producttype = Producttype::new($_POST);
+    $producttype->save();
 
-    $producttype = Producttype::create($_POST);
+    $image = $_FILES["image"];
+    if ($image["name"] != "") {// varsa yeni resmi ekle
+      $producttype->image = ImageHelper::file_upload($image, "/upload/producttype", $producttype->id);
+      $producttype->save();
+    }
     $this->redirect_to("/admin/producttype/show/" . $producttype->id);
-
   }
 
   public function show() {
-
     if (!$this->producttype = Producttype::find($this->id))
-      return $this->redirect_to("/admin/producttype/index");
+      return $this->redirect_to("/admin/producttype");
   }
 
   public function edit() {
     $this->categories = Category::all();
 
     if (!$this->producttype = Producttype::find($this->id))
-      return $this->redirect_to("/admin/producttype/index");
+      return $this->redirect_to("/admin/producttype");
   }
 
   public function update() {
-    $id = $_POST["id"];
-    Producttype::update($id, $_POST);
-    $this->redirect_to("/admin/producttype/show/" . $id);
+    $producttype = Producttype::find($_POST["id"]);
+    foreach ($_POST as $key => $value) $producttype->$key = $value;
+    $producttype->save();
+
+    $image = $_FILES["image"];
+    if ($image["name"] != "") {// varsa bir önceki resmi sil ve yeni resmi ekle
+      $producttype->image = ImageHelper::file_update($producttype->image, $image, "/upload/producttype", $producttype->id);
+      $producttype->save();
+    }
+
+    $this->redirect_to("/admin/producttype/show/" . $producttype->id);
   }
 
   public function destroy() {
-    $id = $_POST["id"];
-    Producttype::delete($id);
-    return $this->redirect_to("/admin/producttype/index");
+    $producttype = Producttype::find($_POST["id"]);
+
+    ImageHelper::file_remove($producttype->image);
+
+    $producttype->destroy();
+    return $this->redirect_to("/admin/producttype");
   }
 
 }

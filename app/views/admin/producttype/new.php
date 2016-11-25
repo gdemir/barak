@@ -24,6 +24,12 @@
     </div>
   </div>
   <div class="form-group">
+    <label class="col-sm-1 control-label" for="image">Resim</label>
+    <div class="col-sm-11">
+      <input type="file" id="image" name="image" class="form-control" />
+    </div>
+  </div>
+  <div class="form-group">
     <div class="col-sm-offset-1 col-sm-11">
       <button type="submit" class="btn btn-primary">Oluştur</button>
     </div>

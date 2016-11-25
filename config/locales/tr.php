@@ -10,26 +10,27 @@ return [
 "button" => "LOGIN",
 ],
 
+// for URL pages
+"home" => "Ana Sayfa",
+"index" => "Index",
 
-"homepage" => "Ana Sayfa",
-
-"corporate" => [
 "corporate" => "Kurumsal",
-"about" => "Hakkmızda",
+
+"about" => "Hakkımızda",
 "service_policy" => "Hizmet Politikamız",
 "our_focus" => "Odak Noktamız",
-"human_resources" => "Kariyer"
-],
+"human_resources" => "Kariyer",
 
-"services" => [
-
-"services" => "Hizmetler"
-
-],
-
-"products" => "Ürünler",
+"categorypage" => "Kategoriler",
+"producttypepage" => "Ürün Tipleri",
+"productpage" => "Ürünler",
 
 "contact" => "İletişim",
+
+"search" => "Ara",
+
+"show" => "Göster",
+"1" => "1"
 
 ];
 

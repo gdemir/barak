@@ -32,7 +32,8 @@ class AdminController extends ApplicationController {
   public function index() {} // OPTIONAL
 
   public function logout() {
-    if (isset($_SESSION["admin"])) session_destroy();
+    if (isset($_SESSION["admin"]))
+      session_destroy();
     return $this->redirect_to("/admin/login");
   }
 

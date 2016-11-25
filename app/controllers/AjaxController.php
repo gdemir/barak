@@ -10,13 +10,13 @@ class AjaxController extends ApplicationController {
     $this->render(["text" => $text]);
   }
 
-  public function product() {
-    $products = Product::load()->where(["producttype_id" => $_POST['producttype_id']])->take();
-    $text = "";
-    foreach ($products as $product)
-      $text .= "<option value='" . $product->id . "'>" . $product->name . "</option>";
-    $this->render(["text" => $text]);
-  }
+  // public function product() {
+  //   $products = Product::load()->where(["producttype_id" => $_POST['producttype_id']])->take();
+  //   $text = "";
+  //   foreach ($products as $product)
+  //     $text .= "<option value='" . $product->id . "'>" . $product->name . "</option>";
+  //   $this->render(["text" => $text]);
+  // }
 
 }
 

@@ -5,7 +5,6 @@ ApplicationRoutes::draw(
   // AJAX
 
   post("/ajax/producttype"),
-  post("/ajax/product"),
 
   // LANGUAGE
 
@@ -64,7 +63,6 @@ ApplicationRoutes::draw(
     resources("/producttype"),
     resources("/product"),
     resources("/productfeature"),
-    resources("/usertype"),
     resources("/user")
     )
 

@@ -19,19 +19,24 @@ class ProducttypeController extends AdminController {
       $producttype->image = ImageHelper::file_upload($image, "/upload/producttype", $producttype->id);
       $producttype->save();
     }
+
+    $_SESSION["success"] = "Yeni ürün tipi eklendi";
     $this->redirect_to("/admin/producttype/show/" . $producttype->id);
   }
 
   public function show() {
-    if (!$this->producttype = Producttype::find($this->id))
+    if (!$this->producttype = Producttype::find($this->id)) {
+      $_SESSION["danger"] = "Böyle bir ürün tipi bulunmamaktadır";
       return $this->redirect_to("/admin/producttype");
+    }
   }
 
   public function edit() {
     $this->categories = Category::all();
-
-    if (!$this->producttype = Producttype::find($this->id))
+    if (!$this->producttype = Producttype::find($this->id)) {
+      $_SESSION["danger"] = "Böyle bir ürün tipi bulunmamaktadır";
       return $this->redirect_to("/admin/producttype");
+    }
   }
 
   public function update() {
@@ -45,6 +50,7 @@ class ProducttypeController extends AdminController {
       $producttype->save();
     }
 
+    $_SESSION["info"] = "Ürün tipi güncellendi";
     $this->redirect_to("/admin/producttype/show/" . $producttype->id);
   }
 
@@ -54,6 +60,7 @@ class ProducttypeController extends AdminController {
     ImageHelper::file_remove($producttype->image);
 
     $producttype->destroy();
+    $_SESSION["info"] = "Ürün tipi silindi";
     return $this->redirect_to("/admin/producttype");
   }
 

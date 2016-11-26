@@ -25,14 +25,14 @@ class CategoryController extends AdminController {
 
   public function show() {
     if (!$this->category = Category::find($this->id)) {
-    	$_SESSION["danger"] = "Böyle bir kategori bulunmamaktadır";
+      $_SESSION["danger"] = "Böyle bir kategori bulunmamaktadır";
       return $this->redirect_to("/admin/category");
     }
   }
 
   public function edit() {
     if (!$this->category = Category::find($this->id)) {
-    	$_SESSION["danger"] = "Böyle bir kategori bulunmamaktadır";
+      $_SESSION["danger"] = "Böyle bir kategori bulunmamaktadır";
       return $this->redirect_to("/admin/category");
     }
   }

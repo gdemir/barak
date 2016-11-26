@@ -9,7 +9,7 @@ class CategorypageController extends HomeController {
 
   public function show() {
     $this->category = Category::find($this->id);
-    $this->producttypes = Producttype::load()->where(["category_id" => $this->category->id])->take();
+    $this->producttypes = $this->category->all_of_producttype;
   }
 
 }

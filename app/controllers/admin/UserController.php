@@ -27,17 +27,23 @@ class UserController extends AdminController {
       $user->save();
     }
 
+    $_SESSION["warning"] = "Güvenliği için bu kullanıcı parolasını güncellemelidir!";
+    $_SESSION["success"] = "Kullanıcı adı: " . $user->username . "<br/> Parola: " . $random_password . "<br/>yeni kayıt oluşturuldu";
     $this->redirect_to("/admin/user/show/" . $user->id);
   }
 
   public function show() {
-    if (!$this->user = User::find($this->id))
+    if (!$this->user = User::find($this->id)) {
+      $_SESSION["danger"] = "Böyle bir personel bulunmamaktadır";
       return $this->redirect_to("/admin/user");
+    }
   }
 
   public function edit() {
-    if (!$this->user = User::find($this->id))
+    if (!$this->user = User::find($this->id)) {
+      $_SESSION["danger"] = "Böyle bir personel bulunmamaktadır";
       return $this->redirect_to("/admin/user");
+    }
   }
 
   public function update() {
@@ -51,6 +57,7 @@ class UserController extends AdminController {
       $user->save();
     }
 
+    $_SESSION["info"] = "Personel güncellendi";
     $this->redirect_to("/admin/user/show/" . $user->id);
   }
 
@@ -60,6 +67,7 @@ class UserController extends AdminController {
     ImageHelper::file_remove($user->image);
 
     $user->destroy();
+    $_SESSION["info"] = "Personel silindi";
     return $this->redirect_to("/admin/user");
   }
 }

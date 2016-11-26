@@ -19,7 +19,7 @@
 
 ```php
 ApplicationRoutes::draw(
-  get("/", "home#index")
+get("/", "home#index")
 );
 ```
 
@@ -28,9 +28,9 @@ ApplicationRoutes::draw(
 ```php
 class HomeController extends ApplicationController {
 
-  public function index() {
-    $this->message = "Hello World";
-  }
+public function index() {
+$this->message = "Hello World";
+}
 
 }
 ```
@@ -68,7 +68,7 @@ class HomeController extends ApplicationController {
 
 ```php
 ApplicationRoutes::draw(
-  get("/home/index")
+get("/home/index")
 );
 ```
 
@@ -78,7 +78,7 @@ ApplicationRoutes::draw(
 
 ```php
 ApplicationRoutes::draw(
-  get("/home/index/:id")
+get("/home/index/:id")
 );
 ```
 
@@ -95,7 +95,7 @@ ApplicationRoutes::draw(
 
 ```php
 ApplicationRoutes::draw(
-  post("/admin/login")
+post("/admin/login")
 );
 ```
 
@@ -103,7 +103,7 @@ ApplicationRoutes::draw(
 
 ```php
 ApplicationRoutes::draw(
-  resources("/user")
+resources("/user")
 );
 ```
 
@@ -111,13 +111,13 @@ ApplicationRoutes::draw(
 
 ```php
 ApplicationRoutes::draw(
-  get("/user/index"),           // all record
-  get("/user/new"),             // new record form
-  post("user/create"),          // new record create
-  get("user/show"),             // display record
-  get("user/edit"),             // edit record
-  post("user/update"),          // update record
-  post("user/destroy")          // destroy record
+get("/user/index"),           // all record
+get("/user/new"),             // new record form
+post("user/create"),          // new record create
+get("user/show"),             // display record
+get("user/edit"),             // edit record
+post("user/update"),          // update record
+post("user/destroy")          // destroy record
 );
 ```
 
@@ -125,7 +125,7 @@ ApplicationRoutes::draw(
 
 ```php
 ApplicationRoutes::draw(
-  resources("/user")
+resources("/user")
 );
 ```
 
@@ -133,13 +133,13 @@ ApplicationRoutes::draw(
 
 ```php
 ApplicationRoutes::draw(
-  get("/user/index"),           // all record
-  get("/user/new"),             // new record form
-  post("user/create"),          // new record create
-  get("user/show/:id"),         // display record
-  get("user/edit/:id"),         // edit record
-  post("user/update"),          // update record
-  post("user/destroy")          // destroy record
+get("/user/index"),           // all record
+get("/user/new"),             // new record form
+post("user/create"),          // new record create
+get("user/show/:id"),         // display record
+get("user/edit/:id"),         // edit record
+post("user/update"),          // update record
+post("user/destroy")          // destroy record
 );
 ```
 
@@ -148,16 +148,16 @@ ApplicationRoutes::draw(
 ```php
 ApplicationRoutes::draw(
 
-  // Ör. 1:
-  resources("/category", "admin"),
-  resource("/product", "admin")
-  
-  // Ör. 2:
-  scope("admin",
-    resources("/category"),
-    resource("/product")
-  );
-  
+// Ör. 1:
+resources("/category", "admin"),
+resource("/product", "admin")
+
+// Ör. 2:
+scope("admin",
+resources("/category"),
+resource("/product")
+);
+
 );
 ```
 
@@ -165,21 +165,21 @@ ApplicationRoutes::draw(
 
 ```php
 ApplicationRoutes::draw(
-  get("/admin/category/index"),       // all record
-  get("/admin/category/new"),         // new record form
-  post("/admin/category/create"),     // new record create
-  get("/admin/category/show/:id"),    // display record
-  get("/admin/category/edit/:id"),    // edit record
-  post("/admin/category/update"),     // update record
-  post("/admin/category/destroy"),    // destroy record
-  
-  get("/admin/product/index"),        // all record
-  get("/admin/product/new"),          // new record form
-  post("/admin/product/create"),      // new record create
-  get("/admin/product/show"),         // display record
-  get("/admin/product/edit"),         // edit record
-  post("/admin/product/update"),      // update record
-  post("/admin/product/destroy")      // destroy record
+get("/admin/category/index"),       // all record
+get("/admin/category/new"),         // new record form
+post("/admin/category/create"),     // new record create
+get("/admin/category/show/:id"),    // display record
+get("/admin/category/edit/:id"),    // edit record
+post("/admin/category/update"),     // update record
+post("/admin/category/destroy"),    // destroy record
+
+get("/admin/product/index"),        // all record
+get("/admin/product/new"),          // new record form
+post("/admin/product/create"),      // new record create
+get("/admin/product/show"),         // display record
+get("/admin/product/edit"),         // edit record
+post("/admin/product/update"),      // update record
+post("/admin/product/destroy")      // destroy record
 );
 ```
 # TODO scope:  layout and view directory sets
@@ -201,40 +201,40 @@ Example
 ```php
 class HomeController extends ApplicationController {
 
-  public function index() {
-    echo "HomeIndex sayfası öncesi çalışan fonksiyon";
+public function index() {
+echo "HomeIndex sayfası öncesi çalışan fonksiyon";
 
-    // DEFAULT LAYOUT: home_layout, VIEW: home, ACTION: index
-    $this->render("/home/index"); // like $this->render(["template" => "/home/index"]);
+// DEFAULT LAYOUT: home_layout, VIEW: home, ACTION: index
+$this->render("/home/index"); // like $this->render(["template" => "/home/index"]);
 
-    // DEFAULT LAYOUT: home_layout, VIEW: home, ACTION: show
-    $this->render("/home/show"); // like $this->render(["template" => "/home/show"]);
+// DEFAULT LAYOUT: home_layout, VIEW: home, ACTION: show
+$this->render("/home/show"); // like $this->render(["template" => "/home/show"]);
 
-    // DEFAULT LAYOUT: home_layout, VIEW: admin, ACTION: show
-    $this->render("/admin/show"); // like $this->render(["template" => "/admin/show"]);
+// DEFAULT LAYOUT: home_layout, VIEW: admin, ACTION: show
+$this->render("/admin/show"); // like $this->render(["template" => "/admin/show"]);
 
-    // Default LAYOUT: home_layout, VIEW: home, ACTION: index
-    $this->render(["layout"=>"home", "view" => "home", "action" => "index"]); // default render
+// Default LAYOUT: home_layout, VIEW: home, ACTION: index
+$this->render(["layout"=>"home", "view" => "home", "action" => "index"]); // default render
 
-    // LAYOUT: false, VIEW: home, ACTION: index
-    $this->render(["layout" => false]);
+// LAYOUT: false, VIEW: home, ACTION: index
+$this->render(["layout" => false]);
 
-    // LAYOUT: home_layout, VIEW: admin, ACTION: index
-    $this->render(["view" => "admin", "action" => "index"]);
+// LAYOUT: home_layout, VIEW: admin, ACTION: index
+$this->render(["view" => "admin", "action" => "index"]);
 
-    // LAYOUT: home_layout, VIEW: admin, ACTION: index
-    $this->render(["view" => "admin", "action" => "index"]);
+// LAYOUT: home_layout, VIEW: admin, ACTION: index
+$this->render(["view" => "admin", "action" => "index"]);
 
-    // LAYOUT: admin_layout, VIEW: home, ACTION: show
-    $this->render(["layout" => "admin", "view" => "home", "action" => "show"]);
+// LAYOUT: admin_layout, VIEW: home, ACTION: show
+$this->render(["layout" => "admin", "view" => "home", "action" => "show"]);
 
-    // LAYOUT: admin_layout, VIEW: home, ACTION: index
-    $this->render(["layout" => "admin", "template" => "home/index"]);
+// LAYOUT: admin_layout, VIEW: home, ACTION: index
+$this->render(["layout" => "admin", "template" => "home/index"]);
 
-    // LAYOUT: admin_layout, VIEW: home, ACTION: show
-    $this->render(["layout" => "admin", "template" => "home/show"]);
+// LAYOUT: admin_layout, VIEW: home, ACTION: show
+$this->render(["layout" => "admin", "template" => "home/show"]);
 
-  }
+}
 }
 ```
 
@@ -255,27 +255,27 @@ Before Action (`protected $before_actions`) özelliği, `app/controller/*.php` d
 ```php
 class HomeController extends ApplicationController {
 
-  protected $before_actions = [
-    ["login", "except" => ["login", "index"]],
-    ["notice_clear", "only" => ["index"]],
-    ["every_time"]
-  ];
+protected $before_actions = [
+["login", "except" => ["login", "index"]],
+["notice_clear", "only" => ["index"]],
+["every_time"]
+];
 
-  public function index() {
-    echo "HomeIndex : Anasayfa (bu işlem için login fonksiyonu çalışmaz, notice_clear ve every_time çalışır)";
-  }
+public function index() {
+echo "HomeIndex : Anasayfa (bu işlem için login fonksiyonu çalışmaz, notice_clear ve every_time çalışır)";
+}
 
-  public function login() {
-    echo "Home#Login : Her işlem öncesi login oluyoruz. (get/post için /home/login, /home/index hariç)";
-  }
+public function login() {
+echo "Home#Login : Her işlem öncesi login oluyoruz. (get/post için /home/login, /home/index hariç)";
+}
 
-  public function notice_clear() {
-    echo "Home#NoticeClear : Duyular silindi. (get/post için sadece /home/index'de çalışır)";
-  }
+public function notice_clear() {
+echo "Home#NoticeClear : Duyular silindi. (get/post için sadece /home/index'de çalışır)";
+}
 
-  public function every_time() {
-    echo "Home#EveryTime : Her zaman get/post öncesi çalışırım.";
-  }
+public function every_time() {
+echo "Home#EveryTime : Her zaman get/post öncesi çalışırım.";
+}
 ```
 
 - After Action
@@ -296,9 +296,9 @@ After Action (`protected $after_actions`) özelliği, `app/controller/*.php` dos
 
 ```php
 ApplicationRoutes::draw(
-  get("/admin/home"),
-  get("/admin/login"),
-  post("/admin/login")
+get("/admin/home"),
+get("/admin/login"),
+post("/admin/login")
 );
 ```
 
@@ -307,44 +307,44 @@ ApplicationRoutes::draw(
 ```php
 class AdminController extends ApplicationController {
 
-  protected $before_actions = [
-    ["require_login", "except" => ["login"]]
-  ];
+protected $before_actions = [
+["require_login", "except" => ["login"]]
+];
 
-  public function login() {
+public function login() {
 
-    if (isset($_SESSION['admin']))
-      return $this->redirect_to("/admin/home");
+if (isset($_SESSION['admin']))
+return $this->redirect_to("/admin/home");
 
-    if (isset($_POST["username"]) and isset($_POST["password"])) {
-      $user = User::load()
-                ->where([
-                  "username" => $_POST["username"],
-                  "password" => $_POST["password"]
-                  ]);
+if (isset($_POST["username"]) and isset($_POST["password"])) {
+$user = User::load()
+->where([
+"username" => $_POST["username"],
+"password" => $_POST["password"]
+]);
 
-      if ($user) {
-        echo "tebrikler";
-        $_SESSION["admin"] = true;
-        return $this->render("/admin/home");
-      } else {
-        echo "şifre veya parola hatalı";
-      }
-    }
-    echo "otomatik render, login paneli gelmeli";
-    // $this->render("/admin/login");
-    // $this->render(["template" => "/admin/login"]);
-    // $this->render(["template" => "/admin/login", "layout" => "admin"]);
-    // $this->render(["view" => "admin", action => "login"]);
-    // $this->render(["view" => "admin", action => "login", "layout" => "admin"]);
-  }
+if ($user) {
+echo "tebrikler";
+$_SESSION["admin"] = true;
+return $this->render("/admin/home");
+} else {
+echo "şifre veya parola hatalı";
+}
+}
+echo "otomatik render, login paneli gelmeli";
+// $this->render("/admin/login");
+// $this->render(["template" => "/admin/login"]);
+// $this->render(["template" => "/admin/login", "layout" => "admin"]);
+// $this->render(["view" => "admin", action => "login"]);
+// $this->render(["view" => "admin", action => "login", "layout" => "admin"]);
+}
 
-  public function require_login() {
-    echo "Her işlem öncesi login oluyoruz<br/>";
+public function require_login() {
+echo "Her işlem öncesi login oluyoruz<br/>";
 
-    if (!isset($_SESSION['admin']))
-      return $this->redirect_to("/admin/login");
-  }
+if (!isset($_SESSION['admin']))
+return $this->redirect_to("/admin/login");
+}
 
 }
 ```
@@ -462,21 +462,21 @@ print_r($user);
 ```php
 $users = User::load()->take();
 foreach ($user as $user)
-  echo $user->first_name;
+echo $user->first_name;
 ```
 
 > `select`, `where`, `order`, `group`, `limit`, `take`
 
 ```php
 $users = User::load()
-           ->where(["first_name" = "Gökhan"])
-           ->select("first_name")
-           ->order("id")
-           ->limit("10")
-           ->take();
+->where(["first_name" = "Gökhan"])
+->select("first_name")
+->order("id")
+->limit("10")
+->take();
 
 foreach ($user as $user)
-  echo $user->first_name;
+echo $user->first_name;
 ```
 
 > `pluck`
@@ -516,11 +516,11 @@ echo User::load()->where(["first_name" => "Gökhan"])->count();
 // Department ["id", "name"], User ["id", "department_id", "first_name"], "Address" ["id", "user_id", "content"]
 
 $department = Department::load()
-                ->joins(["User", "Address"])
-                ->where(["User.id" => "1"])
-                ->select("User.first_name, Department.name, Address.content")
-                ->limit(1)
-                ->take();
+->joins(["User", "Address"])
+->where(["User.id" => "1"])
+->select("User.first_name, Department.name, Address.content")
+->limit(1)
+->take();
 print_r($department);
 ```
 
@@ -543,7 +543,7 @@ echo $user->first_name;
 ```php
 $users = User::find_all([1, 2, 3]);
 foreach ($users as $user)
-  echo $user->first_name;
+echo $user->first_name;
 ```
 
 > `all`
@@ -551,7 +551,7 @@ foreach ($users as $user)
 ```php
 $users = User::all();
 foreach ($users as $user)
-  echo $user->first_name;
+echo $user->first_name;
 ```
 
 > `first`
@@ -565,7 +565,7 @@ echo $user->first_name;
 // Ör. 2:
 $users = User::first(10);
 foreach ($users as $user)
-  echo $user->first_name;
+echo $user->first_name;
 ```
 
 > `last`
@@ -580,7 +580,7 @@ echo $user->first_name;
 
 $users = User::last(10);
 foreach ($users as $user)
-  echo $user->first_name;
+echo $user->first_name;
 ```
 
 > `exists`
@@ -610,15 +610,15 @@ $users = User::find_all([1, 2, 3]);
 $users = User::load()->take();
 $users = User::all();
 $users = User::load()
-           ->where(["first_name" = "Gökhan"])
-           ->select("first_name")
-           ->order("id")
-           ->limit("10")
-           ->take();
+->where(["first_name" = "Gökhan"])
+->select("first_name")
+->order("id")
+->limit("10")
+->take();
 $users = User::first(10);
 foreach ($users as $user) {
-  $user->first_name = "Göktuğ";
-  $user->save();
+$user->first_name = "Göktuğ";
+$user->save();
 }
 ```
 
@@ -635,13 +635,13 @@ $users = User::find_all([1, 2, 3]);
 $users = User::load()->take();
 $users = User::all();
 $users = User::load()
-           ->where(["first_name" = "Gökhan"])
-           ->select("first_name")
-           ->order("id")
-           ->limit("10")
-           ->take();
+->where(["first_name" = "Gökhan"])
+->select("first_name")
+->order("id")
+->limit("10")
+->take();
 foreach ($users as $user)
-  User::update($user->id, array("first_name" => "Göktuğ", "last_name" => "Demir"));
+User::update($user->id, array("first_name" => "Göktuğ", "last_name" => "Demir"));
 ```
 
 #### DELETE ( `destroy`, `delete`, `delete_all` )
@@ -673,6 +673,70 @@ User::load()->where(["first_name" => "Gökhan"])->limit(10)->delete_all();
 User::load()->limit(10)->delete_all();
 ```
 
+#### Dependencies (`$BELONG_TABLE->OWNER_TABLE`, `$OWNER_TABLE->all_of_BELONG_TABLE`)
+
+> `$BELONG_TABLE->OWNER_TABLE`
+
+```php
+// Department ["id", "name"]
+// User ["id", "department_id", "first_name", "last_name"]
+// Book ["id", "user_id", "name"]
+
+// Department
+// [1, "Bilgisayar Mühendisliği"]
+// [2, "Makine Mühendisliği"]
+
+// User
+// [1, 1, "Gökhan", "Demir"]
+// [2, 1, "Göktuğ", "Demir"]
+// [3, 2, "Göksen", "Demir"]
+
+// Book
+// [1, 1, "Barak Türkmenlerinin Tarihi"]
+// [2, 1, "Oğuz Boyu"]
+// [3, 3, "Almila"]
+
+// Ör. 1:
+
+$book = Book::find(1);
+// [1, 1, "Barak Türkmenlerinin Tarihi"]
+
+print_r($book->user);
+// [1, 1, "Gökhan", "Demir"]
+
+print_r($book->user->department);
+// [1, "Bilgisayar Mühendisliği"]
+
+echo "$book->user->department->name $book->user->first_name  $book->name";
+// "Bilgisayar Mühendisliği Gökhan Barak Türkmenlerinin Tarihi"
+
+```
+
+> `$OWNER_TABLE->all_of_BELONG_TABLE`
+
+```php
+// User ["id", "department_id", "first_name", "last_name"]
+// Book ["id", "user_id", "name"]
+
+// User
+// [1, 1, "Gökhan", "Demir"]
+// [2, 1, "Göktuğ", "Demir"]
+// [3, 2, "Göksen", "Demir"]
+
+// Book
+// [1, 1, "Barak Türkmenlerinin Tarihi"]
+// [2, 1, "Oğuz Boyu"]
+// [3, 2, "Kımız"]
+// [4, 3, "Almila"]
+
+$user = User::find(1);
+$books = $user->all_of_book;
+foreach ($books as $book)
+  echo $book->name;
+
+```
+
+
 ### Config and Database (`config/database.ini`, `config/application.ini`, `db/seeds.php`)
 ---
 
@@ -686,7 +750,6 @@ pass  = barak
 name  = BARAK
 ```
 
-
 > `config/application.ini` (application configuration file)
 
 ```ini
@@ -699,10 +762,10 @@ time_zone      = Europe/Istanbul
 
 ```php
 if (User::load()->count() == 0) {
-  User::create(["first_name" => "Gökhan", "last_name" => "Demir", "username" => "gdemir",  "password" => "123456"]);
-  User::create(["first_name" => "Gökçe",  "last_name" => "Demir", "username" => "gcdemir", "password" => "123456"]);
-  User::create(["first_name" => "Göktuğ", "last_name" => "Demir", "username" => "gtdemir", "password" => "123456"]);
-  User::create(["first_name" => "Atilla", "last_name" => "Demir", "username" => "ademir",  "password" => "123456"]);
+User::create(["first_name" => "Gökhan", "last_name" => "Demir", "username" => "gdemir",  "password" => "123456"]);
+User::create(["first_name" => "Gökçe",  "last_name" => "Demir", "username" => "gcdemir", "password" => "123456"]);
+User::create(["first_name" => "Göktuğ", "last_name" => "Demir", "username" => "gtdemir", "password" => "123456"]);
+User::create(["first_name" => "Atilla", "last_name" => "Demir", "username" => "ademir",  "password" => "123456"]);
 }
 ```
 

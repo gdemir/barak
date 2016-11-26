@@ -26,18 +26,23 @@ class ProductController extends AdminController {
       $product->save();
     }
 
+    $_SESSION["success"] = "Yeni ürün eklendi";
     $this->redirect_to("/admin/product/show/" . $product->id);
   }
 
   public function show() {
-    if (!$this->product = Product::find($this->id))
+    if (!$this->product = Product::find($this->id)) {
+      $_SESSION["danger"] = "Böyle bir ürün bulunmamaktadır";
       return $this->redirect_to("/admin/product");
+    }
   }
 
   public function edit() {
   	$this->categories = Category::all();
-    if (!$this->product = Product::find($this->id))
+    if (!$this->product = Product::find($this->id)) {
+      $_SESSION["danger"] = "Böyle bir ürün bulunmamaktadır";
       return $this->redirect_to("/admin/product");
+    }
   }
 
   public function update() {
@@ -57,6 +62,7 @@ class ProductController extends AdminController {
       $product->save();
     }
 
+    $_SESSION["info"] = "Ürün güncellendi";
     $this->redirect_to("/admin/product/show/" . $product->id);
   }
 
@@ -67,6 +73,7 @@ class ProductController extends AdminController {
     ImageHelper::file_remove($product->file);
 
     $product->destroy();
+    $_SESSION["info"] = "Ürün silindi";
     return $this->redirect_to("/admin/product");
   }
 

@@ -97,7 +97,7 @@
                   <li class="dropdown-submenu">
                     <a href="/home/categorypage/show/<?= $category->id; ?>"><?= $category->name; ?></a>
                     <ul class="dropdown-menu">
-                      <?php foreach (Producttype::load()->where(["category_id" => $category->id])->take() as $producttype) { ?>
+                      <?php foreach ($category->all_of_producttype as $producttype) { ?>
                       <li><a href="/home/producttypepage/show/<?= $producttype->id; ?>"><?= $producttype->name; ?></a></li>
                       <?php } ?>
                     </ul>
@@ -151,9 +151,9 @@
       </div>
     </div>
 
-    <?php render('signin_modal'); ?>
-    <?php render('home_footer'); ?>
-    <?php render('nav-up-down', 'layouts'); ?>
+    <?php render("signin_modal", "home"); ?>
+    <?php render("home_footer", "home"); ?>
+    <?php render("nav-up-down", "layouts"); ?>
 
     <!-- dropdown hover start -->
     <script src="/app/assets/js/bootstrap-hover-dropdown.min.js"></script>

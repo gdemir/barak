@@ -93,7 +93,8 @@
 
         <!-- bildirimleri göster ve temizle -->
 
-        <?php render("notice", "layouts"); ?>
+        <?= BootstrapHelper::notice_show(); ?>
+        <?php BootstrapHelper::notice_clear(); ?>
 
 
         {yield}

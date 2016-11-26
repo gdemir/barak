@@ -37,7 +37,10 @@
     <label class="col-sm-1 control-label" for="file">Dosya</label>
     <div class="col-sm-11">
       <div class="thumbnail">
-        <img src="<?= $product->file; ?> " width="100" height="100" />
+        <embed src="<?= $product->file; ?>" style="width:100%;height:150px"></embed>
+        <div class="caption" style="text-align:center;">
+          <a class="fa fa-download fa-3x" download href="<?= $product->file; ?>"></a>
+        </div>
       </div>
     </div>
   </div>

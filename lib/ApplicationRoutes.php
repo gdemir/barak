@@ -40,9 +40,13 @@ class ApplicationRoutes {
     // }
 
     // İstek url ile routes'ı içinden bul ve sevk et
-    $route = $r->get_route($request_route);
-
-    $route->run();
+    if ($route = $r->get_route($request_route)) {
+      $route->run();
+    } else {
+      $v = new ApplicationView();
+      $v->set(["text" => _404()]);
+      $v->run();
+    }
   }
 
   public function get_route(ApplicationRoute $request_route) { // __get($request_route) // is not support object, only string
@@ -89,11 +93,8 @@ class ApplicationRoutes {
           }
         }
       }
-      // $v = new ApplicationView();
-      // $v->render(["file" => "public/404.php"]);
-      // $v->run();
-      // $v->render(["status" => 404, "file" => ]);
-      throw new ConfigurationException("Böyle bir yönlendirme mevcut değil", $request_route->_method . ":" . $request_route->_rule);
+      return null;
+      //throw new ConfigurationException("Böyle bir yönlendirme mevcut değil", $request_route->_method . ":" . $request_route->_rule);
     }
     throw new ConfigurationException("Uzay çağında bizim henüz desteklemediğimiz bir method", $request_route->_method);
   }

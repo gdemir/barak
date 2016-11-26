@@ -13,7 +13,8 @@ ApplicationRoutes::draw(
 
 
   // HOME
-  // get("/", "home#index"),
+  get("/", "home#index"),
+  get("/home", "home#index"),
 
   get("/home/index"),
   get("/home/about"),

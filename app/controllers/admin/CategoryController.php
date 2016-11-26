@@ -19,18 +19,22 @@ class CategoryController extends AdminController {
       $category->image = ImageHelper::file_upload($image, "/upload/category", $category->id);
       $category->save();
     }
-
+    $_SESSION["success"] = "Yeni kategori eklendi";
     $this->redirect_to("/admin/category/show/" . $category->id);
   }
 
   public function show() {
-    if (!$this->category = Category::find($this->id))
+    if (!$this->category = Category::find($this->id)) {
+    	$_SESSION["danger"] = "Böyle bir kategori bulunmamaktadır";
       return $this->redirect_to("/admin/category");
+    }
   }
 
   public function edit() {
-    if (!$this->category = Category::find($this->id))
+    if (!$this->category = Category::find($this->id)) {
+    	$_SESSION["danger"] = "Böyle bir kategori bulunmamaktadır";
       return $this->redirect_to("/admin/category");
+    }
   }
 
   public function update() {
@@ -44,15 +48,16 @@ class CategoryController extends AdminController {
       $category->save();
     }
 
+    $_SESSION["info"] = "Kategori güncellendi";
     $this->redirect_to("/admin/category/show/" . $category->id);
   }
 
   public function destroy() {
     $category = Category::find($_POST["id"]);
-
     ImageHelper::file_remove($category->image);
-
     $category->destroy();
+
+    $_SESSION["info"] = "Kategori silindi";
     return $this->redirect_to("/admin/category");
   }
 }

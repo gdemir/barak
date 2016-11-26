@@ -23,7 +23,6 @@ class UserController extends AdminController {
 
     $image = $_FILES["image"];
     if ($image["name"] != "") {// varsa yeni resmi ekle
-
       $user->image = ImageHelper::file_upload($image, "/upload/user", $user->id);
       $user->save();
     }

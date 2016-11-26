@@ -35,6 +35,7 @@ class ProductController extends AdminController {
   }
 
   public function edit() {
+  	$this->categories = Category::all();
     if (!$this->product = Product::find($this->id))
       return $this->redirect_to("/admin/product");
   }

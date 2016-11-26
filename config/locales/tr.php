@@ -11,26 +11,20 @@ return [
 ],
 
 // for URL pages
-"home" => "Ana Sayfa",
-"index" => "Index",
 
-"corporate" => "Kurumsal",
 
-"about" => "Hakkımızda",
-"service_policy" => "Hizmet Politikamız",
-"our_focus" => "Odak Noktamız",
-"human_resources" => "Kariyer",
-
-"categorypage" => "Kategoriler",
-"producttypepage" => "Ürün Tipleri",
-"productpage" => "Ürünler",
-
-"contact" => "İletişim",
-
-"search" => "Ara",
-
-"show" => "Göster",
-"1" => "1"
+"home" => [
+"index" => "Anasayfa",
+"about" => ["index" => "Hakkımızda"],
+"contact" => ["index" => "İletişim"],
+"service_policy" => ["index" => "Hizmet Politikamız"],
+"our_focus" => ["index" => "Odak Noktamız"],
+"human_resources" => ["index" => "Kariyer"],
+"corporate" => ["index" => "Kurumsal"],
+"categorypage" => ["index" => "Kategoriler", "show" => ["index"=> "Kategori"]],
+"producttypepage" => ["index" => "Ürün Tipleri", "show" => ["index" => "Ürün Tipi"]],
+"productpage" => ["index" => "Ürünler", "show" => ["index" => "Ürün"], "search" => ["index" => "Ürün Ara"]],
+]
 
 ];
 

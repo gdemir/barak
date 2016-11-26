@@ -14,22 +14,22 @@ class AdminController extends ApplicationController {
 
       if ($user = User::unique(["username" => $_POST["username"], "password" => $_POST["password"]])) {
 
-        $GLOBALS["success"] = "Admin sayfasına hoş geldiniz";
-        $_SESSION['full_name'] = "$user->first_name $user->last_name";
-        $_SESSION["admin"] = true;
+        $_SESSION["success"] = "Admin sayfasına hoş geldiniz";
+        $_SESSION["full_name"] = "$user->first_name $user->last_name";
+        $_SESSION["admin"] = $user->id;
         return $this->render("/admin/index");
 
       } else {
 
-        $GLOBALS['danger'] = "şifre veya parola hatalı";
-        echo $GLOBALS['danger'];
+        $_SESSION["danger"] = "Oops! İsminiz veya şifreniz hatalı, belki de bunlardan sadece biri hatalıdır?";
 
       }
     }
+
     return $this->render(["layout" => "default"]);
   }
 
-  public function index() {} // OPTIONAL
+  // public function index() {} // OPTIONAL
 
   public function logout() {
     if (isset($_SESSION["admin"]))
@@ -38,8 +38,10 @@ class AdminController extends ApplicationController {
   }
 
   public function require_login() {
-    if (!isset($_SESSION['admin']))
+    if (!isset($_SESSION["admin"])) {
+      $_SESSION["warning"] = "Lütfen hesabınıza giriş yapın!";
       return $this->redirect_to("/admin/login");
+    }
   }
 }
 ?>

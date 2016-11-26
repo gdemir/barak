@@ -1,4 +1,4 @@
-<h4 class="page-title">Kullanıcı Ekle</h4>
+<h4 class="page-title">Personel Ekle</h4>
 
 <form class="form-horizontal" action="/admin/user/create" accept-charset="UTF-8" method="post" enctype="multipart/form-data">
   <div class="form-group">
@@ -53,7 +53,7 @@
     </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-1 control-label" for="admin">Yönetici</label>
+    <label class="col-sm-1 control-label" for="admin">Admin</label>
     <div class="col-sm-11">
       <select class="form-control" id="admin" name="admin">
         <option value="1" selected>Evet</option>

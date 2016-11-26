@@ -56,6 +56,7 @@ class ApplicationView {
   public function run($params = null) {
 
     if (isset($this->_text)) {
+
       return self::text_display();
     }
 
@@ -86,7 +87,7 @@ class ApplicationView {
       $this->_content = self::page_content();
     }
 
-    self::page_display($params);
+    self::content_display($params);
   }
 
   // merge LAYOUT and TEMPLATE content
@@ -111,7 +112,7 @@ class ApplicationView {
     return file_get_contents($template_path);
   }
 
-  private function page_display($params = null) {
+  private function content_display($params = null) {
 
     if (!is_null($params)) {
       // controller'in paramslarını yükle
@@ -129,5 +130,6 @@ class ApplicationView {
   private function text_display() {
   	echo $this->_text;
   }
+
 }
 ?>

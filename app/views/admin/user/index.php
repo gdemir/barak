@@ -1,4 +1,4 @@
-<h4 class="page-title">Aktif Kullanıcılar</h4>
+<h4 class="page-title">Personeller</h4>
 
 <table id="example" class="table table-striped table-hover dt-responsive" cellspacing="0" width="100%">
   <thead>
@@ -8,7 +8,7 @@
       <th>Kullanıcı Adı</th>
       <th>Telefon</th>
       <th>Email</th>
-      <th>Yönetici</th>
+      <th>Admin</th>
       <th>Patron</th>
       <th>Oluştu</th>
       <th>Düzenlendi</th>
@@ -29,9 +29,9 @@
       <td><?= $user->created_at; ?></td>
       <td><?= $user->updated_at; ?></td>
       <td>
-        <form action="/admin/users/del.php" method="post">
-          <a href="/admin/users/show/<?= $user->id; ?>" class="btn btn-default" role="button" title="Göster"><i class="fa fa-search"></i></a>
-          <a href="/admin/users/edit/<?= $user->id; ?>" class="btn btn-default" role="button" title="Düzenle"><i class="fa fa-edit"></i></a>
+        <form action="/admin/user/del.php" method="post">
+          <a href="/admin/user/show/<?= $user->id; ?>" class="btn btn-default" role="button" title="Göster"><i class="fa fa-search"></i></a>
+          <a href="/admin/user/edit/<?= $user->id; ?>" class="btn btn-default" role="button" title="Düzenle"><i class="fa fa-edit"></i></a>
 
           <input type="hidden" value="<?= $user->id; ?>" id="id" name="id" />
           <button type="submit" class="btn btn-default"

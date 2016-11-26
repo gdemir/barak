@@ -3,21 +3,21 @@
 <form class="form-horizontal" action="/admin/product/update" accept-charset="UTF-8" method="post" enctype="multipart/form-data">
   <input type="hidden" value="<?= $product->id; ?>" name="id" id="id" />
   <div class="form-group">
-    <label class="col-sm-1 control-label" for="name">Kategori</label>
+    <label class="col-sm-1 control-label" for="category_id">Kategori</label>
     <div class="col-sm-11">
-      <input type="text" value="<?= $product->producttype->category->name; ?>" class="form-control" size="50" name="name" id="name" />
+      <input type="text" value="<?= $product->producttype->category->name; ?>" class="form-control" name="category_name" id="category_name" disabled />
     </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-1 control-label" for="category_id">Kategori</label>
+    <label class="col-sm-1 control-label" for="producttype_name">Ürün Tipi</label>
     <div class="col-sm-11">
-      <select class="form-control" id="category_id" name="category_id">
-        <?php foreach ($categories as $category) { ?>
-        <option value="<?= $category->id; ?>"<?= ($product->producttype->category_id == $category->id) ? "selected" : ""; ?>>
-          <?= $category->name; ?>
-        </option>
-        <?php } ?>
-      </select>
+      <input type="text" value="<?= $product->producttype->name; ?>" class="form-control" name="producttype_name" id="producttype_name" disabled />
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-1 control-label" for="name">Ad</label>
+    <div class="col-sm-11">
+      <input type="text" value="<?= $product->name; ?>" class="form-control" size="50" name="name" id="name" />
     </div>
   </div>
   <div class="form-group">
@@ -41,7 +41,10 @@
     <label class="col-sm-1 control-label" for="image">Dosya</label>
     <div class="col-sm-11">
       <div class="thumbnail">
-        <img src="<?= $product->file; ?>" width="100" height="100" />
+        <embed src="<?= $product->file; ?>" style="width:100%;height:200px"></embed>
+        <div style="text-align:center;">
+          <a class="fa fa-download fa-3x" download href="<?= $product->file; ?>"></a>
+        </div>
         <div class="caption">
           <input type="file" id="file" name="file" class="form-control" />
         </div>

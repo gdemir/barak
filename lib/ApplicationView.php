@@ -128,7 +128,7 @@ class ApplicationView {
   }
 
   private function text_display() {
-  	echo $this->_text;
+    echo $this->_text;
   }
 
 }

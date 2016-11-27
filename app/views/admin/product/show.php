@@ -26,6 +26,12 @@
     </div>
   </div>
   <div class="form-group">
+    <label class="col-sm-1 control-label" for="price">Fiyat</label>
+    <div class="col-sm-11">
+      <input type="text" value="<?= $product->price; ?>" class="form-control" name="price" id="price" disabled/>
+    </div>
+  </div>
+  <div class="form-group">
     <label class="col-sm-1 control-label" for="image">Resim</label>
     <div class="col-sm-11">
       <div class="thumbnail">

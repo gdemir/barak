@@ -17,13 +17,19 @@
   <div class="form-group">
     <label class="col-sm-1 control-label" for="name">Ad</label>
     <div class="col-sm-11">
-      <input type="text" value="<?= $product->name; ?>" class="form-control" size="50" name="name" id="name" />
+      <input type="text" value="<?= $product->name; ?>" class="form-control" name="name" id="name" />
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-1 control-label" for="content">İçerik</label>
     <div class="col-sm-11">
       <textarea class="form-control" rows="10" name="content" id="content"><?= $product->content; ?></textarea>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-1 control-label" for="price">Fiyat</label>
+    <div class="col-sm-11">
+      <input type="text" value="<?= $product->price; ?>" class="form-control" name="price" id="price" />
     </div>
   </div>
   <div class="form-group">

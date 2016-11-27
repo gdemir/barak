@@ -93,12 +93,12 @@
               <li class="dropdown-submenu">
                 <a tabindex="-1" href="/home/categorypage"><?= t("home.categorypage.index"); ?></a>
                 <ul class="dropdown-menu">
-                  <?php foreach (Category::all() as $category) { ?>
+                  <?php foreach (Category::all() as $_c) { ?>
                   <li class="dropdown-submenu">
-                    <a href="/home/categorypage/show/<?= $category->id; ?>"><?= $category->name; ?></a>
+                    <a href="/home/categorypage/show/<?= $_c->id; ?>"><?= $_c->name; ?></a>
                     <ul class="dropdown-menu">
-                      <?php foreach ($category->all_of_producttype as $producttype) { ?>
-                      <li><a href="/home/producttypepage/show/<?= $producttype->id; ?>"><?= $producttype->name; ?></a></li>
+                      <?php foreach ($_c->all_of_producttype as $_pt) { ?>
+                      <li><a href="/home/producttypepage/show/<?= $_pt->id; ?>"><?= $_pt->name; ?></a></li>
                       <?php } ?>
                     </ul>
                   </li>
@@ -125,7 +125,9 @@
 
   </div>
 
-  <?php if (!in_array($_SERVER["REQUEST_URI"], ["/", "/home", "/home/index"])) { ?> <div class="well well-sm"> <?= BootstrapHelper::page_title_and_breadcrumb(); ?>
+  <?php if (!in_array($_SERVER["REQUEST_URI"], ["/", "/home", "/home/index"])) { ?>
+  <div class="well well-sm">
+  	<!-- BootstrapHelper::page_title_and_breadcrumb(); -->
 
   <?php } else { ?>
 

@@ -32,6 +32,12 @@
     </div>
   </div>
   <div class="form-group">
+    <label class="col-sm-1 control-label" for="price">Fiyat</label>
+    <div class="col-sm-11">
+      <input type="text" placeholder="Ad" class="form-control" name="price" id="price" />
+    </div>
+  </div>
+  <div class="form-group">
     <label class="col-sm-1 control-label" for="image">Resim</label>
     <div class="col-sm-11">
       <input type="file" id="image" name="image" class="form-control" />

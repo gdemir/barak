@@ -21,7 +21,11 @@ class ApplicationRoute {
 
     if ($match) {
 
-      $option = explode("/", trim($rule, "/"));
+      if ($target) // TODO Rewrite
+        $option = explode("#", trim($target, "/"));
+      else
+        $option = explode("/", trim($rule, "/"));
+
       self::set($method, $match, $this->_path . $rule, preg_replace("|:[\w]+|", self::dynamical_segment, $rule), $option[0], $option[1]);
 
     } elseif ($target) {

@@ -5,32 +5,32 @@ class ImageHelper {
   public static function upload_path() {
     return $_SERVER["DOCUMENT_ROOT"];
   }
-  //const UPLOADPATH = "/var/www/html/";
 
-// example file_upload
-//
-// HTML
-//<form method="post" enctype="multipart/form-data">
-//  <input type="file" id="file" name="file" multiple class="form-control"/>
-//  <button type="submit" class="btn btn-primary">Send</button>
-//</form>
-//
-// PHP
-// $file = $_FILES['file'];
-//
-// ImageHelper::file_upload($file, "/upload", "logo");
-// return "/upload/logo.png";
-// ImageHelper::file_upload($file, "/upload", "file");
-// return "/upload/file.txt";
-// ImageHelper::file_upload($file, "/upload/users", "logo");
-// return /upload/users/logo.png";
-// ImageHelper::file_upload($file, "/upload/texts", "file");
-// return "/upload/texts/file.txt";
-//
-// NOTE
-// $_SERVER["DOCUMENT_ROOT"] owner should be www-data
-// sudo chown www-data:www-data /var/www/
-// sudo chown www-data:www-data /var/www/PROJECT
+  // example file_upload
+  //
+  // HTML
+  //<form method="post" enctype="multipart/form-data">
+  //  <input type="file" id="file" name="file" multiple class="form-control"/>
+  //  <button type="submit" class="btn btn-primary">Send</button>
+  //</form>
+  //
+  // PHP
+  // $file = $_FILES['file'];
+  //
+  // ImageHelper::file_upload($file, "/upload", "logo");
+  // return "/upload/logo.png";
+  // ImageHelper::file_upload($file, "/upload", "file");
+  // return "/upload/file.txt";
+  // ImageHelper::file_upload($file, "/upload/users", "logo");
+  // return /upload/users/logo.png";
+  // ImageHelper::file_upload($file, "/upload/texts", "file");
+  // return "/upload/texts/file.txt";
+  //
+  // NOTE
+  // $_SERVER["DOCUMENT_ROOT"] owner should be www-data
+  // sudo chown www-data:www-data /var/www/
+  // sudo chown www-data:www-data /var/www/PROJECT
+
   public static function file_upload($file, $upload_directory, $upload_file) {
 
     $temp_file = $file["tmp_name"];

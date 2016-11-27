@@ -12,6 +12,7 @@ return [
 
 // for URL pages
 
+"index" => "index",
 
 "home" => [
 "index" => "Anasayfa",

@@ -1,4 +1,3 @@
-
 <!-- first section - Home -->
 <div class="parallax" style="background: url(<?= $category->image; ?>) no-repeat center fixed">
   <div class="parallax-caption">
@@ -16,7 +15,6 @@
       <tr>
         <th></th>
         <th>Ad</th>
-        <th>İçerik</th>
         <th>Çeşit</th>
         <th></th>
       </tr>
@@ -27,23 +25,20 @@
       <tr>
         <td><img src="<?= $producttype->category->image ?>" style="width:200px"></td>
         <td><?= $producttype->name ?></td>
-        <td><?= $producttype->content ?></td>
         <td><?= count($producttype->all_of_product); ?></td>
         <td>
-          <a href="/home/producttypepage/show/<?= $producttype->id; ?>"
-            class="btn btn-default" role="button" title="Göster"><i class="fa fa-search"></i>Göster
+          <a href="/home/producttypepage/show/<?= $producttype->id; ?>" class="btn btn-default" role="button" title="Göster">
+            <i class="fa fa-search"></i>Göster
           </a>
+        </td>
+      </tr>
 
-        </form>
-      </td>
-    </tr>
-
-    <?php } ?>
-    <?php } else { ?>
-    <tr class="text-center"><td colspan="4">Henüz Ürün Tipi mevcut değil</td></tr>
-    <?php } ?>
-  </tbody>
-</table>
+      <?php } ?>
+      <?php } else { ?>
+      <tr class="text-center"><td colspan="4">Henüz Ürün Tipi mevcut değil</td></tr>
+      <?php } ?>
+    </tbody>
+  </table>
 
 
 </div>

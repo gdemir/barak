@@ -11,7 +11,6 @@ ApplicationRoutes::draw(
   get("/lang/en"),
   get("/lang/tr"),
 
-
   // HOME
   get("/", "home#index"),
   get("/home", "home#index"),
@@ -24,6 +23,17 @@ ApplicationRoutes::draw(
   get("/home/contact"),
 
   scope("home",
+
+    [
+    get("/products/:category_id/:producttype_id/:product_id", "page#productshow"),
+    get("/products/:category_id/:producttype_id", "page#producttypeshow"),
+    get("/products/:category_id", "page#categoryshow"),
+    get("/products", "page#categories"),
+
+    get("/products/search", "page#productsearch"),
+    post("/products/find", "page#productfind"),
+    post("/producttypes/find", "page#producttypefind"),
+    ],
 
     [
     get("/categorypage", "categorypage#index"),

@@ -1,4 +1,4 @@
-<?php $producttype = Producttype::find($id); ?>
+
 
 <center>
 

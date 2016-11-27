@@ -28,7 +28,7 @@
         <td><img src="<?= $producttype->category->image ?>" style="width:200px"></td>
         <td><?= $producttype->name ?></td>
         <td><?= $producttype->content ?></td>
-        <td><?= Product::load()->where(["producttype_id" => $producttype->id])->count(); ?></td>
+        <td><?= count($producttype->all_of_product); ?></td>
         <td>
           <a href="/home/producttypepage/show/<?= $producttype->id; ?>"
             class="btn btn-default" role="button" title="Göster"><i class="fa fa-search"></i>Göster

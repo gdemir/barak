@@ -125,43 +125,45 @@
 
   </div>
 
-  <?php if (!in_array($_SERVER["REQUEST_URI"], ["/", "/home", "/home/index"])) { ?>
+  <?php if (!in_array($_SERVER["REQUEST_URI"], ["/", "/home", "/home/index"])) { ?> <div class="well well-sm"> <?= BootstrapHelper::page_title_and_breadcrumb(); ?>
 
-  <div class="well well-sm">
-    <?= BootstrapHelper::page_title_and_breadcrumb(); ?>
+  <?php } else { ?>
 
-    <?php } else { ?>
+  <div>
 
-    <div>
+    <?php } ?>
 
-      <?php } ?>
+    <!-- bildirimleri göster ve temizle -->
 
-      {yield}
+    <?= BootstrapHelper::notice_show(); ?>
+    <?php BootstrapHelper::notice_clear(); ?>
 
-    </div>
+    {yield}
 
-    <div class="well well-lg" style="background-color:#465568; color:white">
+  </div>
 
-      <div class="row">
-        <div class="col-md-9 col-sm-12 col-xs-12">
-          Aksi belirtilmedikçe <a href="http://olt.com.tr" target="_blank">olt.com.tr</a> tarafından tüm içerik hakları saklıdır.
-        </div>
-        <div class="col-md-3 hidden-sm hidden-xs">
-        </div>
+  <div class="well well-lg" style="background-color:#465568; color:white">
+
+    <div class="row">
+      <div class="col-md-9 col-sm-12 col-xs-12">
+        Aksi belirtilmedikçe <a href="http://olt.com.tr" target="_blank">olt.com.tr</a> tarafından tüm içerik hakları saklıdır.
+      </div>
+      <div class="col-md-3 hidden-sm hidden-xs">
       </div>
     </div>
+  </div>
 
-    <?php render("signin_modal", "home"); ?>
-    <?php render("home_footer", "home"); ?>
-    <?php render("nav-up-down", "layouts"); ?>
+  <?php render("signin_modal", "home"); ?>
+  <?php render("home_footer", "home"); ?>
+  <?php render("nav-up-down", "layouts"); ?>
 
-    <!-- dropdown hover start -->
-    <script src="/app/assets/js/bootstrap-hover-dropdown.min.js"></script>
-    <script type="text/javascript">
-    $('.dropdown-toggle').dropdownHover();
-    </script>
-    <!-- dropdown hover end -->
+  <!-- dropdown hover start -->
+  <script src="/app/assets/js/bootstrap-hover-dropdown.min.js"></script>
+  <script type="text/javascript">
+  $('.dropdown-toggle').dropdownHover();
+  </script>
+  <!-- dropdown hover end -->
 
 
-  </body>
-  </html>
+</body>
+</html>

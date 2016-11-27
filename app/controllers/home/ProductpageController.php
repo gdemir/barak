@@ -3,9 +3,7 @@
 class ProductpageController extends HomeController {
 
   public function index() {
-
     $this->products = Product::all();
-
   }
 
   public function search() {
@@ -26,12 +24,17 @@ class ProductpageController extends HomeController {
 
   public function find() {
 
-    if (!Product::find($_POST["product_id"]))
+    if (!$product = Product::find($_POST["product_id"]))
       return $this->redirect_to("/home/index");
-    return $this->redirect_to("/home/productpage/show/" . $_POST["product_id"]);
+    return $this->redirect_to("/home/productpage/show/" . $product->id);
   }
 
-  // public function show() {}
+  public function show() {
+    if (!$this->product = Product::find($this->id)) {
+      $_SESSION["danger"] = "Böyle bir ürün bulunmamaktadır";
+      return $this->redirect_to("/home/productpage");
+    }
+  }
 
 }
 

@@ -8,7 +8,10 @@ class CategorypageController extends HomeController {
   }
 
   public function show() {
-    $this->category = Category::find($this->id);
+    if (!$this->category = Category::find($this->id)) {
+      $_SESSION["danger"] = "Böyle bir kategori bulunmamaktadır";
+      return $this->redirect_to("/home/categorypage");
+    }
     $this->producttypes = $this->category->all_of_producttype;
   }
 

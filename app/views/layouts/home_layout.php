@@ -71,34 +71,34 @@
 
       <div class="col-xs-8">
         <ul class="nav nav-pills">
-          <li role="presentation"><a href="/home/index"><?= t("home.index"); ?></a></li>
+          <li role="presentation"><a href="/home/index"><?= t("home.page"); ?></a></li>
           <li role="presentation" class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"> <?= t("home.corporate.index"); ?>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"> <?= t("home.corporate"); ?>
               <b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
-              <li><a href="/home/about"><?= t("home.about.index"); ?></a></li>
-              <li><a href="/home/service_policy"><?= t("home.service_policy.index"); ?></a></li>
-              <li><a href="/home/our_focus"><?= t("home.our_focus.index"); ?></a></li>
-              <li><a href="/home/human_resources"><?= t("home.human_resources.index"); ?></a></li>
+            	<li><a href="/home/human_resources"><?= t("home.human_resources"); ?></a></li>
+              <li><a href="/home/about"><?= t("home.about"); ?></a></li>
+              <li><a href="/home/our_focus"><?= t("home.our_focus"); ?></a></li>
+              <li><a href="/home/service_policy"><?= t("home.service_policy"); ?></a></li>
             </ul>
           </li>
 
           <li role="presentation" class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"> <?= t("home.productpage.index"); ?>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"> <?= t("home.products"); ?>
               <b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
 
               <li class="dropdown-submenu">
-                <a tabindex="-1" href="/home/categorypage"><?= t("home.categorypage.index"); ?></a>
+                <a tabindex="-1" href="/home/categories"><?= t("home.categories"); ?></a>
                 <ul class="dropdown-menu">
                   <?php foreach (Category::all() as $_c) { ?>
                   <li class="dropdown-submenu">
-                    <a href="/home/categorypage/show/<?= $_c->id; ?>"><?= $_c->name; ?></a>
+                    <a href="/home/categories/show/<?= $_c->id; ?>"><?= $_c->name; ?></a>
                     <ul class="dropdown-menu">
                       <?php foreach ($_c->all_of_producttype as $_pt) { ?>
-                      <li><a href="/home/producttypepage/show/<?= $_pt->id; ?>"><?= $_pt->name; ?></a></li>
+                      <li><a href="/home/producttypes/show/<?= $_pt->id; ?>"><?= $_pt->name; ?></a></li>
                       <?php } ?>
                     </ul>
                   </li>
@@ -106,11 +106,11 @@
                 </ul>
               </li>
 
-              <li><a href="/home/productpage/search"><?= t("home.productpage.search.index"); ?></a></li>
+              <li><a href="/home/products/search"><?= t("home.product_search"); ?></a></li>
             </ul>
           </li>
 
-          <li role="presentation"><a href="/home/contact"><?= t("home.contact.index"); ?></a></li>
+          <li role="presentation"><a href="/home/contact"><?= t("home.contact"); ?></a></li>
         </ul>
       </div>
 
@@ -127,45 +127,45 @@
 
   <?php if (!in_array($_SERVER["REQUEST_URI"], ["/", "/home", "/home/index"])) { ?>
   <div class="well well-sm">
-  	<!-- BootstrapHelper::page_title_and_breadcrumb(); -->
+    <!-- BootstrapHelper::page_title_and_breadcrumb(); -->
 
-  <?php } else { ?>
+    <?php } else { ?>
 
-  <div>
+    <div>
 
-    <?php } ?>
+      <?php } ?>
 
-    <!-- bildirimleri göster ve temizle -->
+      <!-- bildirimleri göster ve temizle -->
 
-    <?= BootstrapHelper::notice_show(); ?>
-    <?php BootstrapHelper::notice_clear(); ?>
+      <?= BootstrapHelper::notice_show(); ?>
+      <?php BootstrapHelper::notice_clear(); ?>
 
-    {yield}
+      {yield}
 
-  </div>
+    </div>
 
-  <div class="well well-lg" style="background-color:#465568; color:white">
+    <div class="well well-lg" style="background-color:#465568; color:white">
 
-    <div class="row">
-      <div class="col-md-9 col-sm-12 col-xs-12">
-        Aksi belirtilmedikçe <a href="http://olt.com.tr" target="_blank">olt.com.tr</a> tarafından tüm içerik hakları saklıdır.
-      </div>
-      <div class="col-md-3 hidden-sm hidden-xs">
+      <div class="row">
+        <div class="col-md-9 col-sm-12 col-xs-12">
+          Aksi belirtilmedikçe <a href="http://olt.com.tr" target="_blank">olt.com.tr</a> tarafından tüm içerik hakları saklıdır.
+        </div>
+        <div class="col-md-3 hidden-sm hidden-xs">
+        </div>
       </div>
     </div>
-  </div>
 
-  <?php render("signin_modal", "home"); ?>
-  <?php render("home_footer", "home"); ?>
-  <?php render("nav-up-down", "layouts"); ?>
+    <?php render("signin_modal", "home"); ?>
+    <?php render("home_footer", "home"); ?>
+    <?php render("nav-up-down", "layouts"); ?>
 
-  <!-- dropdown hover start -->
-  <script src="/app/assets/js/bootstrap-hover-dropdown.min.js"></script>
-  <script type="text/javascript">
-  $('.dropdown-toggle').dropdownHover();
-  </script>
-  <!-- dropdown hover end -->
+    <!-- dropdown hover start -->
+    <script src="/app/assets/js/bootstrap-hover-dropdown.min.js"></script>
+    <script type="text/javascript">
+    $('.dropdown-toggle').dropdownHover();
+    </script>
+    <!-- dropdown hover end -->
 
 
-</body>
-</html>
+  </body>
+  </html>

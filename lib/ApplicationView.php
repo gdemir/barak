@@ -122,9 +122,20 @@ class ApplicationView {
     }
 
     // http://stackoverflow.com/questions/1184628/php-equivalent-of-include-using-eval)
-    eval("?> " . $this->_content . "<?php");
+    $file_name = 'tmp/' . time() . '.php';
+    if (!($fp = fopen($file_name, 'a')))
+      throw new FileNotFoundException("File does not exist", $file_name);
+
+    fwrite($fp, $this->_content);
+
+    fclose($fp);
 
     unset($this->_content);
+    unset($fp);
+
+    include($file_name);
+
+    unlink($file_name);
   }
 
   private function text_display() {

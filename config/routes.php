@@ -12,8 +12,9 @@ ApplicationRoutes::draw(
   get("/lang/tr"),
 
   // HOME
-  get("/", "home#index"),
-  get("/home", "home#index"),
+
+  get("/", "home#home"),
+  get("/home", "home#home"),
 
   get("/home/index"),
   get("/home/about"),
@@ -25,32 +26,20 @@ ApplicationRoutes::draw(
   scope("home",
 
     [
-    get("/products/:category_id/:producttype_id/:product_id", "page#productshow"),
-    get("/products/:category_id/:producttype_id", "page#producttypeshow"),
-    get("/products/:category_id", "page#categoryshow"),
-    get("/products", "page#categories"),
-
-    get("/products/search", "page#productsearch"),
-    post("/products/find", "page#productfind"),
-    post("/producttypes/find", "page#producttypefind"),
+    get("/categories", "categorypage#index"),
+    get("/categories/show/:id", "categorypage#show")
     ],
 
     [
-    get("/categorypage", "categorypage#index"),
-    get("/categorypage/show/:id")
+    get("/products", "productpage#index"),
+    get("/products/search", "productpage#search"),
+    get("/products/show/:id", "productpage#show"),
+    post("/products/find", "productpage#find")
     ],
 
     [
-    get("/productpage", "productpage#index"),
-    get("/productpage/search"),
-    get("/productpage/show/:id"),
-    post("/productpage/find")
-    ],
-
-    [
-    get("/producttypepage", "producttypepage#index"),
-    get("/producttypepage/show/:id"),
-    post("/producttypepage/find")
+    get("/producttypes/show/:id", "producttypepage#show"),
+    post("/producttypes/find", "producttypepage#find")
     ]
 
     ),
@@ -65,16 +54,14 @@ ApplicationRoutes::draw(
   get("/admin/index"),
 
   // get("/category", "category#index", "admin"),
-  //resources("/category", "admin"),
-
-//  post("/category/ajax", false, "admin"),
+  // resources("/category", "admin"),
+  // post("/category/ajax", false, "admin"),
 
   scope("admin",
-    resources("/category"),
-    resources("/producttype"),
-    resources("/product"),
-    resources("/productfeature"),
-    resources("/user")
+    resources("/categories"),
+    resources("/producttypes"),
+    resources("/products"),
+    resources("/users")
     )
 
   );

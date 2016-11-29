@@ -1,6 +1,6 @@
 <h4 class="page-title">Ürün Ekle</h4>
 
-<form class="form-horizontal" action="/admin/product/create" accept-charset="UTF-8" method="post" enctype="multipart/form-data">
+<form class="form-horizontal" action="/admin/products/save" accept-charset="UTF-8" method="post" enctype="multipart/form-data">
   <div class="form-group">
     <label class="col-sm-1 control-label" for="category_id">Kategori</label>
     <div class="col-sm-11">

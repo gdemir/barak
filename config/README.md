@@ -1,7 +1,7 @@
 ### TABLO
 
-- Her tablonun baş harfi büyük diğerleri küçük olmalıdır!
+- Her tablonun adı küçük olmalıdır! // Unix format
 
 - Her tablo `id` değerine sahip olmalı ve auto_increment olmalıdır!
 
-- Her tablonun sütunlarının varsayılan değeri `NULL` gibi bir değer olmalıdır!
+- Her tablonun sütunlarının varsayılan değeri `NULL` olmalıdır! (`id` hariç)

@@ -71,7 +71,7 @@ class ApplicationSql {
 
     foreach ($_fields as $field => $value) if ($value == null) unset($_fields[$field]);
 
-    list($field_keys, $field_symbols, $field_symbol_and_values) = self::hash_to_key_symbol_symbolvalue($_fields);
+    list($field_keys, $field_symbols, $field_symbol_and_values) = (new ApplicationSql)->hash_to_key_symbol_symbolvalue($_fields);
 
     $query = $GLOBALS['db']->prepare("INSERT INTO $_table ( $field_keys ) VALUES ( $field_symbols )");
 
@@ -86,7 +86,7 @@ class ApplicationSql {
     if (empty($_select)) $_select = ["*"];
     $_select = implode(",", $_select);
 
-    list($where_key_and_symbols, $where_symbol_and_values) = self::hash_to_keysymbol_symbolvalue($_where, "and", "WHERE");
+    list($where_key_and_symbols, $where_symbol_and_values) = (new ApplicationSql)->hash_to_keysymbol_symbolvalue($_where, "and", "WHERE");
 
     $query = $GLOBALS['db']->prepare("SELECT $_select FROM $_table $where_key_and_symbols");
 
@@ -98,9 +98,9 @@ class ApplicationSql {
 
   public static function update($_table, $_sets, $_where) {
 
-    list($set_key_and_symbols, $set_symbol_and_values) = self::hash_to_keysymbol_symbolvalue($_sets);
+    list($set_key_and_symbols, $set_symbol_and_values) = (new ApplicationSql)->hash_to_keysymbol_symbolvalue($_sets);
 
-    list($where_key_and_symbols, $where_symbol_and_values) = self::hash_to_keysymbol_symbolvalue($_where, ",");
+    list($where_key_and_symbols, $where_symbol_and_values) = (new ApplicationSql)->hash_to_keysymbol_symbolvalue($_where, ",");
 
     $query = $GLOBALS['db']->prepare("UPDATE `$_table` SET $set_key_and_symbols WHERE $where_key_and_symbols");
 
@@ -110,8 +110,8 @@ class ApplicationSql {
 
   public static function delete($_table, $_fields, $_limit) {
 
-    list($where_key_and_symbols, $where_symbol_and_values) = self::hash_to_keysymbol_symbolvalue($_fields, "and", "WHERE");
-    list($limit_symbol, $limit_command_symbol, $limit_symbol_and_value) = self::var_to_symbol($_limit, "LIMIT");
+    list($where_key_and_symbols, $where_symbol_and_values) = (new ApplicationSql)->hash_to_keysymbol_symbolvalue($_fields, "and", "WHERE");
+    list($limit_symbol, $limit_command_symbol, $limit_symbol_and_value) = (new ApplicationSql)->var_to_symbol($_limit, "LIMIT");
 
     $query = $GLOBALS['db']->prepare("DELETE FROM `$_table` $where_key_and_symbols $limit_command_symbol");
 
@@ -136,10 +136,10 @@ class ApplicationSql {
       $_join_commands = "";
     }
 
-    list($where_command_key_and_symbols, $where_symbol_and_values) = self::hash_to_keysymbol_symbolvalue($_where, "and", "WHERE");
-    list($order_command_symbols, $order_symbol_and_values) = self::list_to_symbol_symbolvalue($_order, "ORDER BY");
-    list($group_command_symbols, $group_symbol_and_values) = self::list_to_symbol_symbolvalue($_group, "GROUP BY");
-    list($limit_symbol, $limit_command_symbol, $limit_symbol_and_value) = self::var_to_symbol($_limit, "LIMIT");
+    list($where_command_key_and_symbols, $where_symbol_and_values) = (new ApplicationSql)->hash_to_keysymbol_symbolvalue($_where, "and", "WHERE");
+    list($order_command_symbols, $order_symbol_and_values) = (new ApplicationSql)->list_to_symbol_symbolvalue($_order, "ORDER BY");
+    list($group_command_symbols, $group_symbol_and_values) = (new ApplicationSql)->list_to_symbol_symbolvalue($_group, "GROUP BY");
+    list($limit_symbol, $limit_command_symbol, $limit_symbol_and_value) = (new ApplicationSql)->var_to_symbol($_limit, "LIMIT");
 
     $sql = "
     SELECT $_select

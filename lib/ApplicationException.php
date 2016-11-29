@@ -19,7 +19,7 @@ class ApplicationException extends Exception {
       <b style = 'color:rgba(201, 2, 92, 0.5);'> %s </b> → %s [<i style = 'color:rgba(201, 2, 92, 0.5);'> %s </i>]
 
       </p>
-      ", static::class, $message, $request
+      ", get_class(), $message, $request
       ));
 
     parent::__construct("$request : $message");

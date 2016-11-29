@@ -1,36 +1,24 @@
-<h4 class="page-title">Ürün Tipi Düzenle</h4>
+<h4 class="page-title">Kategori Düzenle</h4>
 
-<form class="form-horizontal" action="/admin/producttype/update" accept-charset="UTF-8" method="post" enctype="multipart/form-data">
-  <input type="hidden" value="<?= $producttype->id; ?>" name="id" id="id" />
-  <div class="form-group">
-    <label class="col-sm-1 control-label" for="category_id">Kategori</label>
-    <div class="col-sm-11">
-      <select class="form-control" id="category_id" name="category_id">
-        <?php foreach ($categories as $category) { ?>
-        <option value="<?= $category->id; ?>"<?= ($producttype->category_id == $category->id) ? "selected" : ""; ?>>
-          <?= $category->name; ?>
-        </option>
-        <?php } ?>
-      </select>
-    </div>
-  </div>
+<form class="form-horizontal" action="/admin/categories/update" accept-charset="UTF-8" method="post" enctype="multipart/form-data">
+  <input type="hidden" value="<?= $category->id; ?>" name="id" id="id" />
   <div class="form-group">
     <label class="col-sm-1 control-label" for="name">Ad</label>
     <div class="col-sm-11">
-      <input type="text" value="<?= $producttype->name; ?>" class="form-control" size="50" name="name" id="name" />
+      <input type="text" value="<?= $category->name; ?>" class="form-control" size="50" name="name" id="name" />
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-1 control-label" for="content">İçerik</label>
     <div class="col-sm-11">
-      <textarea class="form-control" rows="10" name="content" id="content"><?= $producttype->content; ?></textarea>
+      <textarea class="form-control" rows="10" name="content" id="content"><?= $category->content; ?></textarea>
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-1 control-label" for="image">Resim</label>
     <div class="col-sm-11">
       <div class="thumbnail">
-        <img src="<?= $producttype->image; ?>" width="100" height="100" />
+        <img src="<?= $category->image; ?>" width="100" height="100" />
         <div class="caption">
           <input type="file" id="image" name="image" class="form-control" />
         </div>

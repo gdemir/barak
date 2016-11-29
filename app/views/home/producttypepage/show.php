@@ -1,3 +1,11 @@
+<h4 class="page-title"><?= t("home.producttype"); ?></h4>
+<ol class="breadcrumb text-right">
+  <li><a href="/">Anasayfa</a></li>
+  <li><a href="/home/categories"><?= t("home.categories"); ?></a></li>
+  <li><a href="/home/categories/show/<?= $producttype->category->id; ?>"><?= $producttype->category->name ?></a></li>
+  <li class="active"><?= $producttype->name; ?></li>
+</ol>
+
 <!-- first section - Home -->
 <div class="parallax" style="background: url(<?= $producttype->image; ?>) no-repeat center fixed">
   <div class="parallax-caption">
@@ -23,11 +31,11 @@
       <?php if ($products) { ?>
       <?php foreach ($products as $product) { ?>
       <tr>
-        <td><img src="<?= $product->producttype->category->image ?>" style="width:200px"></td>
+        <td><img src="<?= $product->image ?>" style="width:200px"></td>
         <td><?= $product->name ?></td>
 
         <td>
-          <a href="/home/productpage/show/<?= $product->id; ?>" class="btn btn-default" role="button" title="Göster">
+          <a href="/home/products/show/<?= $product->id; ?>" class="btn btn-default" role="button" title="Göster">
             <i class="fa fa-search"></i>Göster
           </a>
         </td>

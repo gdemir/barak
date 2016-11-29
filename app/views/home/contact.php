@@ -1,3 +1,9 @@
+<h4 class="page-title"><?= t("home.contact"); ?></h4>
+<ol class="breadcrumb text-right">
+  <li><a href="/">Anasayfa</a></li>
+  <li class="active"><?= t("home.contact"); ?></li>
+</ol>
+
 <iframe src="https://www.google.com/maps/embed?pb=!1m21!1m12!1m3!1d1472.2463871828454!2d37.32772967663473!3d37.073410365338624!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m6!3e6!4m0!4m3!3m2!1d37.0733154!2d37.3285243!5e1!3m2!1str!2s!4v1479914977337" width="100%" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
 
 <div class="text-center">

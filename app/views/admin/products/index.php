@@ -25,12 +25,12 @@
       <td><?= $product->updated_at; ?></td>
 
       <td>
-        <form action="/admin/product/destroy" method="post">
+        <form action="/admin/products/destroy" method="post">
           <a href="/admin/product/show/<?= $product->id; ?>"
             class="btn btn-default" role="button" title="Göster"><i class="fa fa-search"></i>
           </a>
 
-          <a href="/admin/product/edit/<?= $product->id; ?>"
+          <a href="/admin/products/edit/<?= $product->id; ?>"
             class="btn btn-default" role="button" title="Düzenle"><i class="fa fa-edit"></i>
           </a>
 
@@ -49,4 +49,4 @@
   <?php } ?>
 </tbody>
 </table>
-<a class="btn btn-primary" href="/admin/product/new">Ürün Ekle</a>
+<a class="btn btn-primary" href="/admin/products/create">Ürün Ekle</a>

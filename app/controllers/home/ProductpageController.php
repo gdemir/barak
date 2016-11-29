@@ -26,13 +26,13 @@ class ProductpageController extends HomeController {
 
     if (!$product = Product::find($_POST["product_id"]))
       return $this->redirect_to("/home/index");
-    return $this->redirect_to("/home/productpage/show/" . $product->id);
+    return $this->redirect_to("/home/products/show/" . $product->id);
   }
 
   public function show() {
     if (!$this->product = Product::find($this->id)) {
       $_SESSION["danger"] = "Böyle bir ürün bulunmamaktadır";
-      return $this->redirect_to("/home/productpage");
+      return $this->redirect_to("/home/products");
     }
   }
 

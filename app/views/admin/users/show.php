@@ -68,11 +68,11 @@
     </div>
   </div>
 
-  <form class="form-horizontal" action="/admin/user/destroy" method="post">
+  <form class="form-horizontal" action="/admin/users/destroy" method="post">
     <input type="hidden" value="<?= $user->id; ?>" id="id" name="id" />
     <div class="form-group">
       <div class="col-sm-offset-1 col-sm-11">
-        <a class="btn btn-primary" href="/admin/user/edit/<?= $user->id; ?>">Bilgileri Düzenle</a>
+        <a class="btn btn-primary" href="/admin/users/edit/<?= $user->id; ?>">Bilgileri Düzenle</a>
         <input type="submit" class="btn btn-danger" value="sil" onClick="return confirm('Bu kullanıcıyı silmek istediğinizden emin misiniz?');" />
       </div>
     </div>

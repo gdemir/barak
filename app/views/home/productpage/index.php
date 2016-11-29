@@ -10,7 +10,7 @@
           <h3><?= $product->name; ?></h3>
           <p><?= $product->name; ?></p>
           <p><?= $product->price; ?></p>
-          <p><a href="/home/productpage/show/<?= $product->id; ?>" class="btn btn-primary fa fa-search" role="button">İncele</a></p>
+          <p><a href="/home/product/show/<?= $product->id; ?>" class="btn btn-primary fa fa-search" role="button">İncele</a></p>
         </div>
       </div>
     </div>

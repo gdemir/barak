@@ -7,9 +7,9 @@ class ApplicationConfig {
   const ROUTEFILE    = "config/routes.php";
   const LOCALEDIR    = "config/locales/";
 
-  public function __construct() {}
+  // public function __construct() {}
 
-  public function run() {
+  public static function run() {
 
     if (!file_exists(self::APPFILE))
       throw new FileNotFoundException("Yapılandırma ayar dosyası mevcut değil", self::APPFILE);

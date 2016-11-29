@@ -25,12 +25,12 @@
       <td><?= $producttype->updated_at; ?></td>
 
       <td>
-        <form action="/admin/producttype/destroy" method="post">
-          <a href="/admin/producttype/show/<?= $producttype->id; ?>"
+        <form action="/admin/producttypes/destroy" method="post">
+          <a href="/admin/producttypes/show/<?= $producttype->id; ?>"
             class="btn btn-default" role="button" title="Göster"><i class="fa fa-search"></i>
           </a>
 
-          <a href="/admin/producttype/edit/<?= $producttype->id; ?>"
+          <a href="/admin/producttypes/edit/<?= $producttype->id; ?>"
             class="btn btn-default" role="button" title="Düzenle"><i class="fa fa-edit"></i>
           </a>
 
@@ -49,4 +49,4 @@
   <?php } ?>
 </tbody>
 </table>
-<a class="btn btn-primary" href="/admin/producttype/new">Ürün Tipi Ekle</a>
+<a class="btn btn-primary" href="/admin/producttypes/create">Ürün Tipi Ekle</a>

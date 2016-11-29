@@ -10,13 +10,13 @@
   </div>
 </div>
 
-<form class="form-horizontal" action="/admin/user/update" accept-charset="UTF-8" method="post" enctype="multipart/form-data">
+<form class="form-horizontal" action="/admin/users/update" accept-charset="UTF-8" method="post" enctype="multipart/form-data">
   <input type="hidden" value="<?= $user->id; ?>" name="id" id="id" />
   <div class="form-group">
     <label class="col-sm-1 control-label" for="image">Resim</label>
     <div class="col-sm-11">
       <div class="thumbnail">
-        <img src="<?= $user->image; ?>"  class='img-rounded' data-toggle='modal'data-target='#image' style="min-height:100px; height:100px;" />
+        <img src="<?= $user->image; ?>" class='img-rounded' data-toggle='modal'data-target='#image' style="min-height:100px; height:100px;" />
         <div class="caption">
           <input type="file" id="image" name="image" class="form-control" />
         </div>

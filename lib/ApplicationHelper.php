@@ -34,8 +34,8 @@ class ApplicationHelper {
     function resource($table, $path = null) {
       return [
         new ApplicationRoute("get",  "$table",        "$table#index", false, $path),  // all record
-        new ApplicationRoute("get",  "$table/new",     false,         false, $path),  // new record form
-        new ApplicationRoute("post", "$table/create",  false,         false, $path),  // new record create
+        new ApplicationRoute("get",  "$table/create",  false,         false, $path),  // new record form
+        new ApplicationRoute("post", "$table/save",    false,         false, $path),  // new record create
         new ApplicationRoute("get",  "$table/show/",   false,         false, $path),  // display record
         new ApplicationRoute("get",  "$table/edit/",   false,         false, $path),  // edit record
         new ApplicationRoute("post", "$table/update",  false,         false, $path),  // update record
@@ -46,8 +46,8 @@ class ApplicationHelper {
       function resources($table, $path = null) {
         return [
       new ApplicationRoute("get",  "$table",          "$table#index", false, $path), // all record
-      new ApplicationRoute("get",  "$table/new",      false,          false, $path), // new record form
-      new ApplicationRoute("post", "$table/create",   false,          false, $path), // new record create
+      new ApplicationRoute("get",  "$table/create",   false,          false, $path), // new record form
+      new ApplicationRoute("post", "$table/save",     false,          false, $path), // new record create
       new ApplicationRoute("get",  "$table/show/:id", false,          true,  $path), // display record
       new ApplicationRoute("get",  "$table/edit/:id", false,          true,  $path), // edit record
       new ApplicationRoute("post", "$table/update",   false,          false, $path), // update record

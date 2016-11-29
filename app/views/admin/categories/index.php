@@ -23,12 +23,12 @@
       <td><?= $category->updated_at ?></td>
 
       <td>
-        <form action="/admin/category/destroy" method="post">
+        <form action="/admin/categories/destroy" method="post">
           <a href="/admin/category/show/<?= $category->id; ?>"
             class="btn btn-default" role="button" title="Göster"><i class="fa fa-search"></i>
           </a>
 
-          <a href="/admin/category/edit/<?= $category->id; ?>"
+          <a href="/admin/categories/edit/<?= $category->id; ?>"
             class="btn btn-default" role="button" title="Düzenle"><i class="fa fa-edit"></i>
           </a>
 
@@ -47,4 +47,4 @@
   <?php } ?>
 </tbody>
 </table>
-<a class="btn btn-primary" href="/admin/category/new">Kategori Ekle</a>
+<a class="btn btn-primary" href="/admin/categories/create">Kategori Ekle</a>

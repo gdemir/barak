@@ -29,9 +29,9 @@
       <td><?= $user->created_at; ?></td>
       <td><?= $user->updated_at; ?></td>
       <td>
-        <form action="/admin/user/del.php" method="post">
-          <a href="/admin/user/show/<?= $user->id; ?>" class="btn btn-default" role="button" title="Göster"><i class="fa fa-search"></i></a>
-          <a href="/admin/user/edit/<?= $user->id; ?>" class="btn btn-default" role="button" title="Düzenle"><i class="fa fa-edit"></i></a>
+        <form action="/admin/users/destroy" method="post">
+          <a href="/admin/users/show/<?= $user->id; ?>" class="btn btn-default" role="button" title="Göster"><i class="fa fa-search"></i></a>
+          <a href="/admin/users/edit/<?= $user->id; ?>" class="btn btn-default" role="button" title="Düzenle"><i class="fa fa-edit"></i></a>
 
           <input type="hidden" value="<?= $user->id; ?>" id="id" name="id" />
           <button type="submit" class="btn btn-default"
@@ -48,4 +48,4 @@
   <?php } ?>
 </tbody>
 </table>
-<a class="btn btn-primary" href="/admin/user/new">Kullanıcı Ekle</a>
+<a class="btn btn-primary" href="/admin/users/create">Kullanıcı Ekle</a>

@@ -1,6 +1,13 @@
+<h4 class="page-title"><?= t("home.product_search"); ?></h4>
+<ol class="breadcrumb text-right">
+  <li><a href="/">Anasayfa</a></li>
+  <li><a href="/home/products"><?= t("home.products"); ?></a></li>
+  <li class="active"><?= t("home.product_search"); ?></li>
+</ol>
+
 <h5 class="page-title-sub">Ürün Hızlı Ara</h5>
 
-<form class="form-horizontal" action="/home/productpage/find" accept-charset="UTF-8" method="post">
+<form class="form-horizontal" action="/home/products/find" accept-charset="UTF-8" method="post">
   <div class="form-group">
     <label class="col-sm-1 control-label" for="autocomplete">Ürün</label>
     <div class="col-sm-11">
@@ -17,7 +24,7 @@
 
 <h5 class="page-title-sub">Ürün Listele</h5>
 
-<form class="form-horizontal" action="/home/producttypepage/find" accept-charset="UTF-8" method="post">
+<form class="form-horizontal" action="/home/producttypes/find" accept-charset="UTF-8" method="post">
   <div class="form-group">
     <label class="col-sm-1 control-label" for="category_id">Kategori</label>
     <div class="col-sm-11">

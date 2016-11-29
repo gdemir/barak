@@ -15,7 +15,21 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-USE OLT;
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+-- -----------------------------------------------------
+-- Schema OLT
+-- -----------------------------------------------------
+DROP SCHEMA IF EXISTS `OLT` ;
+
+-- -----------------------------------------------------
+-- Schema OLT
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `OLT` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
+USE `OLT` ;
+
 
 --
 -- Table structure for table `Category`
@@ -29,8 +43,8 @@ CREATE TABLE `Category` (
   `name` varchar(100) DEFAULT NULL,
   `content` varchar(5000) DEFAULT NULL,
   `image` varchar(100) DEFAULT NULL,
-  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -45,32 +59,6 @@ LOCK TABLES `Category` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `Description`
---
-
-DROP TABLE IF EXISTS `Description`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Description` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `product_id` int(11) DEFAULT NULL,
-  `name` varchar(100) DEFAULT NULL,
-  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Description`
---
-
-LOCK TABLES `Description` WRITE;
-/*!40000 ALTER TABLE `Description` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Description` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `Product`
 --
 
@@ -82,10 +70,11 @@ CREATE TABLE `Product` (
   `producttype_id` int(11) DEFAULT NULL,
   `name` varchar(100) DEFAULT NULL,
   `content` varchar(5000) DEFAULT NULL,
+  `price` int(11) DEFAULT NULL,
   `image` varchar(100) DEFAULT NULL,
   `file` varchar(100) DEFAULT NULL,
-  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -112,8 +101,8 @@ CREATE TABLE `Producttype` (
   `name` varchar(100) DEFAULT NULL,
   `content` varchar(5000) DEFAULT NULL,
   `image` varchar(100) DEFAULT NULL,
-  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -136,7 +125,6 @@ DROP TABLE IF EXISTS `User`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `User` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `usertype_id` int(11) DEFAULT NULL,
   `username` varchar(100) DEFAULT NULL,
   `password` varchar(5000) DEFAULT NULL,
   `first_name` varchar(100) DEFAULT NULL,
@@ -145,11 +133,13 @@ CREATE TABLE `User` (
   `email` varchar(100) DEFAULT NULL,
   `cv` varchar(5000) DEFAULT NULL,
   `image` varchar(100) DEFAULT NULL,
-  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `boss` tinyint(1) DEFAULT NULL,
+  `admin` tinyint(1) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -158,32 +148,8 @@ CREATE TABLE `User` (
 
 LOCK TABLES `User` WRITE;
 /*!40000 ALTER TABLE `User` DISABLE KEYS */;
+INSERT INTO `User` VALUES (1,'rihsanoglu','97233e71ad1a600ef532d02edbbf805b','Ramazan','İhsanoğlu',NULL,NULL,NULL,NULL,1,NULL,'2016-11-28 13:24:17','2016-11-28 13:24:17'),(2,'sgoksel','97233e71ad1a600ef532d02edbbf805b','Sedat','Göksel',NULL,NULL,NULL,NULL,NULL,1,'2016-11-28 13:24:17','2016-11-28 13:24:17');
 /*!40000 ALTER TABLE `User` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `Usertype`
---
-
-DROP TABLE IF EXISTS `Usertype`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Usertype` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) DEFAULT NULL,
-  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Usertype`
---
-
-LOCK TABLES `Usertype` WRITE;
-/*!40000 ALTER TABLE `Usertype` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Usertype` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -195,4 +161,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-11-24 23:52:35
+-- Dump completed on 2016-11-28 14:33:25

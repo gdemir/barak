@@ -103,7 +103,7 @@ ApplicationRoutes::draw(
 
 ```php
 ApplicationRoutes::draw(
-  resources("/user")
+  resources("/users")
 );
 ```
 
@@ -111,13 +111,13 @@ ApplicationRoutes::draw(
 
 ```php
 ApplicationRoutes::draw(
-  get("/user/index"),           // all record
-  get("/user/new"),             // new record form
-  post("user/create"),          // new record create
-  get("user/show"),             // display record
-  get("user/edit"),             // edit record
-  post("user/update"),          // update record
-  post("user/destroy")          // destroy record
+  get("/users/index"),         // all record
+  get("/users/create"),        // new record form
+  post("users/save"),          // new record create
+  get("/users/show"),          // display record
+  get("/users/edit"),          // edit record
+  post("/user/update"),        // update record
+  post("/user/destroy")        // destroy record
 );
 ```
 
@@ -125,7 +125,7 @@ ApplicationRoutes::draw(
 
 ```php
 ApplicationRoutes::draw(
-  resources("/user")
+  resources("/users")
 );
 ```
 
@@ -133,29 +133,55 @@ ApplicationRoutes::draw(
 
 ```php
 ApplicationRoutes::draw(
-  get("/user/index"),           // all record
-  get("/user/new"),             // new record form
-  post("user/create"),          // new record create
-  get("user/show/:id"),         // display record
-  get("user/edit/:id"),         // edit record
-  post("user/update"),          // update record
-  post("user/destroy")          // destroy record
+  get("/users/index"),         // all record
+  get("/users/create"),        // new record form
+  post("/users/save"),         // new record create
+  get("/users/show/:id"),      // display record
+  get("/users/edit/:id"),      // edit record
+  post("/users/update"),       // update record
+  post("/users/destroy")       // destroy record
 );
 ```
 
 #### SCOPE
 
+> `app/controllers/PATH/CONTROLLER.php`
+
+- Simple
+
+> path : `app/controllers/admin/CategoriesController.php`
+> view : `app/views/admin/categories/ACTION.php`
+
+```php
+ApplicationRoutes::draw(
+ scope("admin",
+    resources("/categories")
+ )
+);
+```
+
+> *Aşağıdaki routes kümesini üretir:*
+
+```php
+ApplicationRoutes::draw(
+  get("/admin/categories", "categories#index", "admin"),       // all record
+  get("/admin/categories/create",        false, "admin"),      // new record form
+  post("/admin/categories/save",        false, "admin"),       // new record create
+  get("/admin/categories/show/:id",        false, "admin"),    // display record
+  get("/admin/categories/edit/:id",        false, "admin"),    // edit record
+  post("/admin/categories/update",        false, "admin"),     // update record
+  post("/admin/categories/destroy",        false, "admin"),    // destroy record
+);
+```
+
+- Many
+
 ```php
 ApplicationRoutes::draw(
 
-  // Ör. 1:
-  resources("/category", "admin"),
-  resource("/product", "admin")
-
-  // Ör. 2:
   scope("admin",
-    resources("/category"),
-    resource("/product")
+    resources("/categories"),
+    resource("/products")
   );
 
 );
@@ -165,25 +191,23 @@ ApplicationRoutes::draw(
 
 ```php
 ApplicationRoutes::draw(
-  get("/admin/category/index"),       // all record
-  get("/admin/category/new"),         // new record form
-  post("/admin/category/create"),     // new record create
-  get("/admin/category/show/:id"),    // display record
-  get("/admin/category/edit/:id"),    // edit record
-  post("/admin/category/update"),     // update record
-  post("/admin/category/destroy"),    // destroy record
+  get("/admin/categories", "categories#index", "admin"),       // all record
+  get("/admin/categories/create",        false, "admin"),      // new record form
+  post("/admin/categories/save",        false, "admin"),       // new record create
+  get("/admin/categories/show/:id",        false, "admin"),    // display record
+  get("/admin/categories/edit/:id",        false, "admin"),    // edit record
+  post("/admin/categories/update",        false, "admin"),     // update record
+  post("/admin/categories/destroy",        false, "admin"),    // destroy record
 
-  get("/admin/product/index"),        // all record
-  get("/admin/product/new"),          // new record form
-  post("/admin/product/create"),      // new record create
-  get("/admin/product/show"),         // display record
-  get("/admin/product/edit"),         // edit record
-  post("/admin/product/update"),      // update record
-  post("/admin/product/destroy")      // destroy record
+  get("/admin/products/index", "products#index", "admin"),     // all record
+  get("/admin/products/create",            false, "admin"),    // new record form
+  post("/admin/products/save",            false, "admin"),     // new record create
+  get("/admin/products/show",            false, "admin"),      // display record
+  get("/admin/products/edit",            false, "admin"),      // edit record
+  post("/admin/products/update",            false, "admin"),   // update record
+  post("/admin/products/destroy",            false, "admin")   // destroy record
 );
 ```
-# TODO scope:  layout and view directory sets
-
 
 ### Controller (`app/controller/*.php`)
 ---

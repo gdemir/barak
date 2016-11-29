@@ -265,7 +265,7 @@ ApplicationRoutes::draw(
 
 ```php
 ApplicationRoutes::draw(
-
+  get("/admin/login"),
   scope("admin",
     [
     get("/users", "users#index"),
@@ -282,6 +282,8 @@ ApplicationRoutes::draw(
 
 ```php
 ApplicationRoutes::draw(
+  get("/admin/login"),
+  
   get("/admin/users",          "users#index", "admin"),    // all record
   get("/admin/users/show/:id",         false, "admin"),    // display record
 
@@ -358,6 +360,10 @@ class HomeController extends ApplicationController {
 
 - Redirect
 
+> request url [`/` or `/home`] redirect to `/home/index`
+
+> `config/routes.php`
+
 ```php
 ApplicationRoutes::draw(
   get("/", "home#home"),
@@ -365,12 +371,21 @@ ApplicationRoutes::draw(
 );
 ```
 
+> `app/controllers/HomeController.php`
+
 ```php
 class HomeController extends ApplicationController {
-  public function index() {
-    return $this->redirect_to("/admin/login");
+  public function home() {
+    return $this->redirect_to("/home/index");
   }
+  public function index() {}
 }
+```
+
+> `app/views/home/index.php`
+
+```php
+<h1>Home#Index</h1>
 ```
 
 - Before Action

@@ -51,7 +51,6 @@ class ApplicationRoutes {
 
   public function get_route(ApplicationRoute $request_route) { // __get($request_route) // is not support object, only string
 
-
     if (array_key_exists($request_route->_method, $this->_routes)) {
 
       if (array_key_exists($request_route->_rule, $this->_routes[$request_route->_method])) {

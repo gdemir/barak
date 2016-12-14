@@ -4,7 +4,7 @@
 
 - MySQL
 
-- Web server: [apache2-settings](https://github.com/gdemir/barak/blob/master/.htaccess) or [nginx-settings](https://github.com/gdemir/barak/blob/master/nginx-settings)
+- Web server: [apache2-settings](https://github.com/gdemir/barak/blob/master/.htaccess) or [nginx-settings](https://github.com/gdemir/barak/blob/master/nginx-settings) or [iss-settings](https://github.com/gdemir/barak/blob/master/web.config)
 
 - Php Version : 7.0, - Php Database Access : [PDO](http://php.net/manual/tr/book.pdo.php)
 
@@ -283,7 +283,7 @@ ApplicationRoutes::draw(
 ```php
 ApplicationRoutes::draw(
   get("/admin/login"),
-  
+
   get("/admin/users",          "users#index", "admin"),    // all record
   get("/admin/users/show/:id",         false, "admin"),    // display record
 

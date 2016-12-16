@@ -95,7 +95,8 @@ class ApplicationModel {
           $owner_table = ucfirst($field); // model name
           $owner_key = strtolower($this->_table) . "_id";
 
-          return $owner_table::load()->where([$owner_key => $this->_fields["id"]])->take();
+          // return $owner_table::load()->where([$owner_key => $this->_fields["id"]])->take();
+          return $owner_table::load()->where($owner_key, $this->_fields["id"])->take();
         }
       }
     }
@@ -174,7 +175,7 @@ class ApplicationModel {
 
     if (!$this->_new_record_state) {
 
-      ApplicationSql::update($this->_table, $this->_fields, ["id" => $this->_fields["id"]]);
+      ApplicationSql::update($this->_table, $this->_fields, static::field_to_where(["id" => intval($this->_fields["id"])]));
 
     } else {
 
@@ -192,7 +193,7 @@ class ApplicationModel {
 
   // ok
   public function destroy() {
-    ApplicationSql::delete($this->_table, ["id" => $this->_fields["id"]], null);
+    ApplicationSql::delete($this->_table, static::field_to_where(["id" => intval($this->_fields["id"])]), null);
   }
 
   // $users = User::load()->select("first_name, last_name")->get();
@@ -212,12 +213,75 @@ class ApplicationModel {
     return $this;
   }
 
-  // ok
-  public function where($fields = null) {
-    $fields = self::check_fields_of_table_hash($fields);
 
-    $this->_where = ($this->_where) ? array_merge($this->_where, $fields) : $fields;
+  // // ok
+  // public function where($fields = null) {
+  //   $fields = self::check_fields_of_table_hash($fields);
+
+  //   $this->_where = ($this->_where) ? array_merge($this->_where, $fields) : $fields;
+  //   return $this;
+  // }
+  // ok
+
+  public function where($field, $value = null, $mark = "=", $logic = "AND") {
+
+    /*
+    MARK
+
+    field1 =  value1
+    field1 <> value1
+    field1 >  value1
+    field1 <  value1
+    field1 >= value1
+    field1 <= value1
+
+    field1 BETWEEN value1 and value2
+    field1 NOT BEETWEEN value1 and value2
+    fiedl1 LIKE value
+    field1 NOT_LIKE value
+    field1 IN (value1, value2)
+    fiedl1 NOT IN (value1, value2)
+
+    */
+
+    // if (is_null($value))
+    //   $mark = $value;
+
+    self::check_fieldname($field);
+
+    // mark control
+    $mark = strtoupper(trim($mark));
+    if (in_array($mark, ApplicationSql::$where_in_marks)) {
+      if (!is_array($value))
+        throw new BelongNotFoundException("WHERE IN, NOT IN için değer list olmalıdır", $value);
+    } elseif (in_array($mark, ApplicationSql::$where_between_marks)) {
+      if (!is_array($value)) {
+        throw new BelongNotFoundException("WHERE BETWEEN, NOT BETWEEN için değer list olmalıdır", $value);
+      } elseif (is_array($value)) {
+        if (count($value) != 2)
+          throw new BelongNotFoundException("WHERE BETWEEN, NOT BETWEEN için değer list ve 2 değerli olmalıdır", $value);
+      }
+    } elseif (!in_array($mark, array_merge(ApplicationSql::$where_other_marks, ApplicationSql::$where_like_marks))) {
+      throw new BelongNotFoundException("WHERE de tanımlı böyle bir işaretçi bulunamadı", $mark);
+    }
+
+    // logic control
+    $logic = strtoupper(trim($logic));
+    if (!in_array($logic, ApplicationSql::$where_logics))
+      throw new BelongNotFoundException("WHERE de tanımlı böyle bir bağlayıcı bulunamadı", $logic);
+
+    $this->_where[] = [
+    "field" => $field,
+    "mark"  => $mark,
+    "value" => $value,
+    "logic" => $logic
+    ];
+
     return $this;
+  }
+
+  public function or_where($field, $value = null, $mark = "=") {
+    return $this->where($field, $value, $mark, "OR");
   }
 
   // ok
@@ -269,12 +333,14 @@ class ApplicationModel {
   }
 
   // ok
-  public function order($field, $sort_type = "asc") {
-
-    if (!in_array($sort_type, ["asc", "desc"]))
-      throw new FieldNotFoundException("Order sorgusunda bilinmeyen parametre", $sort_type);
+  public function order($field, $sort_type = "ASC") {
 
     self::check_fieldname($field);
+
+    // sort_type control
+    $sort_type = strtoupper(trim($sort_type));
+    if (!in_array($sort_type, ApplicationSql::$order_sort_type))
+      throw new FieldNotFoundException("Order sorgusunda bilinmeyen parametre", $sort_type);
 
     $this->_order[] = "$field $sort_type";
     return $this;
@@ -298,9 +364,14 @@ class ApplicationModel {
     return $table_name;
   }
 
+  // $user = User::unique(["username" => "gdemir", "password" => "123456"]);
+  // echo $user->first_name;
+  // ok
+
   public static function unique($fields = null) {
     $table_name = self::table_name();
-    if ($record = ApplicationSql::read($table_name, null, $fields)) {
+
+    if ($record = ApplicationSql::read($table_name, null, static::field_to_where($fields))) {
 
       $object = $table_name::load();
       foreach ($record as $fieldname => $value)
@@ -374,7 +445,7 @@ class ApplicationModel {
   // ok
   public static function find($primary_key) {
     $table_name = self::table_name();
-    return $table_name::unique(["id" => intval($primary_key)]);
+    return $table_name::unique(["id" => intval($primary_key)]); // convert to where struct and pass
   }
 
   // $users = User::find_all([1, 2, 3]); // return User objects array
@@ -415,12 +486,13 @@ class ApplicationModel {
   public static function update(int $primary_key, $fields) {
     self::check_fieldnames(array_keys($fields));
 
-    ApplicationSql::update(self::table_name(), $fields, ["id" => intval($primary_key)]);
+//  ApplicationSql::update(self::table_name(), $fields, ["id" => intval($primary_key)]);
+    ApplicationSql::update(self::table_name(), $fields, static::field_to_where(["id" => intval($primary_key)]));
   }
 
   // ok
   public static function delete(int $primary_key) {
-    ApplicationSql::delete(self::table_name(), ["id" => intval($primary_key)], null);
+    ApplicationSql::delete(self::table_name(), static::field_to_where(["id" => intval($primary_key)]), null);
   }
 
   //////////////////////////////////////////////////
@@ -431,11 +503,23 @@ class ApplicationModel {
     return ApplicationSql::query($this->_select, $this->_table, $this->_join, $this->_where, $this->_order, $this->_group, $this->_limit, $this->_offset);
   }
 
+  private static function field_to_where($fields = null, $mark = "=", $logic = "AND") {
+    if ($fields) {
+      $_where = [];
+      foreach ($fields as $field => $value)
+        $_where[] = ["field" => $field, "mark"  => $mark, "value" => $value, "logic" => $logic];
+    } else {
+      $_where = null;
+    }
+    return $_where;
+  }
+
   // name check_join_table_and_field
 
   // select, where, group, order by
 
   public static function check_fields_of_table_list($fields) {
+    $table_name = self::table_name();
     foreach ($fields as $index => $field) {
       if (strpos($field, '.') !== false) { // found TABLE
         list($request_table, $request_field) = array_map('trim', explode('.', $field));
@@ -446,13 +530,14 @@ class ApplicationModel {
         self::check_fieldname($request_field, $request_table);
 
       } else {
-        $fields[$index] = self::table_name() . '.' .  $field;
+        $fields[$index] = $table_name . '.' .  $field;
       }
     }
     return $fields;
   }
 
   public static function check_fields_of_table_hash($fields) {
+    $table_name = self::table_name();
     foreach ($fields as $field => $value) {
       if (strpos($field, '.') !== false) { // found TABLE
         list($request_table, $request_field) = array_map('trim', explode('.', $field));
@@ -463,7 +548,7 @@ class ApplicationModel {
         self::check_fieldname($request_field, $request_table);
 
       } else {
-        $fields[self::table_name() . '.' .  $field] = $value;
+        $fields[$table_name . '.' .  $field] = $value;
         unset($fields[$field]);
       }
     }

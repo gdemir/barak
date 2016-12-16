@@ -322,13 +322,13 @@ class ApplicationModel {
 
   // ok
   public function limit($limit = null) {
-    $this->_limit = $limit;
+    $this->_limit = intval($limit);
     return $this;
   }
 
   // ok
   public function offset($offset = null) {
-    $this->_offset = $offset;
+    $this->_offset = intval($offset);
     return $this;
   }
 

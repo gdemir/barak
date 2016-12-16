@@ -28,21 +28,21 @@ class ApplicationSql {
 
           if (in_array($hash["mark"], static::$where_in_marks)) {
 
-            list($in_command, $in_symbols, $in_symbol_and_values) = static::list_to_command_symbol_symbolvalue($hash["value"], $unique_symbol_prefix);
+            list($in_command, $in_symbols, $in_symbolvalues) = static::list_to_command_symbol_symbolvalue($hash["value"], $unique_symbol_prefix);
             $symbols .= $hash["field"] . " " . $hash["mark"] . " " . "(" . $in_symbols . ")";
-            $symbol_and_values = array_merge($symbol_and_values, $in_symbol_and_values);
+            $symbol_and_values = array_merge($symbol_and_values, $in_symbolvalues);
 
           } elseif (in_array($hash["mark"], static::$where_between_marks)) {
 
-            list($between_command, $between_symbols, $between_symbol_and_values) = static::list_to_command_symbol_symbolvalue($hash["value"], $unique_symbol_prefix, "AND");
+            list($between_command, $between_symbols, $between_symbolvalues) = static::list_to_command_symbol_symbolvalue($hash["value"], $unique_symbol_prefix, "AND");
             $symbols .= $hash["field"] . " " . $hash["mark"] . " " . $between_symbols;
-            $symbol_and_values = array_merge($symbol_and_values, $between_symbol_and_values);
+            $symbol_and_values = array_merge($symbol_and_values, $between_symbolvalues);
 
           } else {
 
-            list($field_command, $field_symbol, $field_value) = static::var_to_command_symbol_value($hash["value"], $unique_symbol_prefix);
+            list($field_command, $field_symbol, $field_symbolvalue) = static::var_to_command_symbol_value($hash["value"], $unique_symbol_prefix);
             $symbols .= $hash["field"] . " " . $hash["mark"] . " " . $field_symbol;
-            $symbol_and_values[$field_symbol] = $field_value;
+            $symbol_and_values = array_merge($symbol_and_values, $field_symbolvalue);
 
           }
 
@@ -50,23 +50,25 @@ class ApplicationSql {
 
           if (in_array($hash["mark"], static::$where_in_marks)) {
 
-            list($in_command, $in_symbols, $in_symbol_and_values) = static::list_to_command_symbol_symbolvalue($hash["value"], $unique_symbol_prefix);
+            list($in_command, $in_symbols, $in_symbolvalues) = static::list_to_command_symbol_symbolvalue($hash["value"], $unique_symbol_prefix);
             $symbols .= " " . $hash["logic"] . " " . $hash["field"] . " " . $hash["mark"] . " " . "(" . $in_symbols . ")";
-            $symbol_and_values = array_merge($symbol_and_values, $in_symbol_and_values);
+            $symbol_and_values = array_merge($symbol_and_values, $in_symbolvalues);
 
           } elseif (in_array($hash["mark"], static::$where_between_marks)) {
 
-            list($between_command, $between_symbols, $between_symbol_and_values) = static::list_to_command_symbol_symbolvalue($hash["value"], $unique_symbol_prefix, "AND");
+            list($between_command, $between_symbols, $between_symbolvalues) = static::list_to_command_symbol_symbolvalue($hash["value"], $unique_symbol_prefix, "AND");
             $symbols .= " " . $hash["logic"] . " " . $hash["field"] . " " . $hash["mark"] . " " . $between_symbols;
-            $symbol_and_values = array_merge($symbol_and_values, $between_symbol_and_values);
+            $symbol_and_values = array_merge($symbol_and_values, $between_symbolvalues);
 
           } else {
 
-            list($field_command, $field_symbol, $field_value) = static::var_to_command_symbol_value($hash["value"], $unique_symbol_prefix);
+            list($field_command, $field_symbol, $field_symbolvalue) = static::var_to_command_symbol_value($hash["value"], $unique_symbol_prefix);
             $symbols .= " " . $hash["logic"] . " " . $hash["field"] . " " . $hash["mark"] . " " . $field_symbol;
-            $symbol_and_values[$field_symbol] = $field_value;
+
+            $symbol_and_values = array_merge($symbol_and_values, $field_symbolvalue);
 
           }
+
         }
 
       }
@@ -149,10 +151,10 @@ class ApplicationSql {
   private static function var_to_command_symbol_value($_value, $_command = "") {
 
     if ($_value) {
-      $command = str_replace(" ", "", $_command); // ORDER BY => ORDERBY, GROUP BY => GROUPBY
-      return array("$_command", ":$_command", $_value);
+      $symbol = ":" . str_replace(" ", "", $_command); // ORDER BY => ORDERBY, GROUP BY => GROUPBY
+      return array("$_command $symbol", $symbol, [$symbol => $_value]);
     } else {
-      return array("", "", "");
+      return array("", "", []);
     }
 
   }
@@ -163,11 +165,19 @@ class ApplicationSql {
 
     foreach ($_fields as $field => $value) if ($value == null) unset($_fields[$field]);
 
-    list($field_keys, $field_symbols, $field_symbol_and_values) = static::hash_to_key_symbol_symbolvalue($_fields);
+    list($field_keys, $field_symbols, $field_symbolvalues) = static::hash_to_key_symbol_symbolvalue($_fields);
 
     $query = $GLOBALS['db']->prepare("INSERT INTO `$_table` ( $field_keys ) VALUES ( $field_symbols )");
 
-    if (!$query->execute($field_symbol_and_values))
+    $symbolvalues = array_merge(
+      $field_symbolvalues
+      );
+
+    foreach ($symbolvalues as $symbol => $value) {
+      $query->bindValue($symbol, $value, ApplicationSql::bindtype($value));
+    }
+
+    if (!$query->execute())
       throw new SQLException("Tabloya kayıt yazmada sorun oluştu", $_table);
 
     return intval($GLOBALS["db"]->lastInsertId());
@@ -178,11 +188,19 @@ class ApplicationSql {
     if (empty($_select)) $_select = ["*"];
     $_select = implode(",", $_select);
 
-    list($where_commands, $where_symbols, $where_symbol_and_values) = static::where_to_command_symbol_symbolvalue($_where);
+    list($where_commands, $where_symbols, $where_symbolvalues) = static::where_to_command_symbol_symbolvalue($_where);
 
     $query = $GLOBALS['db']->prepare("SELECT $_select FROM `$_table` $where_commands");
 
-    if (!$query->execute($where_symbol_and_values))
+    $symbolvalues = array_merge(
+      $where_symbolvalues
+      );
+
+    foreach ($symbolvalues as $symbol => $value) {
+      $query->bindValue($symbol, $value, ApplicationSql::bindtype($value));
+    }
+
+    if (!$query->execute())
       throw new SQLException("Tablodan veri okumasında sorun oluştu", $_table);
 
     return $query->fetch(PDO::FETCH_ASSOC);
@@ -191,26 +209,40 @@ class ApplicationSql {
   public static function update($_table, $_sets, $_where) {
 
     list($set_keysymbols, $set_symbolvalues) = static::hash_to_keysymbol_symbolvalue($_sets);
-
     list($where_commands, $where_symbols, $where_symbolvalues) = static::where_to_command_symbol_symbolvalue($_where);
 
     $query = $GLOBALS['db']->prepare("UPDATE `$_table` SET $set_keysymbols $where_commands");
 
-    if (!$query->execute(array_merge($where_symbolvalues, $set_symbolvalues)))
+    $symbolvalues = array_merge(
+      $where_symbolvalues,
+      $set_symbolvalues
+      );
+
+    foreach ($symbolvalues as $symbol => $value) {
+      $query->bindValue($symbol, $value, ApplicationSql::bindtype($value));
+    }
+
+    if (!$query->execute())
       throw new SQLException("Tabloda kayıt güncellemesinde sorun oluştu", $_table);
   }
 
   public static function delete($_table, $_where, $_limit) {
 
     list($where_commands, $where_symbols, $where_symbolvalues) = static::where_to_command_symbol_symbolvalue($_where);
-    list($limit_command, $limit_symbol, $limit_value)  = static::var_to_command_symbol_value($_limit, "LIMIT");
+    list($limit_command, $limit_symbol, $limit_symbolvalue)  = static::var_to_command_symbol_value($_limit, "LIMIT");
 
     $query = $GLOBALS['db']->prepare("DELETE FROM `$_table` $where_commands $limit_command");
 
-    if ($_limit)
-      $query->bindParam($limit_symbol, $limit_value, PDO::PARAM_INT);
+    $symbolvalues = array_merge(
+      $where_symbolvalues,
+      $limit_symbolvalue
+      );
 
-    if (!$query->execute($where_symbolvalues))
+    foreach ($symbolvalues as $symbol => $value) {
+      $query->bindValue($symbol, $value, ApplicationSql::bindtype($value));
+    }
+
+    if (!$query->execute())
       throw new SQLException("Tablodan veri silmesinde sorun oluştu", $_table);
   }
 
@@ -233,8 +265,8 @@ class ApplicationSql {
     list($order_commands, $order_symbols, $order_symbolvalues) = static::list_to_command_symbol_symbolvalue($_order, "ORDER BY");
     list($group_commands, $group_symbols, $group_symbolvalues) = static::list_to_command_symbol_symbolvalue($_group, "GROUP BY");
 
-    list($limit_command,  $limit_symbol,  $limit_value)  = static::var_to_command_symbol_value($_limit, "LIMIT");
-    list($offset_command, $offset_symbol, $offset_value) = static::var_to_command_symbol_value($_offset, "OFFSET");
+    list($limit_command,  $limit_symbol,  $limit_symbolvalue)  = static::var_to_command_symbol_value($_limit, "LIMIT");
+    list($offset_command, $offset_symbol, $offset_symbolvalue) = static::var_to_command_symbol_value($_offset, "OFFSET");
 
     $sql = "
     SELECT $_select
@@ -247,35 +279,38 @@ class ApplicationSql {
     $offset_command
     ";
 
-
     $query = $GLOBALS['db']->prepare($sql);
 
-    if ($_limit)
-      $query->bindParam($limit_symbol, $limit_value, PDO::PARAM_INT);
-
-    if ($_offset)
-      $query->bindParam($offset_symbol, $offset_value, PDO::PARAM_INT);
 
     $symbolvalues = array_merge(
       $where_symbolvalues,
       $order_symbolvalues,
-      $group_symbolvalues
+      $group_symbolvalues,
+      $limit_symbolvalue,
+      $offset_symbolvalue
       );
 
     // PDO have a bug on bindParam: not working
     // $a = User::load()->where("first_name", "Sedat")->or_where("first_name", "Ramazan")->take();
     // print_r($a);
 
-    // foreach ($symbolvalues as $symbol => $value) {
-    //   //$query->bindParam($symbol, $value);
-    // }
+    foreach ($symbolvalues as $symbol => $value) {
+      // $query->bindParam($symbol, $value);
+      $query->bindValue($symbol, $value, ApplicationSql::bindtype($value));
+    }
 
-    if (!$query->execute($symbolvalues))
+    if (!$query->execute())
       throw new SQLException("Tablodan kayıtların okunmasında sorun oluştu", $_table);
 
     return $query->fetchAll(PDO::FETCH_ASSOC);
   }
+  public static function bindtype($value) {
+    if     (is_int($value))  return PDO::PARAM_INT;
+    elseif (is_bool($value)) return PDO::PARAM_BOOL;
+    elseif (is_null($value)) return PDO::PARAM_NULL;
+    else                     return PDO::PARAM_STR;
 
+  }
   public static function tablenames() {
     $name = $GLOBALS['db']->query("select database()")->fetchColumn();
     $result = $GLOBALS['db']->query("show tables");

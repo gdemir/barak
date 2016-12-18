@@ -185,8 +185,7 @@ class ApplicationSql {
 
   public static function read($_table, $_select, $_where) {
 
-    if (empty($_select)) $_select = ["*"];
-    $_select = implode(",", $_select);
+    $_select = (!empty($_select)) ? implode(",", $_select) : "*";
 
     list($where_commands, $where_symbols, $where_symbolvalues) = static::where_to_command_symbol_symbolvalue($_where);
 
@@ -248,51 +247,43 @@ class ApplicationSql {
 
   public static function query($_select, $_table, $_join, $_where, $_order, $_group, $_limit, $_offset) {
 
-    if (empty($_select)) $_select = ["*"];
-    $_select = implode(",", $_select);
+    $_select_fields = (!empty($_select)) ? implode(",", $_select) : "*";
+    $_order_fields  = (!empty($_order)) ? "ORDER BY " . implode(",", $_order) : "";
+    $_group_fields  = (!empty($_group)) ? "GROUP BY " . implode(",", $_group) : "";
+
 
     if ($_join) {
-      $_join_commands = "";
+      $_join_fields = "";
       foreach ($_join as $table => $condition) {
-        $_join_commands .= ($_join_commands ? " " : "") . "INNER JOIN $table ON $condition";;
+        $_join_fields .= ($_join_fields ? " " : "") . "INNER JOIN $table ON $condition";;
       }
     } else {
-      $_join_commands = "";
+      $_join_fields = "";
     }
 
     list($where_commands, $where_symbols, $where_symbolvalues) = static::where_to_command_symbol_symbolvalue($_where);
-
-    list($order_commands, $order_symbols, $order_symbolvalues) = static::list_to_command_symbol_symbolvalue($_order, "ORDER BY");
-    list($group_commands, $group_symbols, $group_symbolvalues) = static::list_to_command_symbol_symbolvalue($_group, "GROUP BY");
 
     list($limit_command,  $limit_symbol,  $limit_symbolvalue)  = static::var_to_command_symbol_value($_limit, "LIMIT");
     list($offset_command, $offset_symbol, $offset_symbolvalue) = static::var_to_command_symbol_value($_offset, "OFFSET");
 
     $sql = "
-    SELECT $_select
+    SELECT $_select_fields
     FROM $_table
-    $_join_commands
+    $_join_fields
     $where_commands
-    $order_commands
-    $group_commands
+    $_order_fields
+    $_group_fields
     $limit_command
     $offset_command
     ";
 
     $query = $GLOBALS['db']->prepare($sql);
 
-
     $symbolvalues = array_merge(
       $where_symbolvalues,
-      $order_symbolvalues,
-      $group_symbolvalues,
       $limit_symbolvalue,
       $offset_symbolvalue
       );
-
-    // PDO have a bug on bindParam: not working
-    // $a = User::load()->where("first_name", "Sedat")->or_where("first_name", "Ramazan")->take();
-    // print_r($a);
 
     foreach ($symbolvalues as $symbol => $value) {
       // $query->bindParam($symbol, $value);

@@ -569,6 +569,24 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
 ### Model
 ---
 
+> `app/models/TABLE.php`
+`example: app/models/User.php`
+
+```php
+class User extends ApplicationModel {
+
+  public function full_name() {
+    return $this->first_name . " " . $this->last_name;
+  }
+
+}
+```
+
+```php
+$user = User::find(1);
+echo $user->full_name();
+```
+
 - Public Access Functions
 
 > `save`, `destroy`, `delete_all`, `select`, `where`, `joins`, `order`, `group`, `limit`, `take`, `pluck`, `count`
@@ -585,14 +603,14 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
 ```php
 // Ör. 1:
 
-$user = User::new();
+$user = User::draft();
 $user->first_name = "Gökhan";
 $user->save();
 print_r($user); // otomatik id alır
 
 // Ör. 2:
 
-$user = User::new(["first_name" => "Gökhan"])->save();
+$user = User::draft(["first_name" => "Gökhan"])->save();
 print_r($user); // otomatik id alır
 ```
 
@@ -618,10 +636,10 @@ foreach ($user as $user)
 
 ```php
 $users = User::load()
-           ->where(["first_name" = "Gökhan"])
+           ->where("first_name", "Gökhan")
            ->select("first_name")
            ->order("id")
-           ->limit("10")
+           ->limit(10)
            ->take();
 
 foreach ($user as $user)
@@ -654,7 +672,7 @@ echo User::load()->count();
 
 // Ör. 2:
 
-echo User::load()->where(["first_name" => "Gökhan"])->count();
+echo User::load()->where("first_name", "Gökhan")->count();
 // 5
 ```
 
@@ -666,7 +684,7 @@ echo User::load()->where(["first_name" => "Gökhan"])->count();
 
 $department = Department::load()
                 ->joins(["User", "Address"])
-                ->where(["User.id" => "1"])
+                ->where("User.id", 1)
                 ->select("User.first_name, Department.name, Address.content")
                 ->limit(1)
                 ->take();
@@ -759,7 +777,7 @@ $users = User::find_all([1, 2, 3]);
 $users = User::load()->take();
 $users = User::all();
 $users = User::load()
-           ->where(["first_name" = "Gökhan"])
+           ->where("first_name", "Gökhan")
            ->select("first_name")
            ->order("id")
            ->limit("10")
@@ -776,7 +794,7 @@ foreach ($users as $user) {
 ```php
 // Ör. 1:
 
-User::update(1, array("first_name" => "Gökhan", "last_name" => "Demir"));
+User::update(1, ["first_name" => "Gökhan", "last_name" => "Demir"]);
 
 // Ör. 2:
 
@@ -784,13 +802,13 @@ $users = User::find_all([1, 2, 3]);
 $users = User::load()->take();
 $users = User::all();
 $users = User::load()
-           ->where(["first_name" = "Gökhan"])
+           ->where("first_name", "Gökhan")
            ->select("first_name")
            ->order("id")
-           ->limit("10")
+           ->limit(10)
            ->take();
 foreach ($users as $user)
-  User::update($user->id, array("first_name" => "Göktuğ", "last_name" => "Demir"));
+  User::update($user->id, ["first_name" => "Göktuğ", "last_name" => "Demir"]);
 ```
 
 #### DELETE ( `destroy`, `delete`, `delete_all` )
@@ -817,8 +835,8 @@ User::delete(1);
 
 ```php
 User::load()->delete_all();
-User::load()->where(["first_name" => "Gökhan"])->delete_all();
-User::load()->where(["first_name" => "Gökhan"])->limit(10)->delete_all();
+User::load()->where("first_name", "Gökhan")->delete_all();
+User::load()->where("first_name", "Gökhan")->limit(10)->delete_all();
 User::load()->limit(10)->delete_all();
 ```
 

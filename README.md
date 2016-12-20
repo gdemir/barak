@@ -686,6 +686,17 @@ $users = User::load()->where("created_at", ["2016-12-01", "2016-13-01"], "not be
 // SELECT * FROM user WHERE created_at NOT BETWEEN "2016-12-01" AND "2016-13-01";
 ```
 
+> `or_where`
+
+only logic key: `OR`
+
+```php
+// where($field, $value, $mark, "OR")
+$users = User::load()->where("first_name", "Gökhan")->or_where("last_name", "Demir")->take();
+$users = User::load()->where("first_name", "Gökhan", "=", "AND")->where("last_name", "Demir", "=", "OR")->take();
+// SELECT * FROM user WHERE first_name = 'Gökhan' OR last_name = 'Demir';
+```
+
 > `select`, `where`, `order`, `group`, `limit`, `take`
 
 ```php
@@ -834,7 +845,7 @@ $users = User::load()
            ->where("first_name", "Gökhan")
            ->select("first_name")
            ->order("id")
-           ->limit("10")
+           ->limit(10)
            ->take();
 $users = User::first(10);
 foreach ($users as $user) {

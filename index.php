@@ -31,7 +31,7 @@ ApplicationHelper::extract();
 // Database : seed // OPTIONAL
 ApplicationDatabase::seed();
 
-// I18n : locale get // OPTINAL
+// I18n : locale get // OPTIONAL
 if (!isset($_SESSION['i18n']))
   $_SESSION['i18n'] = new ApplicationI18n("tr");
 

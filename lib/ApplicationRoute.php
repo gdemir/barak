@@ -19,12 +19,12 @@ class ApplicationRoute {
   public function __construct($method, $rule, $target = false, $match = false, $path = null) {
     $this->_path = ($path) ? "/$path" : "";
 
-    if ($match) {
+    if ($match) { // for :id/:action like
 
       if ($target) // TODO Rewrite
-        $option = explode("#", trim($target, "/"));
+        $option = explode("#", trim($target, "/")); // get("/users/show/:id", "users#show"); // controller: users, action:show
       else
-        $option = explode("/", trim($rule, "/"));
+        $option = explode("/", trim($rule, "/"));  //  get("/users/show/:id");               // controller: users, action:show
 
       self::set($method, $match, $this->_path . $rule, preg_replace("|:[\w]+|", self::dynamical_segment, $rule), $option[0], $option[1]);
 
@@ -43,7 +43,7 @@ class ApplicationRoute {
       } elseif (count($option) == 3) { // scope parser
 
         $this->_path = $option[0];
-        self::set($method, $match, "", "/$this->_path/" . $option[1] . "/". $option[2], $option[1], $option[2]);
+        self::set($method, $match, "", "/$this->_path/" . $option[1] . "/" . $option[2], $option[1], $option[2]);
 
       } else {
         $option = explode("/", trim($rule, "/"));// echo "php ya da web sunucu otomatik boş istek yolluyor TODO";

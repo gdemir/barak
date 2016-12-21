@@ -20,10 +20,10 @@ class ApplicationHelper {
           $permitted_route->_path = $path;
 
           if ($permitted_route->_match) {
-            $permitted_route->_match_rule = "/$path" . $permitted_route->_match_rule;
+            $permitted_route->_match_rule = $path . $permitted_route->_match_rule;
           }
 
-          $permitted_route->_rule = "/$path" . $permitted_route->_rule;
+          $permitted_route->_rule = $path . $permitted_route->_rule;
           $routes[] = $permitted_route;
         }
       }
@@ -33,13 +33,13 @@ class ApplicationHelper {
 
     function resource($table, $path = null) {
       return [
-        new ApplicationRoute("get",  "$table",        "$table#index", false, $path),  // all record
-        new ApplicationRoute("get",  "$table/create",  false,         false, $path),  // new record form
-        new ApplicationRoute("post", "$table/save",    false,         false, $path),  // new record create
-        new ApplicationRoute("get",  "$table/show/",   false,         false, $path),  // display record
-        new ApplicationRoute("get",  "$table/edit/",   false,         false, $path),  // edit record
-        new ApplicationRoute("post", "$table/update",  false,         false, $path),  // update record
-        new ApplicationRoute("post", "$table/destroy", false,         false, $path)   // destroy record
+        new ApplicationRoute("get",  "$table",         "$table#index", false, $path),  // all record
+        new ApplicationRoute("get",  "$table/create",  false,          false, $path),  // new record form
+        new ApplicationRoute("post", "$table/save",    false,          false, $path),  // new record create
+        new ApplicationRoute("get",  "$table/show/",   false,          false, $path),  // display record
+        new ApplicationRoute("get",  "$table/edit/",   false,          false, $path),  // edit record
+        new ApplicationRoute("post", "$table/update",  false,          false, $path),  // update record
+        new ApplicationRoute("post", "$table/destroy", false,          false, $path)   // destroy record
       ];
     }
 
@@ -48,27 +48,23 @@ class ApplicationHelper {
         new ApplicationRoute("get",  "$table",          "$table#index", false, $path), // all record
         new ApplicationRoute("get",  "$table/create",   false,          false, $path), // new record form
         new ApplicationRoute("post", "$table/save",     false,          false, $path), // new record create
-        new ApplicationRoute("get",  "$table/show/:id", false,          true,  $path), // display record
-        new ApplicationRoute("get",  "$table/edit/:id", false,          true,  $path), // edit record
+        new ApplicationRoute("get",  "$table/show/:id", "$table#show",  true,  $path), // display record
+        new ApplicationRoute("get",  "$table/edit/:id", "$table#edit",  true,  $path), // edit record
         new ApplicationRoute("post", "$table/update",   false,          false, $path), // update record
         new ApplicationRoute("post", "$table/destroy",  false,          false, $path)  // destroy record
       ];
     }
 
-    function include_dynamical_segment($rule) {
-      return strpos($rule, ":") ? true : false;
-    }
-    
     function root($target, $path = null) {
       return new ApplicationRoute("get",  "/", $target, false, $path);
     }
-    
+
     function post($rule, $target = false, $path = null) {
-      return new ApplicationRoute("post", $rule, $target, include_dynamical_segment($rule), $path);
+      return new ApplicationRoute("post", $rule, $target, (strpos($rule, ":") ? true : false), $path);
     }
 
     function get($rule, $target = false, $path = null) {
-      return new ApplicationRoute("get", $rule, $target, include_dynamical_segment($rule), $path);
+      return new ApplicationRoute("get",  $rule, $target, (strpos($rule, ":") ? true : false), $path);
     }
 
 

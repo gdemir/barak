@@ -7,8 +7,9 @@ class ApplicationRoutes {
 
   public static function draw() {
 
-    $request_route = new ApplicationRoute($_SERVER["REQUEST_METHOD"], $_SERVER['REQUEST_URI'], false);
-    // print_r($request_route);
+    //$request_route = new ApplicationRoute($_SERVER["REQUEST_METHOD"], $_SERVER['REQUEST_URI'], false);
+    $request_route = [ "_rule" => $_SERVER['REQUEST_URI'], "_method" => $_SERVER["REQUEST_METHOD"] ];
+
     $r = new ApplicationRoutes();
 
     // İzin verilmiş route'ları routes'a yükle
@@ -49,31 +50,30 @@ class ApplicationRoutes {
     }
   }
 
-  public function get_route(ApplicationRoute $request_route) { // __get($request_route) // is not support object, only string
+  public function get_route($request_route) { // __get($request_route) // is not support object, only string
 
 
-    if (array_key_exists($request_route->_method, $this->_routes)) {
+    if (array_key_exists($request_route["_method"], $this->_routes)) {
 
-      if (array_key_exists($request_route->_rule, $this->_routes[$request_route->_method])) {
-        return $this->_routes[$request_route->_method][$request_route->_rule];
+      if (array_key_exists($request_route["_rule"], $this->_routes[$request_route["_method"]])) {
+        return $this->_routes[$request_route["_method"]][$request_route["_rule"]];
       } else { // search for match routes
 
-        foreach ($this->_routes[$request_route->_method] as $_route) {
+        foreach ($this->_routes[$request_route["_method"]] as $_route) {
 
           if ($_route->_match) {
 
-            $request_rule = explode("/", trim($request_route->_rule, "/"));
+            $request_rule = explode("/", trim($request_route["_rule"], "/"));
             $permit_rule = explode("/", trim($_route->_rule, "/"));
 
             if (count($request_rule) == count($permit_rule)) {
-
               $match = true;
               foreach ($request_rule as $index => $value) {
-                if (($permit_rule[$index] != $request_rule[$index]) and ($permit_rule[$index] != ApplicationRoute::dynamical_segment)) {
+
+                if (($request_rule[$index] != $permit_rule[$index]) and ($permit_rule[$index] != ApplicationRoute::dynamical_segment)) {
                   $match = false;
                   break;
                 }
-
               }
               if ($match) {
 
@@ -81,7 +81,7 @@ class ApplicationRoutes {
                 preg_match_all('@:([\w]+)@', $_route->_match_rule, $segments, PREG_PATTERN_ORDER);
                 $segments = $segments[0];
 
-                // get methodları için params'a yükle, :id, :action gibi karşılık gelen değerler
+                // get methodları için params'a yükle
                 foreach ($segments as $segment) {
                   if ($index = array_search($segment, $permit_match_rule)) {
                     $_route->_params[substr($segment, 1)] = $request_rule[$index];
@@ -95,9 +95,9 @@ class ApplicationRoutes {
         }
       }
       return null;
-      //throw new ConfigurationException("Böyle bir yönlendirme mevcut değil", $request_route->_method . ":" . $request_route->_rule);
+      //throw new ConfigurationException("Böyle bir yönlendirme mevcut değil", $request_route["_method"] . ":" . $request_route["_rule"]);
     }
-    throw new ConfigurationException("Uzay çağında bizim henüz desteklemediğimiz bir method", $request_route->_method);
+    throw new ConfigurationException("Uzay çağında bizim henüz desteklemediğimiz bir method", $request_route["_method"]);
   }
 
   public function set_route(ApplicationRoute $route) {

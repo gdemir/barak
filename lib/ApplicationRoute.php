@@ -17,15 +17,14 @@ class ApplicationRoute {
   public $_action;
 
   public function __construct($method, $rule, $target = false, $match = false, $path = null) {
-    $this->_path = ($path) ? "/$path" : "";
+    $this->_path = ($path) ? $path : "";
 
     if ($match) { // for :id/:action like
 
-      if ($target) // TODO Rewrite
-        $option = explode("#", trim($target, "/")); // get("/users/show/:id", "users#show"); // controller: users, action:show
-      else
-        $option = explode("/", trim($rule, "/"));  //  get("/users/show/:id");               // controller: users, action:show
+      if (!$target)
+        throw new ConfigurationException("Dynamic route özelliğinde hedef (controlller#action) belirtilmek zorundadır!", $rule);
 
+      $option = explode("#", trim($target, "/")); // get("/users/show/:id", "users#show"); // controller: users, action:show
       self::set($method, $match, $this->_path . $rule, preg_replace("|:[\w]+|", self::dynamical_segment, $rule), $option[0], $option[1]);
 
     } elseif ($target) {
@@ -36,23 +35,12 @@ class ApplicationRoute {
     } elseif (strpos($rule, "/") !== false) { // dizgi içerisinde konum(indexi) yok değilse (yani varsa)
 
       $option = explode("/", trim($rule, "/"));
-      if (count($option) == 2) {  // /home/index
+      if (count($option) != 2)
+        throw new ConfigurationException("Route rule isteğinde istek sadece /controller/action şeklinde olmalıdır!", $rule);
 
-        self::set($method, $match, "", $this->_path . $rule, $option[0], $option[1]);
+      // Note: rule uzatmak için path'e ekleme yapılması gerek!
+      self::set($method, $match, "", $this->_path . $rule, $option[0], $option[1]);
 
-      } elseif (count($option) == 3) { // scope parser
-
-        $this->_path = $option[0];
-        self::set($method, $match, "", "/$this->_path/" . $option[1] . "/" . $option[2], $option[1], $option[2]);
-
-      } else {
-        $option = explode("/", trim($rule, "/"));// echo "php ya da web sunucu otomatik boş istek yolluyor TODO";
-
-        self::set(
-          $method, $match, "", $rule,
-          self::default_controller, self::default_action
-          );
-      }
     } else {
       throw new ConfigurationException("/config/routes.php içinde beklenmedik kurallar", $rule);
     }
@@ -97,8 +85,11 @@ class ApplicationRoute {
 
     if ($this->_path) { // have scope or path of resouce/resouces
       $v->set(["layout" => $this->_path]);
+
       $v->set(["view" => $this->_path . "/" . $this->_controller, "action" => $this->_action]);
+
     } else {
+
       $v->set(["view" => $this->_controller, "action" => $this->_action]);
     }
 

@@ -66,13 +66,14 @@ class ApplicationRoutes {
             $permit_rule = explode("/", trim($_route->_rule, "/"));
 
             if (count($request_rule) == count($permit_rule)) {
+
               $match = true;
               foreach ($request_rule as $index => $value) {
-
-                if (($request_rule[$index] != $permit_rule[$index]) and ($permit_rule[$index] != ApplicationRoute::dynamical_segment)) {
+                if (($permit_rule[$index] != $request_rule[$index]) and ($permit_rule[$index] != ApplicationRoute::dynamical_segment)) {
                   $match = false;
                   break;
                 }
+
               }
               if ($match) {
 
@@ -80,7 +81,7 @@ class ApplicationRoutes {
                 preg_match_all('@:([\w]+)@', $_route->_match_rule, $segments, PREG_PATTERN_ORDER);
                 $segments = $segments[0];
 
-                // get methodları için params'a yükle
+                // get methodları için params'a yükle, :id, :action gibi karşılık gelen değerler
                 foreach ($segments as $segment) {
                   if ($index = array_search($segment, $permit_match_rule)) {
                     $_route->_params[substr($segment, 1)] = $request_rule[$index];

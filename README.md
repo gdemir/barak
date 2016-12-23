@@ -79,15 +79,17 @@ ApplicationRoutes::draw(
 
 - Dynamical Segment
 
+Dinamik route tanımlamalarında "home#index" gibi hedef belirtilmek zorundadır:
+
 > `config/routes.php`
 
 ```php
 ApplicationRoutes::draw(
-  get("/home/index/:id")
+  get("/home/index/:id", "home#index")
 );
 ```
 
-> dynamical segment fetch variable
+Dinamik route tanımlamalarında ki "id" gibi parçalara erişim:
 
 > `app/controllers/HomeController.php`
 
@@ -215,13 +217,13 @@ ApplicationRoutes::draw(
 
 ```php
 ApplicationRoutes::draw(
-  get("/users", "users#index"), // all record
-  get("/users/create"),         // new record form
-  post("/users/save"),          // new record save
-  get("/users/show/:id"),       // display record
-  get("/users/edit/:id"),       // edit record
-  post("/users/update"),        // update record
-  post("/users/destroy")        // destroy record
+  get("/users", "users#index"),         // all record
+  get("/users/create"),                 // new record form
+  post("/users/save"),                  // new record save
+  get("/users/show/:id", "users#show"), // display record
+  get("/users/edit/:id", "users#edit"), // edit record
+  post("/users/update"),                // update record
+  post("/users/destroy")                // destroy record
 );
 ```
 
@@ -240,7 +242,7 @@ ApplicationRoutes::draw(
 
 ```php
 ApplicationRoutes::draw(
- scope("admin",
+ scope("/admin",
     resources("/categories")
  )
 );
@@ -249,13 +251,13 @@ ApplicationRoutes::draw(
 
 ```php
 ApplicationRoutes::draw(
-  get("/admin/categories", "categories#index", "admin"),  // all record
-  get("/admin/categories/create",       false, "admin"),  // new record form
-  post("/admin/categories/save",        false, "admin"),  // new record save
-  get("/admin/categories/show/:id",     false, "admin"),  // display record
-  get("/admin/categories/edit/:id",     false, "admin"),  // edit record
-  post("/admin/categories/update",      false, "admin"),  // update record
-  post("/admin/categories/destroy",     false, "admin"),  // destroy record
+  get("/admin/categories",          "categories#index", "/admin"),  // all record
+  get("/admin/categories/create",   false,              "/admin"),  // new record form
+  post("/admin/categories/save",    false,              "/admin"),  // new record save
+  get("/admin/categories/show/:id", "categories#show",  "/admin"),  // display record
+  get("/admin/categories/edit/:id", "categories#edit",  "/admin"),  // edit record
+  post("/admin/categories/update",  false,              "/admin"),  // update record
+  post("/admin/categories/destroy", false,              "/admin"),  // destroy record
 );
 ```
 
@@ -266,7 +268,7 @@ ApplicationRoutes::draw(
 ```php
 ApplicationRoutes::draw(
   get("/admin/login"),
-  scope("admin",
+  scope("/admin",
     [
     get("/users", "users#index"),
     get("/users/show/:id")
@@ -284,24 +286,42 @@ ApplicationRoutes::draw(
 ApplicationRoutes::draw(
   get("/admin/login"),
 
-  get("/admin/users",          "users#index", "admin"),    // all record
-  get("/admin/users/show/:id",         false, "admin"),    // display record
+  get("/admin/users",               "users#index",      "/admin"),  // all record
+  get("/admin/users/show/:id",      false,              "/admin"),  // display record
 
-  get("/admin/categories", "categories#index", "admin"),    // all record
-  get("/admin/categories/create",       false, "admin"),    // new record form
-  post("/admin/categories/save",        false, "admin"),    // new record save
-  get("/admin/categories/show/:id",     false, "admin"),    // display record
-  get("/admin/categories/edit/:id",     false, "admin"),    // edit record
-  post("/admin/categories/update",      false, "admin"),    // update record
-  post("/admin/categories/destroy",     false, "admin"),    // destroy record
+  get("/admin/categories",          "categories#index", "/admin"),  // all record
+  get("/admin/categories/create",   false,              "/admin"),  // new record form
+  post("/admin/categories/save",    false,              "/admin"),  // new record save
+  get("/admin/categories/show/:id", "categories#show",  "/admin"),  // display record
+  get("/admin/categories/edit/:id", "categories#edit",  "/admin"),  // edit record
+  post("/admin/categories/update",  false,              "/admin"),  // update record
+  post("/admin/categories/destroy", false,              "/admin"),  // destroy record
 
-  get("/admin/products/index", "products#index", "admin"),  // all record
-  get("/admin/products/create",           false, "admin"),  // new record form
-  post("/admin/products/save",            false, "admin"),  // new record save
-  get("/admin/products/show",             false, "admin"),  // display record
-  get("/admin/products/edit",             false, "admin"),  // edit record
-  post("/admin/products/update",          false, "admin"),  // update record
-  post("/admin/products/destroy",         false, "admin")   // destroy record
+  get("/admin/products",           "products#index",    "/admin"),  // all record
+  get("/admin/products/create",     false,              "/admin"),  // new record form
+  post("/admin/products/save",      false,              "/admin"),  // new record save
+  get("/admin/products/show",       false,              "/admin"),  // display record
+  get("/admin/products/edit",       false,              "/admin"),  // edit record
+  post("/admin/products/update",    false,              "/admin"),  // update record
+  post("/admin/products/destroy",   false,              "/admin")   // destroy record
+);
+```
+
+#### ROOT
+
+> `config/routes.php`
+
+```php
+ApplicationRoutes::draw(
+  root("home#index")
+);
+```
+
+> *Aşağıdaki routes kümesini üretir:*
+
+```php
+ApplicationRoutes::draw(
+  get("/", "home#index"),
 );
 ```
 
@@ -366,8 +386,9 @@ class HomeController extends ApplicationController {
 
 ```php
 ApplicationRoutes::draw(
-  get("/", "home#home"),
-  get("/home", "home#home")
+  get("/", "home#home"), // or root("home#home"),
+  get("/home", "home#home"),
+  get("/home/index"),
 );
 ```
 
@@ -589,11 +610,11 @@ echo $user->full_name();
 
 - Public Access Functions
 
-> `save`, `destroy`, `delete_all`, `select`, `where`, `joins`, `order`, `group`, `limit`, `take`, `pluck`, `count`
+> `save`, `destroy`, `delete_all`, `select`, `where`, `or_where`, `joins`, `order`, `group`, `limit`, `take`, `pluck`, `count`
 
 - Static Access Functions
 
-> `new`, `load`, `create`, `unique`, `find`, `find_all`, `all`, `first`, `last`, `exists`, `delete`, `update`
+> `draft`, `load`, `create`, `unique`, `find`, `find_all`, `all`, `first`, `last`, `exists`, `delete`, `update`
 
 #### CREATE ( `new`, `create` )
 
@@ -621,7 +642,7 @@ $user = User::create(["first_name" => "Gökhan"]);
 print_r($user);
 ```
 
-#### READ ( `load`, `select`, `where`, `order`, `group`, `limit`, `take`, `pluck`, `count`, `joins`, `find`, `find_all`, `all`, `first`, `last` )
+#### READ ( `load`, `select`, `where`, `or_where`, `order`, `group`, `limit`, `take`, `pluck`, `count`, `joins`, `find`, `find_all`, `all`, `first`, `last` )
 
 > `load`
 
@@ -740,7 +761,6 @@ echo User::load()->count();
 echo User::load()->where("first_name", "Gökhan")->count();
 // 5
 ```
-
 
 > `joins`
 
@@ -967,7 +987,6 @@ foreach ($books as $book)
   echo $book->name;
 
 ```
-
 
 ### Config and Database (`config/database.ini`, `config/application.ini`, `db/seeds.php`)
 ---

@@ -36,7 +36,7 @@ class ApplicationRoute {
 
       $option = explode("/", trim($rule, "/"));
       if (count($option) != 2)
-        throw new ConfigurationException("Route rule isteğinde istek sadece /controller/action şeklinde olmalıdır!", $rule);
+        throw new ConfigurationException("Route rule özelliğinde istek /controller/action şeklinde olmalıdır!", $rule);
 
       // Note: rule uzatmak için path'e ekleme yapılması gerek!
       self::set($method, $match, "", $this->_path . $rule, $option[0], $option[1]);

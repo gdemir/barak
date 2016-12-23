@@ -4,7 +4,6 @@ class ApplicationHelper {
 
   public static function extract() {
 
-
     function scope() {
 
       // İzin verilmiş route'ları routes'a yükle
@@ -56,7 +55,10 @@ class ApplicationHelper {
     }
 
     function root($target = false, $path = null) {
-      return new ApplicationRoute("get",  "/", $target, false, $path);
+      if (!$target)
+        throw new ConfigurationException("Root route özelliğinde hedef (controlller#action) belirtilmek zorundadır!", "root");
+
+      return new ApplicationRoute("get", "/", $target, false, $path);
     }
 
     function post($rule, $target = false, $path = null) {
@@ -66,7 +68,6 @@ class ApplicationHelper {
     function get($rule, $target = false, $path = null) {
       return new ApplicationRoute("get",  $rule, $target, (strpos($rule, ":") ? true : false), $path);
     }
-
 
     function _404() {
 

@@ -55,7 +55,7 @@ class ApplicationHelper {
       ];
     }
 
-    function root($target, $path = null) {
+    function root($target = false, $path = null) {
       return new ApplicationRoute("get",  "/", $target, false, $path);
     }
 

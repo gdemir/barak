@@ -262,7 +262,7 @@ class ApplicationSql {
     }
 
     list($where_commands, $where_symbols, $where_symbolvalues) = static::where_to_command_symbol_symbolvalue($_where);
-    list($limit_command,  $limit_symbol,  $limit_symbolvalue)  = static::var_to_command_symbol_value($_limit, "LIMIT");
+    list($limit_command,  $limit_symbol,  $limit_symbolvalue)  = static::var_to_command_symbol_value($_limit,  "LIMIT");
     list($offset_command, $offset_symbol, $offset_symbolvalue) = static::var_to_command_symbol_value($_offset, "OFFSET");
 
     $sql = "
@@ -294,13 +294,14 @@ class ApplicationSql {
 
     return $query->fetchAll(PDO::FETCH_ASSOC);
   }
+  
   public static function bindtype($value) {
     if     (is_int($value))  return PDO::PARAM_INT;
     elseif (is_bool($value)) return PDO::PARAM_BOOL;
     elseif (is_null($value)) return PDO::PARAM_NULL;
     else                     return PDO::PARAM_STR;
-
   }
+  
   public static function tablenames() {
     $name = $GLOBALS['db']->query("select database()")->fetchColumn();
     $result = $GLOBALS['db']->query("show tables");

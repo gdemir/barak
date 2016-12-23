@@ -150,7 +150,7 @@ class ApplicationSql {
 
   private static function var_to_command_symbol_value($_value, $_command = "") {
 
-    if ($_value) {
+    if (!is_null($_value)) {
       $symbol = ":" . str_replace(" ", "", $_command); // ORDER BY => ORDERBY, GROUP BY => GROUPBY
       return array("$_command $symbol", $symbol, [$symbol => $_value]);
     } else {

@@ -10,6 +10,10 @@
 
 - Install : [LAMP](http://gdemir.me/categories/linux/lamp/) or [LEMP](http://gdemir.me/categories/linux/lemp/)
 
+## Licence
+
+Barak is released under the MIT license.
+
 ## Guides
 
 ### Simple Usage

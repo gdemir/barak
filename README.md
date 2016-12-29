@@ -10,10 +10,6 @@
 
 - Install : [LAMP](http://gdemir.me/categories/linux/lamp/) or [LEMP](http://gdemir.me/categories/linux/lemp/)
 
-## Licence
-
-Barak is released under the MIT license.
-
 ## Guides
 
 ### Simple Usage
@@ -1033,7 +1029,10 @@ User::create(["first_name" => "Atilla", "last_name" => "Demir", "username" => "a
 [![BarakTurkmens#VeledBey](https://img.youtube.com/vi/3RBtPGWRnsI/2.jpg)](https://www.youtube.com/watch?v=3RBtPGWRnsI)
 [![BarakTurkmens#VeledBey2](https://img.youtube.com/vi/CiThgSNoSr0/2.jpg)](https://www.youtube.com/watch?v=CiThgSNoSr0)
 
-
 ## Sources
 
 - [https://tr.wikipedia.org/wiki/Barak_T%C3%BCrkmenleri](https://tr.wikipedia.org/wiki/Barak_T%C3%BCrkmenleri)
+
+## License
+
+Barak is released under the [MIT License](http://www.opensource.org/licenses/MIT).

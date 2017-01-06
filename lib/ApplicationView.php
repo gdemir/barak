@@ -105,7 +105,8 @@ class ApplicationView {
   }
 
   private function template_content($path = self::VIEWPATH) {
-    $template_path = $path . $this->_template . ".php";
+
+    $template_path = $path . trim($this->_template, "/") . ".php";
 
     if (!file_exists($template_path))
       throw new FileNotFoundException("Template dosyası mevcut değil", $template_path);
@@ -127,7 +128,6 @@ class ApplicationView {
       throw new FileNotFoundException("File does not exist", $file_name);
 
     fwrite($fp, $this->_content);
-
     fclose($fp);
 
     unset($this->_content);

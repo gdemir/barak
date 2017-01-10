@@ -12,7 +12,8 @@ class ApplicationSql {
   public static $where_in_marks = ["IN", "NOT IN"];
   public static $where_between_marks = ["BETWEEN", "NOT BETWEEN"];
   public static $where_like_marks = ["LIKE", "NOT LIKE"];
-  public static $where_other_marks = ["=", "<>", ">", "<", ">=", "<="];
+  public static $where_null_marks = ["IS NULL", "IS NOT NULL"];
+  public static $where_other_marks = ["=", "!=", ">", "<", ">=", "<="];
 
   // ["first_name" => "Gökhan", "last_name" => "Demir"]
   private static function where_to_command_symbol_symbolvalue($_list) {
@@ -26,7 +27,11 @@ class ApplicationSql {
         $unique_symbol_prefix = "WHERE_" . $index;
         if ($index == 0) {
 
-          if (in_array($hash["mark"], static::$where_in_marks)) {
+          if (in_array($hash["mark"], static::$where_null_marks)) {
+
+            $symbols .= $hash["field"] . " " . $hash["mark"];
+
+          } elseif (in_array($hash["mark"], static::$where_in_marks)) {
 
             list($in_command, $in_symbols, $in_symbolvalues) = static::list_to_command_symbol_symbolvalue($hash["value"], $unique_symbol_prefix);
             $symbols .= $hash["field"] . " " . $hash["mark"] . " " . "(" . $in_symbols . ")";
@@ -40,7 +45,7 @@ class ApplicationSql {
 
           } else {
 
-            list($field_command, $field_symbol, $field_symbolvalue) = static::var_to_command_symbol_value($hash["value"], $unique_symbol_prefix);
+            list($field_command, $field_symbol, $field_symbolvalue) = static::list_to_command_symbol_symbolvalue([$hash["value"]], $unique_symbol_prefix);
             $symbols .= $hash["field"] . " " . $hash["mark"] . " " . $field_symbol;
             $symbol_and_values = array_merge($symbol_and_values, $field_symbolvalue);
 
@@ -48,7 +53,11 @@ class ApplicationSql {
 
         } else {
 
-          if (in_array($hash["mark"], static::$where_in_marks)) {
+          if (in_array($hash["mark"], static::$where_null_marks)) {
+
+            $symbols .= " " . $hash["logic"] . " " . $hash["field"] . " " . $hash["mark"];
+
+          } elseif (in_array($hash["mark"], static::$where_in_marks)) {
 
             list($in_command, $in_symbols, $in_symbolvalues) = static::list_to_command_symbol_symbolvalue($hash["value"], $unique_symbol_prefix);
             $symbols .= " " . $hash["logic"] . " " . $hash["field"] . " " . $hash["mark"] . " " . "(" . $in_symbols . ")";
@@ -62,9 +71,8 @@ class ApplicationSql {
 
           } else {
 
-            list($field_command, $field_symbol, $field_symbolvalue) = static::var_to_command_symbol_value($hash["value"], $unique_symbol_prefix);
+            list($field_command, $field_symbol, $field_symbolvalue) = static::list_to_command_symbol_symbolvalue([$hash["value"]], $unique_symbol_prefix);
             $symbols .= " " . $hash["logic"] . " " . $hash["field"] . " " . $hash["mark"] . " " . $field_symbol;
-
             $symbol_and_values = array_merge($symbol_and_values, $field_symbolvalue);
 
           }
@@ -150,7 +158,7 @@ class ApplicationSql {
 
   private static function var_to_command_symbol_value($_value, $_command = "") {
 
-    if (!is_null($_value)) {
+    if (isset($_value)) {
       $symbol = ":" . str_replace(" ", "", $_command); // ORDER BY => ORDERBY, GROUP BY => GROUPBY
       return array("$_command $symbol", $symbol, [$symbol => $_value]);
     } else {
@@ -193,7 +201,7 @@ class ApplicationSql {
 
     $symbolvalues = array_merge(
       $where_symbolvalues
-    );
+      );
 
     foreach ($symbolvalues as $symbol => $value) {
       $query->bindValue($symbol, $value, ApplicationSql::bindtype($value));
@@ -251,7 +259,6 @@ class ApplicationSql {
     $_order_fields  = (!empty($_order))  ? "ORDER BY " . implode(",", $_order) : "";
     $_group_fields  = (!empty($_group))  ? "GROUP BY " . implode(",", $_group) : "";
 
-
     if ($_join) {
       $_join_fields = "";
       foreach ($_join as $table => $condition) {
@@ -294,14 +301,14 @@ class ApplicationSql {
 
     return $query->fetchAll(PDO::FETCH_ASSOC);
   }
-  
+
   public static function bindtype($value) {
     if     (is_int($value))  return PDO::PARAM_INT;
     elseif (is_bool($value)) return PDO::PARAM_BOOL;
     elseif (is_null($value)) return PDO::PARAM_NULL;
     else                     return PDO::PARAM_STR;
   }
-  
+
   public static function tablenames() {
     $name = $GLOBALS['db']->query("select database()")->fetchColumn();
     $result = $GLOBALS['db']->query("show tables");

@@ -656,7 +656,7 @@ foreach ($user as $user)
 > `where`
 
 
-operators: `=`, `<>`, `>`, `<`, `>=`, `<=`
+operators: `=`, `!=`, `>`, `<`, `>=`, `<=`
 
 
 ```php
@@ -680,30 +680,41 @@ $users = User::load()->where("age", 25, "<=")->take();
 // SELECT * FROM user WHERE age <= 25;
 ```
 
+operators: `IS NULL`, `IS NOT NULL`
+
+```php
+$users = User::load()->where("email", NULL)->take();
+// SELECT * FROM user WHERE emai IS NULL;
+$users = User::load()->where("email", "IS NULL")->take();
+// SELECT * FROM user WHERE emai IS NULL;
+$users = User::load()->where("email", "IS NOT NULL")->take();
+// SELECT * FROM user WHERE email IS NOT NULL;
+```
+
 operators: `LIKE`, `NOT LIKE`
 
 ```php
-$users = User::load()->where("email", "%.com.tr", "like")->take();
-// SELECT * FROM user WHERE id LIKE '%.com.tr';
-$users = User::load()->where("email", "%.com.tr", "not like")->take();
-// SELECT * FROM user WHERE id NOT LIKE '%.com.tr';
+$users = User::load()->where("email", "%.com.tr", "LIKE")->take();
+// SELECT * FROM user WHERE email LIKE '%.com.tr';
+$users = User::load()->where("email", "%.com.tr", "NOT LIKE")->take();
+// SELECT * FROM user WHERE email NOT LIKE '%.com.tr';
 ```
 
 operators: `IN`, `NOT IN`
 
 ```php
-$users = User::load()->where("id", [1, 2, 3], "in")->take();
+$users = User::load()->where("id", [1, 2, 3], "IN")->take();
 // SELECT * FROM user WHERE id IN (1, 2, 3);
-$users = User::load()->where("id", [1, 2, 3], "not in")->take();
+$users = User::load()->where("id", [1, 2, 3], "NOT IN")->take();
 // SELECT * FROM user WHERE id NOT IN (1, 2, 3)
 ```
 
 operators: `BETWEEN`, `NOT BETWEEN`
 
 ```php
-$users = User::load()->where("created_at", ["2016-12-01", "2016-13-01"], "between")->take();
+$users = User::load()->where("created_at", ["2016-12-01", "2016-13-01"], "BETWEEN")->take();
 // SELECT * FROM user WHERE created_at BETWEEN "2016-12-01" AND "2016-13-01";
-$users = User::load()->where("created_at", ["2016-12-01", "2016-13-01"], "not between")->take();
+$users = User::load()->where("created_at", ["2016-12-01", "2016-13-01"], "NOT BETWEEN")->take();
 // SELECT * FROM user WHERE created_at NOT BETWEEN "2016-12-01" AND "2016-13-01";
 ```
 

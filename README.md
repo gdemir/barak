@@ -684,9 +684,8 @@ operators: `IS NULL`, `IS NOT NULL`
 
 ```php
 $users = User::load()->where("email", NULL)->take();
-// SELECT * FROM user WHERE emai IS NULL;
 $users = User::load()->where("email", "IS NULL")->take();
-// SELECT * FROM user WHERE emai IS NULL;
+// SELECT * FROM user WHERE email IS NULL;
 $users = User::load()->where("email", "IS NOT NULL")->take();
 // SELECT * FROM user WHERE email IS NOT NULL;
 ```

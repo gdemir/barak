@@ -115,11 +115,9 @@ class ApplicationView {
 
   private function content_display($params = null) {
 
+    // controller'in paramsları var ise yükle
     if (!is_null($params)) {
-      // controller'in paramslarını yükle
-      foreach ($params as $param => $value) {
-        $$param = $value;
-      }
+      extract($params);
     }
 
     // http://stackoverflow.com/questions/1184628/php-equivalent-of-include-using-eval)

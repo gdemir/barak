@@ -1,5 +1,9 @@
 <?php
 
+// composer packages load
+
+require "vendor/autoload.php";
+
 // lib/*.php files load
 // app/controllers/*.php  files load
 

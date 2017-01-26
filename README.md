@@ -10,6 +10,8 @@
 
 - Install : [LAMP](http://gdemir.me/categories/linux/lamp/) or [LEMP](http://gdemir.me/categories/linux/lemp/)
 
+- [Composer](http://gdemir.me/categories/php/composer/)
+
 ## Guides
 
 ### Simple Usage

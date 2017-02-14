@@ -195,13 +195,13 @@ ApplicationRoutes::draw(
 
 ```php
 ApplicationRoutes::draw(
-  get("/users/", "user#index"), // all record
-  get("/users/create"),         // new record form
-  post("users/save"),           // new record save
-  get("/users/show"),           // display record
-  get("/users/edit"),           // edit record
-  post("/user/update"),         // update record
-  post("/user/destroy")         // destroy record
+  get("/users/", "users#index"), // all record
+  get("/users/create"),          // new record form
+  post("users/save"),            // new record save
+  get("/users/show"),            // display record
+  get("/users/edit"),            // edit record
+  post("/users/update"),         // update record
+  post("/users/destroy")         // destroy record
 );
 ```
 
@@ -651,7 +651,7 @@ print_r($user);
 
 ```php
 $users = User::load()->take();
-foreach ($user as $user)
+foreach ($users as $user)
   echo $user->first_name;
 ```
 
@@ -740,7 +740,7 @@ $users = User::load()
            ->limit(10)
            ->take();
 
-foreach ($user as $user)
+foreach ($users as $user)
   echo $user->first_name;
 ```
 

@@ -12,6 +12,10 @@
 
 - [Composer](http://gdemir.me/categories/php/composer/)
 
+## Install
+
+    composer create-project gdemir/barak project_name
+
 ## Guides
 
 ### Simple Usage

@@ -379,6 +379,10 @@ class HomeController extends ApplicationController {
 
     // LAYOUT: admin_layout, VIEW: home, ACTION: show
     $this->render(["layout" => "admin", "template" => "home/show"]);
+    
+    // LAYOUT: false, VIEW: false, ACTION: false
+    // only load controller params and get this file
+    $this->render(["file" => "/app/views/admin/login.php"]);
   }
 
 }

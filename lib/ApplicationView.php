@@ -5,8 +5,6 @@ class ApplicationView {
   const LAYOUTPATH = "app/views/layouts/";
   const VIEWPATH   = "app/views/";
 
-  private $_content;
-
   private $_layout;
   private $_template;
 

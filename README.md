@@ -51,7 +51,7 @@ class HomeController extends ApplicationController {
 <?= $message; ?>
 ```
 
-> `app/views/layouts/home_layout.php`
+> `app/views/layouts/home.php`
 
 ```html
 <!DOCTYPE html>
@@ -63,7 +63,7 @@ class HomeController extends ApplicationController {
   <title></title>
 </head>
 <body>
-  {yield}
+  <?= $yield; ?>
 </body>
 </html>
 ```
@@ -548,7 +548,7 @@ class AdminController extends ApplicationController {
 <h1> Admin#Home </h1>
 ```
 
-> `app/views/layouts/admin_layout.php`
+> `app/views/layouts/admin.php`
 
 ```html
 <!DOCTYPE html>
@@ -560,7 +560,7 @@ class AdminController extends ApplicationController {
   <title></title>
 </head>
 <body>
-  {yield}
+  <?= $yield; ?>
 </body>
 </html>
 ```
@@ -576,7 +576,7 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
 <h1> Hello World </h1>
 ```
 
-> `app/views/layouts/DIRECTORY_layout.php`
+> `app/views/layouts/DIRECTORY.php`
 
 ```html
 <!DOCTYPE html>
@@ -588,7 +588,7 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
   <title></title>
 </head>
 <body>
-  {yield}
+  <?= $yield; ?>
 </body>
 </html>
 ```

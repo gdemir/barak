@@ -22,7 +22,7 @@ class ApplicationRoute {
     if ($match) { // for :id/:action like
 
       if (!$target)
-        throw new ConfigurationException("Dynamic route özelliğinde hedef (controlller#action) belirtilmek zorundadır!", $rule);
+        throw new ConfigurationException("Dynamic route özelliğinde hedef (controller#action) belirtilmek zorundadır!", $rule);
 
       $option = explode("#", trim($target, "/")); // get("/users/show/:id", "users#show"); // controller: users, action:show
       self::set($method, $match, $this->_path . $rule, preg_replace("|:[\w]+|", self::dynamical_segment, $rule), $option[0], $option[1]);

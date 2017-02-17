@@ -40,10 +40,10 @@ class ApplicationHelper {
         new ApplicationRoute("post", "$table/update",  false,          false, $path),  // update record
         new ApplicationRoute("post", "$table/destroy", false,          false, $path)   // destroy record
         ];
-    }
+      }
 
-    function resources($table, $path = null) {
-      return [
+      function resources($table, $path = null) {
+        return [
       new ApplicationRoute("get",  "$table",          "$table#index", false, $path), // all record
       new ApplicationRoute("get",  "$table/create",   false,          false, $path), // new record form
       new ApplicationRoute("post", "$table/save",     false,          false, $path), // new record create
@@ -122,28 +122,12 @@ class ApplicationHelper {
     // LAYOUT and TEMPLATE
     // for app/views/VIEW/ACTION.php and app/views/layouts/VIEW_layout.php
 
-    function render($filename, $dir = null, $params = null) {
-      if ($params) {
-      	extract($params);
+    function render($options = null) {
+      if ($options) {
+        $v = new ApplicationView();
+        $v->set($options);
+        $v->run();
       }
-      if (is_null($dir)) {
-        $_request_uri_list = explode("/", $_SERVER["REQUEST_URI"]);
-        $dir = $_request_uri_list[1];
-      }
-      $file = getcwd(). "/app/views/$dir/_". "$filename.php";
-      if (!file_exists($file)) {
-        throw new FileNotFoundException("İçerik dosyası mevcut değil", $file);
-      }
-      include $file;
-      /* TODO
-      function render($options = null) {
-       if ($options) {
-         $v = new ApplicationView();
-         $v->set($options);
-         $v->run($vars["_params"]); // params send to with on $options
-       }
-     }
-     */
     }
 
   }

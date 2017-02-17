@@ -13,15 +13,9 @@ class ApplicationView {
 
   private $_text;
   private $_file;
+  private $_partial;
 
-  // "/home/index"
-  // "/home/show"
-  // "/admin/show"
-  // ["layout"=>"home", "view" => "home", "action" => "index"]
-  // ["layout" => false]
-  // ["view" => "admin", "action" => "index"]
-  // ["view" => "admin", "action" => "index"]
-  // ["layout" => "admin", "view" => "home", "action" => "show"]
+  private $_locals;
 
   public function __construct() {}
 
@@ -31,7 +25,8 @@ class ApplicationView {
 
       foreach ($_render as $key => $value) {
         switch ($key) {
-          // TODO case "partial":  $this->_partial  = $value; break;
+          case "partial":  $this->_partial  = $value; break;
+          case "locals":   $this->_locals   = $value; break;
           case "file":     $this->_file     = $value; break;
           case "text":     $this->_text     = $value; break;
           case "layout":   $this->_layout   = $value; break;
@@ -54,7 +49,7 @@ class ApplicationView {
 
   }
 
-  public function run($params = null) {
+  public function run() {
 
     // sets contiune - start
     if (!isset($this->_template)) { // is not set ?
@@ -64,27 +59,37 @@ class ApplicationView {
     if (!isset($this->_layout)) { // is not set ?
       $this->_layout = $this->_view;
     }
+
+    if (!isset($this->_locals)) { // is not set ?
+      $this->_locals = null;
+    }
     // sets contiune - end
 
+    // take content!
     if (isset($this->_text)) {
 
       $content = $this->_text;
 
     } elseif (isset($this->_file)) {
 
-      $content = self::render_file($this->_file, $params);
+      $content = self::render_file($this->_file, $this->_locals);
+
+    } elseif (isset($this->_partial)) {
+
+      $content = self::render_file(self::VIEWPATH . preg_replace("~/(?!.*/)~", "/_", $this->_partial) . ".php", $this->_locals);
 
     } elseif ($this->_layout) { // layout : is not false?
 
-      $content = self::render_file(self::layout_file(), ["yield" => self::render_file(self::template_file(), $params)]);
+      $content = self::render_file(self::layout_file(), ["yield" => self::render_file(self::template_file(), $this->_locals)]);
 
     } else { // layout : is false?
 
-      $content = self::render_file(self::template_file(), $params);
+      $content = self::render_file(self::template_file(), $this->_locals);
+
     }
 
     // show content!
-    self::display($content);
+    self::display($content, $this->_locals);
   }
 
   private function layout_file() {
@@ -107,7 +112,7 @@ class ApplicationView {
     return $template_path;
   }
 
-  private function render_file($file = null, $params = null) {
+  private function render_file($file = null, $locals = null) {
 
     // https://github.com/betephp/framework/blob/master/src/Bete/View/View.php#L100
     if (!file_exists($file))
@@ -116,11 +121,11 @@ class ApplicationView {
     ob_start();
     ob_implicit_flush(false);
 
-    // controller'in paramsları var ise yükle
-    if (!is_null($params)) {
-      extract($params, EXTR_OVERWRITE);
+    // controller'in localsları var ise yükle
+    if (!is_null($locals)) {
+      extract($locals, EXTR_OVERWRITE);
     }
-    
+
     include($file);
     return ob_get_clean();
   }

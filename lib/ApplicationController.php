@@ -1,7 +1,7 @@
 <?php
 class ApplicationController {
 
-  public $_params = [];
+  public $_locals = [];
   public $_render;
 
   public function _filter($action, $filter_actions) {
@@ -13,12 +13,12 @@ class ApplicationController {
         if (method_exists($this, $filter_action_name)) {
           if (array_key_exists("only", $filter_action)) {
             if (in_array($action, $filter_action["only"]))
-              echo $this->{$filter_action_name}();
+              $this->{$filter_action_name}();
           } elseif (array_key_exists("except", $filter_action)) {
             if (!in_array($action, $filter_action["except"]))
-              echo $this->{$filter_action_name}();
+              $this->{$filter_action_name}();
           } elseif (!array_key_exists("only", $filter_action) and !array_key_exists("except", $filter_action)) {
-            echo $this->{$filter_action_name}();
+            $this->{$filter_action_name}();
           }
         }
       }
@@ -42,12 +42,12 @@ class ApplicationController {
     exit(header("Location: http://" . $_SERVER['SERVER_NAME'] . "/" . trim($url, "/"), false, 303));
   }
 
-  public function __get($param) {
-    return $this->_params[$param];
+  public function __get($local) {
+    return $this->_locals[$local];
   }
 
-  public function __set($param, $value) {
-    $this->_params[$param] = $value;
+  public function __set($local, $value) {
+    $this->_locals[$local] = $value;
   }
 }
 ?>

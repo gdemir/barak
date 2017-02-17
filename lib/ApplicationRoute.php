@@ -6,7 +6,7 @@ class ApplicationRoute {
   const default_controller = "default";
   const default_action = "index";
 
-  public $_params = [];
+  public $_locals = [];
   public $_path;
   public $_match;
   public $_match_rule;
@@ -70,37 +70,37 @@ class ApplicationRoute {
 
     $c = new $controller_class();
 
-    // router'in paramslarını(sayfadan :id, çekmek için), controller'dan gelen paramslara yükle
-    $c->_params = $this->_params;
+    // router'in localslarını(sayfadan :id, çekmek için), controller'dan gelen localslara yükle
+    $c->_locals = $this->_locals;
     $c->run($this->_action);
 
-    // controller var fetch
+    // controller vars fetch
     $vars = get_object_vars($c);
-
-    // controllerın renderi
-    // vars["_render"];
 
     // render controller choice
     $v = new ApplicationView();
 
+    // render template
     if ($this->_path) { // have scope or path of resouce/resouces
 
       $v->set(["layout" => $this->_path]);
       $v->set(["view" => $this->_path . "/" . $this->_controller, "action" => $this->_action]);
 
-    } else {
+    } else { // normal path
 
       $v->set(["view" => "/" . $this->_controller, "action" => $this->_action]);
 
     }
 
+    // $vars["_locals"] : controllerin localsları
+    if ($vars["_locals"])
+      $v->set(["locals" => $vars["_locals"]]);
+
+    // vars["_render"] : controllerın renderi
     if ($vars["_render"])
       $v->set($vars["_render"]);
 
-    // controllerin paramsları
-    // $vars["_params"];
-
-    $v->run($vars["_params"]);
+    $v->run();
   }
 }
 

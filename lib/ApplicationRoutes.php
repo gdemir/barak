@@ -81,10 +81,10 @@ class ApplicationRoutes {
                 preg_match_all('@:([\w]+)@', $_route->_match_rule, $segments, PREG_PATTERN_ORDER);
                 $segments = $segments[0];
 
-                // get methodları için params'a yükle
+                // get methodları için locals'a yükle : değişkenler
                 foreach ($segments as $segment) {
                   if ($index = array_search($segment, $permit_match_rule)) {
-                    $_route->_params[substr($segment, 1)] = $request_rule[$index];
+                    $_route->_locals[substr($segment, 1)] = $request_rule[$index];
                   }
                 }
 

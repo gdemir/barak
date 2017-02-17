@@ -135,6 +135,15 @@ class ApplicationHelper {
         throw new FileNotFoundException("İçerik dosyası mevcut değil", $file);
       }
       include $file;
+      /* TODO
+      function render($options = null) {
+       if ($options) {
+         $v = new ApplicationView();
+         $v->set($options);
+         $v->run($vars["_params"]); // params send to with on $options
+       }
+     }
+     */
     }
 
   }

@@ -110,7 +110,7 @@ class ApplicationView {
 
     // https://github.com/betephp/framework/blob/master/src/Bete/View/View.php#L100
     if (!file_exists($file))
-      throw new FileNotFoundException("Render dosyası mevcut değil", "a");
+      throw new FileNotFoundException("Render dosyası mevcut değil", $file);
 
     ob_start();
     ob_implicit_flush(false);

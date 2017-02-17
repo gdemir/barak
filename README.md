@@ -334,11 +334,11 @@ ApplicationRoutes::draw(
 ### Controller (`app/controller/*.php`)
 ---
 
-Her `config/routes.php` içerisinde tanımlanan `get` işlemi için `app/controller/*.php` dosyası içerisinde fonksiyon tanımlamak zorunlu değildir, tanımlanırsa bir değişken yükü/yükleri ilgili web sayfasına `$params[KEY]` şeklinde çekilebilir. Her `config/routes.php` içerisinde tanımlanan `post` için ilgili `app/controller/*.php` dosyası içerisinde fonksiyon tanımlamak zorunludur.
+Her `config/routes.php` içerisinde tanımlanan `get` işlemi için `app/controller/*.php` dosyası içerisinde fonksiyon tanımlamak zorunlu değildir, tanımlanırsa bir değişken yükü/yükleri controller içinde `$this->KEY` şeklinde tanımlanırsa ilgili yönlenen sayfada `$KEY` şeklinde veriye erişebilir. Her `config/routes.php` içerisinde tanımlanan `post` için ilgili `app/controller/*.php` dosyası içerisinde fonksiyon tanımlamak zorunludur.
 
 - Render
 
-> layout : `app/views/layouts/VIEW_layout.php`
+> layout : `app/views/layouts/VIEW.php`
 
 > view : `app/views/VIEW/ACTION.php`
 
@@ -350,39 +350,42 @@ class HomeController extends ApplicationController {
   public function index() {
     echo "HomeIndex sayfası öncesi çalışan fonksiyon";
 
-    // DEFAULT LAYOUT: home_layout, VIEW: home, ACTION: index
+    // DEFAULT LAYOUT: home, VIEW: home, ACTION: index
     $this->render("/home/index"); // like $this->render(["template" => "/home/index"]);
 
-    // DEFAULT LAYOUT: home_layout, VIEW: home, ACTION: show
+    // DEFAULT LAYOUT: home, VIEW: home, ACTION: show
     $this->render("/home/show"); // like $this->render(["template" => "/home/show"]);
 
-    // DEFAULT LAYOUT: home_layout, VIEW: admin, ACTION: show
+    // DEFAULT LAYOUT: home, VIEW: admin, ACTION: show
     $this->render("/admin/show"); // like $this->render(["template" => "/admin/show"]);
 
-    // Default LAYOUT: home_layout, VIEW: home, ACTION: index
-    $this->render(["layout"=>"home", "view" => "home", "action" => "index"]); // default render
+    // Default LAYOUT: home, VIEW: home, ACTION: index
+    $this->render(["layout" => "home", "view" => "home", "action" => "index"]); // default render
 
     // LAYOUT: false, VIEW: home, ACTION: index
     $this->render(["layout" => false]);
 
-    // LAYOUT: home_layout, VIEW: admin, ACTION: index
+    // LAYOUT: home, VIEW: admin, ACTION: index
     $this->render(["view" => "admin", "action" => "index"]);
 
-    // LAYOUT: home_layout, VIEW: admin, ACTION: index
+    // LAYOUT: home, VIEW: admin, ACTION: index
     $this->render(["view" => "admin", "action" => "index"]);
 
-    // LAYOUT: admin_layout, VIEW: home, ACTION: show
+    // LAYOUT: admin, VIEW: home, ACTION: show
     $this->render(["layout" => "admin", "view" => "home", "action" => "show"]);
 
-    // LAYOUT: admin_layout, VIEW: home, ACTION: index
+    // LAYOUT: admin, VIEW: home, ACTION: index
     $this->render(["layout" => "admin", "template" => "home/index"]);
 
-    // LAYOUT: admin_layout, VIEW: home, ACTION: show
+    // LAYOUT: admin, VIEW: home, ACTION: show
     $this->render(["layout" => "admin", "template" => "home/show"]);
     
     // LAYOUT: false, VIEW: false, ACTION: false
     // only load controller params and get this file
     $this->render(["file" => "/app/views/admin/login.php"]);
+    
+    // TODO partial, ayrıca sayfa üzerinde
+    // $this->render(["partial" => "home/navbar"]);
   }
 
 }
@@ -572,7 +575,7 @@ class AdminController extends ApplicationController {
 ### Views (`app/views/DIRECTORY/*.php`)
 ---
 
-Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `action` adlarını alarak, `app/views/CONTROLLER/ACTION.php` html sayfası `app/views/layouts/CONTROLLER_layout.php` içerisine `{yield}` değişken kısmına gömülür ve görüntülenir.
+Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `action` adlarını alarak, `app/views/CONTROLLER/ACTION.php` html sayfası `app/views/layouts/CONTROLLER_layout.php` içerisine `<?= $yield; ?>` değişken kısmına gömülür ve görüntülenir.
 
 > `app/views/DIRECTORY/*.php`
 

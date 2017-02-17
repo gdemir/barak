@@ -575,7 +575,7 @@ class AdminController extends ApplicationController {
 ### Views (`app/views/DIRECTORY/*.php`)
 ---
 
-Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `action` adlarını alarak, `app/views/CONTROLLER/ACTION.php` html sayfası `app/views/layouts/CONTROLLER_layout.php` içerisine `<?= $yield; ?>` değişken kısmına gömülür ve görüntülenir.
+Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `action` adlarını alarak, `app/views/CONTROLLER/ACTION.php` html sayfası `app/views/layouts/CONTROLLER.php` içerisine `<?= $yield; ?>` değişken kısmına gömülür ve görüntülenir.
 
 > `app/views/DIRECTORY/*.php`
 

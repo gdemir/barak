@@ -31,6 +31,7 @@ class ApplicationView {
 
       foreach ($_render as $key => $value) {
         switch ($key) {
+          // TODO case "partial":  $this->_partial  = $value; break;
           case "file":     $this->_file     = $value; break;
           case "text":     $this->_text     = $value; break;
           case "layout":   $this->_layout   = $value; break;
@@ -119,6 +120,7 @@ class ApplicationView {
     if (!is_null($params)) {
       extract($params, EXTR_OVERWRITE);
     }
+    
     include($file);
     return ob_get_clean();
   }

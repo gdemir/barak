@@ -5,8 +5,12 @@ class ApplicationDatabase extends PDO {
   const SEEDSFILE  = "db/seeds.php";
 
   public function __construct($host, $name, $user, $pass) {
-    parent::__construct("mysql:host={$host};dbname={$name}", $user, $pass);
-    //"mysql:host={$db['host']};dbname={$db['name']}", $db['user'], $db['pass']
+
+    try {
+      parent::__construct("mysql:host={$host};dbname={$name}", $user, $pass);
+    } catch (PDOException $e) {
+      throw new DatabaseException("Veritabanına bağlantısı başarılı değil!", $e->getMessage());
+    }
 
     // DB configuration
     parent::query('set names "utf8"');

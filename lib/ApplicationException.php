@@ -37,5 +37,6 @@ class BelongNotFoundException extends ApplicationException {};
 class SQLException extends ApplicationException {};
 class ViewNotFoundException extends ApplicationException {};
 class I18nNotFoundException extends ApplicationException {};
+class DatabaseException extends ApplicationException {};
 
 ?>

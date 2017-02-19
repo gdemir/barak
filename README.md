@@ -12,9 +12,39 @@
 
 - [Composer](http://gdemir.me/categories/php/composer/)
 
+
 ## Install
 
+- Composer
+
+    [Composer](http://gdemir.me/categories/php/composer/)
+
+- Barak
+
     composer create-project gdemir/barak project_name
+
+## Configuration Database File (`config/database.ini`)
+
+```ini
+[database_configuration]
+host  = localhost
+user  = root
+pass  = barak
+name  = BARAK
+```
+
+## Run
+
+    cd project_name
+    php -S localhost:9090
+
+and check homepage : [http://localhost:9090](http://localhost:9090) and thats all!
+
+## Releases
+
+- [https://github.com/gdemir/barak/releases](https://github.com/gdemir/barak/releases)
+
+---
 
 ## Guides
 
@@ -379,11 +409,11 @@ class HomeController extends ApplicationController {
 
     // LAYOUT: admin, VIEW: home, ACTION: show
     $this->render(["layout" => "admin", "template" => "home/show"]);
-    
+
     // LAYOUT: false, VIEW: false, ACTION: false
     // only load controller params and get this file
     $this->render(["file" => "/app/views/admin/login.php"]);
-    
+
     // TODO partial, ayrıca sayfa üzerinde
     // $this->render(["partial" => "home/navbar"]);
   }
@@ -600,7 +630,7 @@ Her `get` işlemi için `config/routes.php` de yönlendirilen `controller` ve `a
 </html>
 ```
 
-### Model
+### Model (`app/models/TABLE.php`)
 ---
 
 > `app/models/TABLE.php`
@@ -1011,7 +1041,7 @@ foreach ($books as $book)
 
 ```
 
-### Config and Database (`config/database.ini`, `config/application.ini`, `db/seeds.php`)
+### Configurations (`config/database.ini`, `config/application.ini`)
 ---
 
 > `config/database.ini` (database configuration file)
@@ -1031,6 +1061,10 @@ name  = BARAK
 display_errors = true
 time_zone      = Europe/Istanbul
 ```
+
+### Seeds (`db/seeds.php`)
+
+Proje başlamadan önce ilk çalıştırılacak dosyadır.
 
 > `db/seeds.php` (database seeds file)
 

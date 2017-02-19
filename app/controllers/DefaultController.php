@@ -27,12 +27,12 @@ class DefaultController extends ApplicationController {
     [
     "title" => "Model",
     "directory" =>"app/models/TABLE.php",
-    "link" => "https://github.com/gdemir/barak#model",
+    "link" => "https://github.com/gdemir/barak#model-appmodelstablephp",
     ],
     [
     "title" => "Configuration",
     "directory" =>"config/application.ini, config/database.ini",
-    "link" => "https://github.com/gdemir/barak#configuration-configdatabaseini-configapplicationini",
+    "link" => "https://github.com/gdemir/barak#configurations-configdatabaseini-configapplicationini",
     ],
     [
     "title" => "Seeds",

@@ -17,7 +17,7 @@
 
 - Composer
 
-    [Composer](http://gdemir.me/categories/php/composer/)
+[Composer](http://gdemir.me/categories/php/composer/)
 
 - Barak
 

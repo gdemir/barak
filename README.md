@@ -21,7 +21,9 @@
 
 - Barak
 
-	composer create-project gdemir/barak project_name
+```sh
+composer create-project gdemir/barak project_name
+```
 
 ## Configuration Database File (`config/database.ini`)
 

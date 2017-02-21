@@ -1,11 +1,8 @@
 # Barak
 
 [![Latest Stable Version](https://poser.pugx.org/gdemir/barak/v/stable)](https://packagist.org/packages/gdemir/barak)
-
 [![Total Downloads](https://poser.pugx.org/gdemir/barak/downloads)](https://packagist.org/packages/gdemir/barak)
-
 [![Latest Unstable Version](https://poser.pugx.org/gdemir/barak/v/unstable)](https://packagist.org/packages/gdemir/barak)
-
 [![License](https://poser.pugx.org/gdemir/barak/license)](https://packagist.org/packages/gdemir/barak)
 
 ##  Requirements Packages and Versions

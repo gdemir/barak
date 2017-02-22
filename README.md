@@ -272,9 +272,11 @@ ApplicationRoutes::draw(
 
 #### SCOPE
 
+Kodları daha derli toplu kullanmak için Route'in Gruplama özelliğidir. Bir PATH altında CONTROLLER ve VIEW dizininin çalışma imkanı sağlar. 
+
 > controller: `app/controllers/PATH/CONTROLLER.php`
 
-> view : `app/views/VIEW/PATH/ACTION.php`
+> view : `app/views/VIEW/PATH/CONTROLLER/ACTION.php`
 
 - Simple
 

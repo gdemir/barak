@@ -489,15 +489,14 @@ class ApplicationModel {
   }
 
   // ok
-  public static function update(int $primary_key, $fields) {
+  public static function update($primary_key, $fields) {
     self::check_fieldnames(array_keys($fields));
 
-//  ApplicationSql::update(self::table_name(), $fields, ["id" => intval($primary_key)]);
     ApplicationSql::update(self::table_name(), $fields, static::field_to_where(["id" => intval($primary_key)]));
   }
 
   // ok
-  public static function delete(int $primary_key) {
+  public static function delete($primary_key) {
     ApplicationSql::delete(self::table_name(), static::field_to_where(["id" => intval($primary_key)]), null);
   }
 

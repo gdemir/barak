@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title></title>
   <link href="" rel="alternate" title="" type="application/atom+xml" />
-  <link rel="shortcut icon" href="default.ico">
+  <link rel="shortcut icon" href="/favicon.ico">
   <link rel="stylesheet" href="/app/assets/css/syntax.css" type="text/css" />
   <link href='http://fonts.googleapis.com/css?family=Monda' rel='stylesheet' type='text/css'>
 
